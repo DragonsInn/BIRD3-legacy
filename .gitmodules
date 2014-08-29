@@ -1,0 +1,12 @@
+[submodule "php_modules/CloudFlare-API"]
+	path = php_modules/CloudFlare-API
+	url = ./php_modules/CloudFlare-API/
+[submodule "php_modules/parsedown"]
+	path = php_modules/parsedown
+	url = ./php_modules/parsedown/
+[submodule "php_modules/WingStyle"]
+	path = php_modules/WingStyle
+	url = ./php_modules/WingStyle/
+[submodule "php_modules/predis"]
+	path = php_modules/predis
+	url = ./php_modules/predis/

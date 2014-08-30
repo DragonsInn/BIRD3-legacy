@@ -7,9 +7,9 @@ var fs = require('fs');
 var winston = require("winston");
 
 // Initialize the config object.
-global.config = {
-    base: __dirname
-};
+global.config = require("./config/nodejs");
+config.base = __dirname;
+
 // Logging and configuring it
 global.log = new (winston.Logger)({
     transports: [
@@ -26,11 +26,11 @@ global.log = new (winston.Logger)({
 });
 
 // make the server listen
-app.listen(8080, "localhost");
+app.listen(config.http_port, config.host);
 
 // Set up the web stuff.
 var request_handler = require("./lib/request_handler.js");
-var ws_handler = require("./lib/websocket_handler.js");
+var ws_handler = require("./lib/websocket_handler.js")(io);
 
 // Register the handlers.
 app.on("request", request_handler);

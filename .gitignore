@@ -1,1 +1,4 @@
 *.log
+config/nodejs.js
+config/yii.php
+cdn/assets/*

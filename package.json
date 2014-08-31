@@ -13,9 +13,12 @@
     "node_cloudflare": "0.0.2",
     "nodemailer": "^0.7.0",
     "redis": "^0.10.3",
+    "router": "^0.6.2",
     "socket.io": "^1.0.6",
+    "telnet": "0.0.1",
     "threads_a_gogo": "^0.1.7",
     "twit": "^1.1.15",
+    "weo-http-proxy": "^0.8.2",
     "winston": "^0.7.3"
   },
   "devDependencies": {},

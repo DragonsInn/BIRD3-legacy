@@ -2,3 +2,4 @@
 config/nodejs.js
 config/yii.php
 cdn/assets/*
+node_modules/*

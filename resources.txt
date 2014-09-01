@@ -1,2 +1,4 @@
 http://www.berriart.com/sidr/#usage
 http://www.iacquire.com/blog/18-meta-tags-every-webpage-should-have-in-2013
+http://fortawesome.github.io/Font-Awesome/examples/
+http://noizwaves.github.io/bootstrap-social-buttons/

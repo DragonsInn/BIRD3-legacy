@@ -6,6 +6,7 @@ var pLeft = $("#Pleft"),
 var tLeft = $("#trigger-left"),
     tRight = $("#trigger-right"),
     tTop = $("#trigger-top");
+var everything = $(".panel-pusher");
 if(useBottomPanel) {
     var pBottom = $("#Pbottom");
     var tBottom = $("#trigger-bottom");
@@ -13,18 +14,24 @@ if(useBottomPanel) {
 
 tLeft.click(function(e) {
     e.stopPropagation();
-    pLeft.toggleClass("panel-side-active");
+    removePushers("left");
     disableOthers("left");
+    pLeft.toggleClass("panel-side-active");
+    everything.toggleClass("panel-pusher-toright");
 });
 tRight.click(function(e) {
     e.stopPropagation();
-    pRight.toggleClass("panel-side-active");
     disableOthers("right");
+    removePushers("right");
+    pRight.toggleClass("panel-side-active");
+    everything.toggleClass("panel-pusher-toleft");
 });
 tTop.click(function(e) {
     e.stopPropagation();
-    pTop.toggleClass("panel-top-active");
     disableOthers("top");
+    removePushers("top");
+    pTop.toggleClass("panel-top-active");
+    everything.toggleClass("panel-pusher-fromtop");
 });
 
 // Now assign event stopper on bars.
@@ -35,8 +42,9 @@ $(pTop).click(function(e){ e.stopPropagation(); });
 if(useBottomPanel) {
     tBottom.click(function(e) {
         e.stopPropagation();
-        pBottom.toggleClass("panel-bottom-active");
         disableOthers("bottom");
+        removePushers("bottom");
+        pBottom.toggleClass("panel-bottom-active");
     });
     $(pBottom).click(function(e){ e.stopPropagation(); });
 }
@@ -45,8 +53,12 @@ $(document).click(function(e) {
     pLeft.removeClass("panel-side-active");
     pRight.removeClass("panel-side-active");
     pTop.removeClass("panel-top-active");
+    everything.removeClass("panel-pusher-fromtop");
+    everything.removeClass("panel-pusher-toleft");
+    everything.removeClass("panel-pusher-toright");
     if(useBottomPanel) {
         tBottom.removeClass("panel-bottom-active");
+        everything.removeClass("panel-pusher-frombottom");
     }
 });
 
@@ -56,5 +68,14 @@ function disableOthers(panel) {
     if(panel != "top") pTop.removeClass("panel-top-active");
     if(useBottomPanel) {
         if(panel != "bottom") tBottom.removeClass("panel-bottom-active");
+    }
+}
+
+function removePushers(panel) {
+    if(panel != "left") everything.removeClass("panel-pusher-toright");
+    if(panel != "right") everything.removeClass("panel-pusher-toleft");
+    if(panel != "top") everything.removeClass("panel-pusher-fromtop");
+    if(useBottomPanel) {
+        if(panel != "bottom") everything.removeClass("panel-pusher-frombottom");
     }
 }

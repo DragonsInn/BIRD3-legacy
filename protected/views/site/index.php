@@ -4,4 +4,12 @@
 $this->pageTitle="Home";
 ?>
 
-<h1>o.o</h1>
+<h1>Latest Characters...</h1>
+<div>
+	<div style="width:50%; position:relative; float: left;">
+		this is div 1
+	</div>
+	<div style="width:50%; position:relative; float: left;">
+		This is div 2
+	</div>
+</div>

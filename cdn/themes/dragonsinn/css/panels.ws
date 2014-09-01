@@ -59,6 +59,28 @@ WS(".panel-bottom.panel-bottom-active")
     ->bottom(0)
 ->end;
 
+// Pushing
+WS(".panel-pusher")
+    ->width("100%")
+    ->height("100%")
+    ->overflow->x(hidden)
+    ->position(fixed)
+    ->left(0)
+    ->top(0)
+->end;
+WS(".panel-pusher-toright")
+    ->left($panel_side_width)
+->end;
+WS(".panel-pusher-toleft")
+    ->left(-$panel_side_width)
+->end;
+WS(".panel-pusher-frombottom")
+    ->bottom($panel_bottom_height)
+->end;
+WS(".panel-pusher-fromtop")
+    ->top($panel_top_height)
+->end;
+
 // Visual effects
 WS(".panel-default", ".panel-pusher")
     ->transition(all, "0.3s", ease)

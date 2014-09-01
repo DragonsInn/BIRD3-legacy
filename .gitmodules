@@ -6,7 +6,7 @@
 	url = ./php_modules/parsedown/
 [submodule "php_modules/WingStyle"]
 	path = php_modules/WingStyle
-	url = ./php_modules/WingStyle/
+	url = https://github.com/IngwiePhoenix/WingStyle.git
 [submodule "php_modules/predis"]
 	path = php_modules/predis
 	url = ./php_modules/predis/

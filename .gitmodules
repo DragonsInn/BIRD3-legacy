@@ -1,12 +1,12 @@
 [submodule "php_modules/CloudFlare-API"]
 	path = php_modules/CloudFlare-API
-	url = ./php_modules/CloudFlare-API/
+	url = https://github.com/vexxhost/CloudFlare-API.git
 [submodule "php_modules/parsedown"]
 	path = php_modules/parsedown
-	url = ./php_modules/parsedown/
+	url = https://github.com/erusev/parsedown.git
 [submodule "php_modules/WingStyle"]
 	path = php_modules/WingStyle
 	url = https://github.com/IngwiePhoenix/WingStyle.git
 [submodule "php_modules/predis"]
 	path = php_modules/predis
-	url = ./php_modules/predis/
+	url = https://github.com/nrk/predis.git

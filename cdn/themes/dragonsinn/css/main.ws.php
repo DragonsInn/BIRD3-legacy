@@ -11,7 +11,10 @@ Yii::createWebApplication($config);
 // WS
 include_once("$main/php_modules/WingStyle/WingStyle.php");
 ws_copyright();
-WS()->load("transition", "position", "float", "border", "whiteSpace", "wordWrap");
+WS()->load(
+    "transition", "position", "float", "border",
+    "whiteSpace", "wordWrap", "display"
+);
 
 // Helper function
 function reactToAll($elem) {
@@ -97,11 +100,17 @@ WS("#menu div div.text-right", "#menu div div.text-left")
 
 // This fixes some odd padding behavior and adresses flaoting divs.
 WS("#outerContent")
-    ->width("80%")
+    ->width("85%")
     ->margin->left(auto)
     ->margin->right(auto)
-    ->margin->top(70)
     ->whiteSpace(nowrap)
+    ->display(block)
+->end;
+WS(".extraMargin")
+    ->margin->top(170)
+->end;
+WS(".no-extraMargin")
+    ->margin->top(70)
 ->end;
 
 WS("#outerContent > div")
@@ -130,6 +139,7 @@ WS("#content")
     ->padding->top(5)
     ->padding->bottom(5)
     ->float(left)
+    ->border(1, solid, white)
 ->end;
 WS(".cType1")
     # Type 1: Full width
@@ -146,19 +156,19 @@ WS(".cType3")
 
 WS("#leftSide", "#rightSide")
     ->background->rgba(0,0,0, 0.8)
-    ->width("15%")
+    ->width("18%")
     ->margin->top(20)
     ->float(left)
     ->border(1, solid, white)
-    ->padding->left(2)
-    ->padding->right(2)
+    ->padding->left(3)
+    ->padding->right(3)
     ->borderRadius(10)
 ->end;
 WS("#leftSide")
-    ->margin->right("5%")
+    ->margin->right("2%")
 ->end;
 WS("#rightSide")
-    ->margin->left("5%")
+    ->margin->left("2%")
 ->end;
 
 WS("#leftSide", "#rightSide", "#content")

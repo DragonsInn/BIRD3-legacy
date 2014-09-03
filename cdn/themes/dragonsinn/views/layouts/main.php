@@ -150,8 +150,10 @@
             } elseif(!empty($this->leftSide) && !empty($this->rightSide)) {
                 $cClass = "cType3";
             }
+            if(empty($this->tabbar)) $tClass = "extraMargin";
+            else                     $tClass = "no-extraMargin";
         ?>
-        <div id="outerContent">
+        <div id="outerContent" class="<?=$tClass?>">
             <?php if(!empty($this->leftSide)) { ?>
             <div id="leftSide">
                 <?=$this->leftSide?>

@@ -1,8 +1,9 @@
 <?php
 error_reporting(E_ALL);
-$main = "../../../..";
+$main = dirname(__FILE__)."/../../../..";
 
 // Yii
+#define("YII_DEBUG", true);
 include_once("$main/php_modules/yii/framework/yii.php");
 $config = include_once("$main/config/yii.php");
 Yii::createWebApplication($config);
@@ -10,7 +11,7 @@ Yii::createWebApplication($config);
 // WS
 include_once("$main/php_modules/WingStyle/WingStyle.php");
 ws_copyright();
-WS()->load("transition", "position", "float", "border");
+WS()->load("transition", "position", "float", "border", "whiteSpace", "wordWrap");
 
 // Helper function
 function reactToAll($elem) {
@@ -28,6 +29,7 @@ function cdnRequire($path) {
 // CSS includes
 cdnRequire("/css/normalize.css");
 cdnRequire("/bootstrap/css/bootstrap.min.css");
+cdnRequire("/bootstrap-accessibility/css/bootstrap-accessibility.css");
 cdnRequire("/font-awesome/css/font-awesome.min.css");
 cdnRequire("/pick-a-color/css/pick-a-color-1.2.3.min.css");
 
@@ -95,21 +97,73 @@ WS("#menu div div.text-right", "#menu div div.text-left")
 
 // This fixes some odd padding behavior and adresses flaoting divs.
 WS("#outerContent")
-    ->width("70%")
+    ->width("80%")
     ->margin->left(auto)
     ->margin->right(auto)
+    ->margin->top(70)
+    ->whiteSpace(nowrap)
+->end;
+
+WS("#outerContent > div")
+    ->display("inline-block")
+->end;
+
+WS("#tabbar")
+    ->margin->bottom(30)
     ->margin->top(100)
+    ->margin->left(auto)
+    ->margin->right(auto)
+    ->display(block)
+    ->position(relative)
+    ->width("75%")
+    ->color(white)
+    ->background->rgba(0,0,0, 0.3)
 ->end;
 
 WS("#content")
-    ->width("100%")
     ->background->rgba(0,0,0, 0.7)
-    ->margin->bottom(10) # Fix for overflow-x+box-shadow
-    ->padding->left(10)
-    ->padding->right(10)
+    # Fix for overflow-x+box-shadow
+    ->margin->bottom(10)
+    # Responsible design implementation: http://stackoverflow.com/a/25634192/2423150
+    ->padding->left("1%")
+    ->padding->right("1%")
     ->padding->top(5)
     ->padding->bottom(5)
     ->float(left)
+->end;
+WS(".cType1")
+    # Type 1: Full width
+    ->width("100%")
+->end;
+WS(".cType2")
+    # Type 2: One sidebar shown
+    ->width("80%")
+->end;
+WS(".cType3")
+    # Type 3: Both sidebars shown
+    ->width("60%")
+->end;
+
+WS("#leftSide", "#rightSide")
+    ->background->rgba(0,0,0, 0.8)
+    ->width("15%")
+    ->margin->top(20)
+    ->float(left)
+    ->border(1, solid, white)
+    ->padding->left(2)
+    ->padding->right(2)
+    ->borderRadius(10)
+->end;
+WS("#leftSide")
+    ->margin->right("5%")
+->end;
+WS("#rightSide")
+    ->margin->left("5%")
+->end;
+
+WS("#leftSide", "#rightSide", "#content")
+    ->whiteSpace(normal)
+    ->wordWrap(breakWord)
 ->end;
 
 WS("#Pright div", "#Pleft div", "#Ptop div", "#Pbottom div")

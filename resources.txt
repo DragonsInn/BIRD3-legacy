@@ -2,3 +2,9 @@ http://www.berriart.com/sidr/#usage
 http://www.iacquire.com/blog/18-meta-tags-every-webpage-should-have-in-2013
 http://fortawesome.github.io/Font-Awesome/examples/
 http://noizwaves.github.io/bootstrap-social-buttons/
+https://developer.mozilla.org/en-US/docs/Web/Accessibility/An_overview_of_accessible_web_applications_and_widgets
+http://zomigi.com/blog/videos-of-screen-readers-using-aria-updated/
+http://rawgit.com/w3c/aria-in-html/master/index.html#first-rule-of-aria-use
+https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Test_Cases
+http://www-03.ibm.com/able/guidelines/web/accessweb.html
+http://www.w3.org/WAI/GL/wiki/Using_aria-label_to_provide_an_invisible_label

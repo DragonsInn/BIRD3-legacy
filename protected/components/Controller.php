@@ -13,6 +13,9 @@ class Controller extends CController
 	public $og_type="website";
 	public $og_image="";
 	public $panelBottom=false;
+	public $tabbar;
+	public $leftSide;
+	public $rightSide;
 
 	public function beforeAction($action) {
     	if( parent::beforeAction($action) ) {

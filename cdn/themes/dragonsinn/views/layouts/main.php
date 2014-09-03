@@ -8,9 +8,13 @@
             $cs = Yii::app()->clientScript;
             $theme = Yii::app()->theme;
             $tbase = $theme->getBaseUrl();
+            $cdnUrl = Yii::app()->cdn->getBaseUrl();
             $cs->registerCssFile($tbase.'/css/main.ws.php');
             $cs->registerScriptFile($tbase."/js/panels.js", CClientScript::POS_END);
-            $cs->registerScriptFile(Yii::app()->cdn->getBaseUrl()."/bootstrap/js/bootstrap.min.js", CClientScript::POS_END);
+            $cs->registerScriptFile($cdnUrl."/bootstrap/js/bootstrap.min.js");
+            $cs->registerScriptFile($cdnUrl."/bootstrap-accessibility/js/bootstrap-accessibility.min.js");
+            $cs->registerScriptFile($cdnUrl."/pick-a-color/js/tinycolor-0.9.15.min.js");
+            $cs->registerScriptFile($cdnUrl."/pick-a-color/js/pick-a-color-1.2.3.min.js");
             $pageTitle = Yii::app()->name.": ".$this->pageTitle;
         ?>
 
@@ -47,17 +51,37 @@
         </div>
         <div id="Pleft" class="panel-default panel-side panel-left">
             <div>
-                <input type="search" name="search" class="form-control white-box" placeholder="Search/Command..."/>
+                <input type="search"
+                    name="search"
+                    class="form-control white-box"
+                    placeholder="Search/Command..."
+                    aria-label="Type search term or command"
+                />
+            </div>
+            <div id="searchResults" aria-label="Search results">
             </div>
         </div>
         <div id="Pright" class="panel-default panel-side panel-right">
             <div id="login">
                 <h3>Login</h3>
                 <div class="input-group">
-                    <input type="text" placeholder="Username" name="userName" required class="form-control" />
+                    <input type="text"
+                        placeholder="Username"
+                        name="userName"
+                        required
+                        class="form-control"
+                        aria-label="User name"
+                    />
                 </div>
                 <div class="input-group">
-                    <input type="password" class="form-control" placeholder="Password" required name="password"/>
+                    <input
+                        type="password"
+                        class="form-control"
+                        placeholder="Password"
+                        required
+                        name="password"
+                        aria-label="Password"
+                    />
                     <span class="input-group-btn">
                         <button class="btn btn-inverse" type="submit">Go!</button>
                     </span>
@@ -74,7 +98,11 @@
         <div id="menu">
             <div class="left">
                 <div style="float:left;" id="trigger-left">
-                    <img src="<?=$tbase?>/images/icons/search.png" class="icon"/>
+                    <img
+                        src="<?=$tbase?>/images/icons/search.png"
+                        class="icon"
+                        aria-hidden="true"
+                    />
                 </div>
                 <div class="text-left">
                     <a href="#">o.o</a>
@@ -82,7 +110,11 @@
             </div>
             <div class="center">
                 <div id="trigger-top">
-                    <img src="<?=$tbase?>/images/icons/download.png" class="icon"/>
+                    <img
+                        src="<?=$tbase?>/images/icons/download.png"
+                        class="icon"
+                        aria-hidden="true"
+                    />
                 </div>
             </div>
             <div class="right">
@@ -90,16 +122,49 @@
                     B DIV
                 </div>
                 <div style="float:right;" id="trigger-right">
-                    <img src="<?=$tbase?>/images/icons/pacman-games.png" class="icon"/>
+                    <img
+                        src="<?=$tbase?>/images/icons/pacman-games.png"
+                        class="icon"
+                        aria-hidden="true"
+                    />
                 </div>
             </div>
         </div>
 
+        <!-- Tab menu -->
+        <?php if(!empty($this->tabbar)) { ?>
+        <div id="tabbar">
+            <?=$this->tabbar?>
+        </div>
+        <?php } ?>
+
         <!-- Content -->
+        <?php # Decide the #content class.
+            if(empty($this->leftSide) && empty($this->rightSide)) {
+                $cClass = "cType1";
+            } elseif(
+                empty($this->leftSide) && !empty($this->rightSide)
+                || !empty($this->leftSide) && empty($this->rightSide)
+            ) {
+                $cClass = "cType2";
+            } elseif(!empty($this->leftSide) && !empty($this->rightSide)) {
+                $cClass = "cType3";
+            }
+        ?>
         <div id="outerContent">
-            <div id="content" class="white-box">
+            <?php if(!empty($this->leftSide)) { ?>
+            <div id="leftSide">
+                <?=$this->leftSide?>
+            </div>
+            <?php } ?>
+            <div id="content" class="<?=$cClass?> white-box">
                 <?=$content?>
             </div>
+            <?php if(!empty($this->rightSide)) { ?>
+            <div id="rightSide">
+                <?=$this->rightSide?>
+            </div>
+            <?php } ?>
         </div>
 
         <!-- Copyright and the like. -->

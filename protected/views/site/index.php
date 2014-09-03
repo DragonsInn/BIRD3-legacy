@@ -16,3 +16,4 @@ $this->pageTitle="Home";
 		This is div 2
 	</div>
 </div>
+<p>URL: <?=$this->createUrl("site/error")?>

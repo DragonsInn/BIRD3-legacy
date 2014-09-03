@@ -64,7 +64,7 @@ WS(".panel-pusher")
     ->width("100%")
     ->height("100%")
     ->overflow->x(hidden)
-    ->position(fixed)
+    ->position(absolute)
     ->left(0)
     ->top(0)
 ->end;

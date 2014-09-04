@@ -1,13 +1,25 @@
 <?php
 
-// uncomment the following to define a path alias
-// Yii::setPathOfAlias('local','path/to/local-folder');
+// Some short-hands:
+$CDN = "http://cdn.".$_SERVER["SERVER_NAME"];
+$base = dirname(__FILE__).DIRECTORY_SEPARATOR.'..';
 
-// This is the main Web application configuration. Any writable
-// CWebApplication properties can be configured here.
+Yii::setPathOfAlias('cdn',$base.'/cdn');
+
+# Version determination
+include_once $base."/php_modules/getallheaders.php";
+$hdrs = getallheaders();
+if(isset($hdrs["BIRD3_VERSION"])) {
+	$bVersion = $hdrs["BIRD3_VERSION"];
+} else {
+	$bVersion = "";
+}
+
 return array(
-	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'name'=>'My Web Application',
+	'basePath'=>$base."/protected",
+	'runtimePath'=>$base."/cache",
+	'name'=>'BIRD3',
+	'theme'=>'dragonsinn',
 
 	// preloading 'log' component
 	'preload'=>array('log'),
@@ -19,15 +31,6 @@ return array(
 	),
 
 	'modules'=>array(
-		// uncomment the following to enable the Gii tool
-		/*
-		'gii'=>array(
-			'class'=>'system.gii.GiiModule',
-			'password'=>'Enter Your Password Here',
-			// If removed, Gii defaults to localhost only. Edit carefully to taste.
-			'ipFilters'=>array('127.0.0.1','::1'),
-		),
-		*/
 	),
 
 	// application components
@@ -36,30 +39,35 @@ return array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
 		),
+		'themeManager'=>array(
+			'basePath'=>$base."/cdn/themes",
+			'baseUrl'=>"/cdn/themes"
+		),
+		'assetManager'=>array(
+			'basePath'=>$base."/cdn/assets",
+			'baseUrl'=>"/cdn/assets"
+		),
+		'cdn'=>array(
+			'class'=>'CDNHelper',
+			'basePath'=>$base.'/cdn',
+			'baseUrl'=>'/cdn'
+		),
 		// uncomment the following to enable URLs in path-format
-		/*
-		'urlManager'=>array(
+		/*'urlManager'=>array(
 			'urlFormat'=>'path',
 			'rules'=>array(
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),
-		),
-		*/
+		),*/
 		'db'=>array(
-			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
-		),
-		// uncomment the following to use a MySQL database
-		/*
-		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=testdrive',
+			'connectionString' => 'mysql:host=localhost;dbname=dragonsinn_tk',
 			'emulatePrepare' => true,
 			'username' => 'root',
-			'password' => '',
+			'password' => 'Your Password Here',
 			'charset' => 'utf8',
 		),
-		*/
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
 			'errorAction'=>'site/error',
@@ -86,5 +94,6 @@ return array(
 	'params'=>array(
 		// this is used in contact page
 		'adminEmail'=>'webmaster@example.com',
+		'version'=>$bVersion
 	),
 );

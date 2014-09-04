@@ -1,0 +1,10 @@
+{
+    "rec": "rec",
+    "send": "send",
+    "whisper": "pm",
+    "bot": "bot",
+    "error": "error",
+    "login": "login",
+    "logout": "logout"
+}
+

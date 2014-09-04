@@ -10,5 +10,12 @@ module.exports = {
     http_port: 8080,
     app_port: 8200,
 
+    // Settings for creating internal URLs...
+    yii_fix_routes: true,
+
+    // Security. CHANGE THIS TO SOMETHING SECURE.
+    userName: "www-data",
+    groupName: "www-data",
+
     version: "BIRD 3.0-dev.0"
 };

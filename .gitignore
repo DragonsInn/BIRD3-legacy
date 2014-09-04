@@ -5,3 +5,4 @@ cdn/assets/*
 node_modules/*
 u/*
 .DS_Store
+*.pid

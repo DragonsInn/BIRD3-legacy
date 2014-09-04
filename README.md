@@ -8,3 +8,6 @@
 
 ## Extending
 `cdn/sounds` can be extended with new soundpacks. The format can be seen in example in the 8Bit folder.
+
+## Security
+The server changes to the user and group defined in `config/nodejs.js`

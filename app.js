@@ -35,11 +35,11 @@ global.log = new (winston.Logger)({
 app.listen(config.http_port, config.host);
 
 // Set up the web stuff.
+require("./lib/security_handler.js")();
 require("./lib/request_handler.js")(app);
 require("./lib/status_worker.js")(redis);
 require("./lib/update_worker.js")();
 require("./lib/websocket_handler.js")(io);
-require("./lib/security_handler.js")();
 
 // Default event.
 BIRD3.on("error", function(){ process.exit(1); });

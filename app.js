@@ -3,11 +3,15 @@ process.env["DEBUG"]="socket.io:*";
 process.title="BIRD3";
 
 var app = require('http').createServer();
+// Performance tweak.
+app.globalAgent.maxSockets = 100;
+
 var io = require('socket.io')(app);
 var fs = require('fs');
 var winston = require("winston");
 var redis = require("redis");
 var events = require("events");
+
 
 // Initialize the config object.
 global.config = require("./config/nodejs");

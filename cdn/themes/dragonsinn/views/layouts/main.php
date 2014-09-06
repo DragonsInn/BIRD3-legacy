@@ -62,31 +62,7 @@
             </div>
         </div>
         <div id="Pright" class="panel-default panel-side panel-right">
-            <div id="login">
-                <h3>Login</h3>
-                <div class="input-group">
-                    <input type="text"
-                        placeholder="Username"
-                        name="userName"
-                        required
-                        class="form-control"
-                        aria-label="User name"
-                    />
-                </div>
-                <div class="input-group">
-                    <input
-                        type="password"
-                        class="form-control"
-                        placeholder="Password"
-                        required
-                        name="password"
-                        aria-label="Password"
-                    />
-                    <span class="input-group-btn">
-                        <button class="btn btn-inverse" type="submit">Go!</button>
-                    </span>
-                </div>
-            </div>
+            <?php $this->widget("BIRD3LoginWidget"); ?>
         </div>
         <?php if($this->panelBottom != false) { ?>
         <div id="Pbottom" class="panel-default panel-bottom">

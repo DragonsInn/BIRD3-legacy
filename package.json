@@ -6,7 +6,9 @@
   "dependencies": {
     "bootstrap-accessibility-plugin": "^1.0.2",
     "cloudflare": "0.0.6",
+    "daemonize.redux": "0.0.1",
     "exec-sync": "^0.1.6",
+    "failing-line": "^0.1.0",
     "fb": "^0.7.0",
     "gitlabhook": "0.0.11",
     "glob": "^4.0.5",
@@ -41,5 +43,12 @@
     "combo"
   ],
   "author": "Ingwie Phoenix",
-  "license": "MIT"
+  "license": "MIT",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.ingwie.me:ingwie/bird3.git"
+  }
 }

@@ -6,3 +6,4 @@ node_modules/*
 u/*
 .DS_Store
 *.pid
+config/gitlabhook.json

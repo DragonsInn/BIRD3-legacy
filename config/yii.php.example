@@ -28,14 +28,18 @@ return array(
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
+		'application.modules.user.models.*',
+		'application.modules.user.components.*'
 	),
 
 	'modules'=>array(
+		'user'
 	),
 
 	// application components
 	'components'=>array(
 		'user'=>array(
+			'class'=>'BIRD3User',
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
 		),
@@ -67,6 +71,7 @@ return array(
 			'username' => 'root',
 			'password' => 'Your Password Here',
 			'charset' => 'utf8',
+			'tablePrefix' => 'tbl_'
 		),
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors

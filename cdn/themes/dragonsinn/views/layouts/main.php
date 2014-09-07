@@ -63,6 +63,8 @@
         </div>
         <div id="Pright" class="panel-default panel-side panel-right">
             <?php $this->widget("BIRD3LoginWidget"); ?>
+            <hr>
+            <p>BIRD3@<?=Yii::app()->params['version']?></p>
         </div>
         <?php if($this->panelBottom != false) { ?>
         <div id="Pbottom" class="panel-default panel-bottom">

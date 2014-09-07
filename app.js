@@ -14,6 +14,7 @@ var app = require('http').createServer(),
 // Initialize the config object.
 global.config = ini.getSync("./config/BIRD3.ini");
 config.base = __dirname;
+config.version = fs.readFileSync("./config/version.txt").toString().replace("\n","");
 
 // Global eventing.
 global.BIRD3 = new events.EventEmitter();
@@ -32,6 +33,9 @@ global.log = new (winston.Logger)({
         })
     ]
 });
+
+// Intro!
+log.info("BIRD3@"+config.version+" starting up!");
 
 // make the server listen
 app.listen(config.BIRD3.http_port, config.BIRD3.host);

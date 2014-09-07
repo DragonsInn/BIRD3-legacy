@@ -7,6 +7,7 @@ $base = dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."..";
 Yii::setPathOfAlias('cdn',$base.'/cdn');
 
 $BIRD3 = parse_ini_file($base."/config/BIRD3.ini", true);
+$version = file_get_contents($base."/config/version.txt");
 
 $config = array(
 	'basePath'=>$base."/protected",
@@ -83,7 +84,7 @@ $config = array(
 	'params'=>array(
 		// this is used in contact page
 		'adminEmail'=>'webmaster@example.com',
-		'version'=>$BIRD3["BIRD3"]["version"]
+		'version'=>$version
 	),
 );
 

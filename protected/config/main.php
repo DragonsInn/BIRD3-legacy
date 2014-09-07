@@ -1,39 +1,32 @@
 <?php
 
 // Some short-hands:
-$CDN = "http://cdn.".$_SERVER["SERVER_NAME"];
-$base = dirname(__FILE__).DIRECTORY_SEPARATOR.'..';
+$CDN = "http://cdn.dragonsinn.tk";
+$base = dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."..";
 
 Yii::setPathOfAlias('cdn',$base.'/cdn');
 
-# Version determination
-include_once $base."/php_modules/getallheaders.php";
-$hdrs = getallheaders();
-if(isset($hdrs["BIRD3_VERSION"])) {
-	$bVersion = $hdrs["BIRD3_VERSION"];
-} else {
-	$bVersion = "";
-}
+$BIRD3 = parse_ini_file($base."/config/BIRD3.ini", true);
 
-return array(
+$config = array(
 	'basePath'=>$base."/protected",
 	'runtimePath'=>$base."/cache",
 	'name'=>'BIRD3',
 	'theme'=>'dragonsinn',
 
 	// preloading 'log' component
-	'preload'=>array('log'),
+	'preload'=>array('log', 'user'),
 
 	// autoloading model and component classes
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
+		'application.modules.user.components.*',
 		'application.modules.user.models.*',
-		'application.modules.user.components.*'
 	),
 
 	'modules'=>array(
-		'user'
+		"user"
 	),
 
 	// application components
@@ -45,31 +38,22 @@ return array(
 		),
 		'themeManager'=>array(
 			'basePath'=>$base."/cdn/themes",
-			'baseUrl'=>"/cdn/themes"
+			'baseUrl'=>$BIRD3['CDN']['baseUrl']."/themes"
 		),
 		'assetManager'=>array(
 			'basePath'=>$base."/cdn/assets",
-			'baseUrl'=>"/cdn/assets"
+			'baseUrl'=>$BIRD3['CDN']['baseUrl']."/assets"
 		),
 		'cdn'=>array(
 			'class'=>'CDNHelper',
 			'basePath'=>$base.'/cdn',
-			'baseUrl'=>'/cdn'
+			'baseUrl'=>$BIRD3['CDN']['baseUrl']
 		),
-		// uncomment the following to enable URLs in path-format
-		/*'urlManager'=>array(
-			'urlFormat'=>'path',
-			'rules'=>array(
-				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
-				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
-				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
-			),
-		),*/
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=dragonsinn_tk',
+			'connectionString' => 'mysql:host=localhost;dbname='.$BIRD3['DB']['mydb'],
 			'emulatePrepare' => true,
-			'username' => 'root',
-			'password' => 'Your Password Here',
+			'username' => $BIRD3['DB']['user'],
+			'password' => $BIRD3['DB']['pass'],
 			'charset' => 'utf8',
 			'tablePrefix' => 'tbl_'
 		),
@@ -99,6 +83,20 @@ return array(
 	'params'=>array(
 		// this is used in contact page
 		'adminEmail'=>'webmaster@example.com',
-		'version'=>$bVersion
+		'version'=>$BIRD3["BIRD3"]["version"]
 	),
 );
+
+// Extra work
+if($BIRD3["Yii"]["use_path_urls"]=="1") {
+	$config['components']['urlManager'] = array(
+		'urlFormat'=>'path',
+		'rules'=>array(
+			'<controller:\w+>/<id:\d+>'=>'<controller>/view',
+			'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
+			'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+		),
+	);
+}
+
+return $config;

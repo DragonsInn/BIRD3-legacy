@@ -1,0 +1,31 @@
+[BIRD3]
+
+; The host the server runs on
+host = 127.0.0.1
+
+; The HTTP port to expose to
+http_port = 8080
+
+; The port the actual Yii app runs on. HTTP port of the underlying HTTP server.
+app_port = 8200
+
+; The user/group that the server should run under
+userName = www-data
+groupName = www-data
+
+; Version!
+version = BIRD 3.0-dev.0
+
+[Yii]
+
+; Enable, when Yii should use path-style URLs.
+; Reminder: Not every webserver supports it!
+use_path_urls = 1
+
+[DB]
+user = My User
+pass = My Password
+mydb = My BIRD3 DB
+
+[API]
+twitter.key = UNKNOWN

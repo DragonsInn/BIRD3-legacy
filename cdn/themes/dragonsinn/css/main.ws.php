@@ -5,7 +5,7 @@ $main = dirname(__FILE__)."/../../../..";
 // Yii
 #define("YII_DEBUG", true);
 include_once("$main/php_modules/yii/framework/yii.php");
-$config = include_once("$main/config/yii.php");
+$config = include_once("$main/protected/config/main.php");
 Yii::createWebApplication($config);
 
 // WS

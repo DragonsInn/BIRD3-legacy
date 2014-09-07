@@ -7,17 +7,15 @@ var app = require('http').createServer(),
     fs = require('fs'),
     winston = require("winston"),
     redis = require("redis"),
-    events = require("events"),
     ini = require("multilevel-ini");
 
+// Global eventing
+global.BIRD3 = require("./lib/communicator.js");
 
 // Initialize the config object.
 global.config = ini.getSync("./config/BIRD3.ini");
 config.base = __dirname;
 config.version = fs.readFileSync("./config/version.txt").toString().replace("\n","");
-
-// Global eventing.
-global.BIRD3 = new events.EventEmitter();
 
 // Logging and configuring it
 global.log = new (winston.Logger)({
@@ -50,11 +48,10 @@ app.on("listening", function(){
 });
 
 // Default event.
-BIRD3.on("error", function(){ process.exit(1); });
-
-// Watch over everything
-var client = redis.createClient();
-client.subscribe("BIRD3 Status");
-client.on("message", function(ch, msg){
-    log.info("Redis: "+ch+": "+msg);
+BIRD3.on("error", function(e){
+    log.error("BIRD3 going down. Cause: ", e);
+    process.exit(1);
+});
+process.on("error", function(e){
+    BIRD3.emit("error", e);
 });

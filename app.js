@@ -45,13 +45,5 @@ app.on("listening", function(){
     require("./lib/status_worker.js")(redis);
     require("./lib/update_worker.js")();
     require("./lib/websocket_handler.js")(io);
-});
-
-// Default event.
-BIRD3.on("error", function(e){
-    log.error("BIRD3 going down. Cause: ", e);
-    process.exit(1);
-});
-process.on("error", function(e){
-    BIRD3.emit("error", e);
+    require("./lib/error_handler.js")();
 });

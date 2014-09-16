@@ -1,12 +1,16 @@
 <?php class BIRD3UserIdendity extends CUserIdentity {
 
-    private $model;
+    private $_model;
     private $_id;
 
-    public function authenticate() {
-        $model = User::model()->findByAttributes(array(
-            "userName" => $this->username
-        ));
+    public function authentificate() {
+        if($this->_model == null) {
+            $model = User::model()->findByAttributes(array(
+                "username" => $this->username
+            ));
+        } else {
+            $model = $this->_model;
+        }
         if($model == NULL) {
             $this->errorCode=self::ERROR_USERNAME_INVALID;
         } else if(md5($this->password) != $model->password) {
@@ -14,8 +18,9 @@
         } else {
             $this->errorCode=self::ERROR_NONE;
             $this->_id=$model->id;
-            $this->model=$model;
+            $this->_model=$model;
         }
+        return $this->errorCode;
     }
 
     public function getId() {
@@ -23,6 +28,9 @@
     }
 
     public function getModel() {
-        return $this->model;
+        return $this->_model;
+    }
+    public function setModel($m) {
+        $this->_model=$m;
     }
 }

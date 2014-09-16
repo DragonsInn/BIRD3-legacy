@@ -1,7 +1,6 @@
 <?php
 
 // Some short-hands:
-$CDN = "http://cdn.dragonsinn.tk";
 $base = dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."..";
 
 Yii::setPathOfAlias('cdn',$base.'/cdn');
@@ -9,7 +8,9 @@ Yii::setPathOfAlias('cdn',$base.'/cdn');
 $BIRD3 = parse_ini_file($base."/config/BIRD3.ini", true);
 $version = file_get_contents($base."/config/version.txt");
 
-$config = array(
+$CDN = "http://".$BIRD3["CDN"]["url"];
+
+return array(
 	'basePath'=>$base."/protected",
 	'runtimePath'=>$base."/cache",
 	'name'=>'BIRD3',
@@ -22,8 +23,15 @@ $config = array(
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
+		# User
 		'application.modules.user.components.*',
 		'application.modules.user.models.*',
+		# Booster
+		'ext.EScriptBoost.*',
+		# Caching
+		#'ext.redis.*',
+		# Misc
+		#'ext.iwi.*',
 	),
 
 	'modules'=>array(
@@ -43,12 +51,18 @@ $config = array(
 		),
 		'assetManager'=>array(
 			'basePath'=>$base."/cdn/assets",
-			'baseUrl'=>$BIRD3['CDN']['baseUrl']."/assets"
+			'baseUrl'=>$BIRD3['CDN']['baseUrl']."/assets",
+			'class' => 'EAssetManagerBoost',
+      		'minifiedExtensionFlags'=>array('min.js','minified.js','packed.js')
 		),
 		'cdn'=>array(
 			'class'=>'CDNHelper',
 			'basePath'=>$base.'/cdn',
 			'baseUrl'=>$BIRD3['CDN']['baseUrl']
+		),
+		'clientScript'=>array(
+			'class'=>'EClientScriptBoost',
+         	'cacheDuration'=>30,
 		),
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname='.$BIRD3['DB']['mydb'],
@@ -57,6 +71,25 @@ $config = array(
 			'password' => $BIRD3['DB']['pass'],
 			'charset' => 'utf8',
 			'tablePrefix' => 'tbl_'
+		),
+		'urlManager'=>array(
+			'urlFormat'=>'path',
+			'showScriptName'=>false,
+			'rules'=>array(
+				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
+				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
+				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+			),
+		),
+		'cache'=>array(
+			'class'=>'ext.redis.CRedisCache',
+		),
+		'iwi' => array(
+    		'class' => 'application.extensions.iwi.IwiComponent',
+    		// GD or ImageMagick
+    		'driver' => 'GD',
+    		// ImageMagick setup path
+    		//'params'=>array('directory'=>'C:/ImageMagick'),
 		),
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
@@ -87,17 +120,3 @@ $config = array(
 		'version'=>$version
 	),
 );
-
-// Extra work
-if($BIRD3["Yii"]["use_path_urls"]=="1") {
-	$config['components']['urlManager'] = array(
-		'urlFormat'=>'path',
-		'rules'=>array(
-			'<controller:\w+>/<id:\d+>'=>'<controller>/view',
-			'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
-			'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
-		),
-	);
-}
-
-return $config;

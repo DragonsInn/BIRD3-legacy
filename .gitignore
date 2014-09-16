@@ -6,3 +6,6 @@ u/*
 *.pid
 config/gitlabhook.json
 config/BIRD3.ini
+*.bin
+.tmp
+dump.rdb

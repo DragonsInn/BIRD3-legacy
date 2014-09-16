@@ -1,3 +1,4 @@
+<?php if($this->controller->displayLogin) { ?>
 <div id="login">
     <h3>Login</h3>
     <?php $form = $this->beginWidget('CActiveForm', array(
@@ -30,3 +31,7 @@
     </div>
     <?php $this->endWidget(); ?>
 </div>
+<?php } ?>
+<div><pre>
+    <?php var_dump(Yii::app()->user->isGuest); ?>
+</pre></div>

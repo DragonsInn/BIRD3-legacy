@@ -16,6 +16,8 @@ class Controller extends CController
 	public $tabbar;
 	public $leftSide;
 	public $rightSide;
+	# User extension
+	public $displayLogin=true;
 
 	public function beforeAction($action) {
     	if( parent::beforeAction($action) ) {

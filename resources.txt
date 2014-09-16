@@ -9,3 +9,5 @@ https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Test_Cases
 http://www-03.ibm.com/able/guidelines/web/accessweb.html
 http://www.w3.org/WAI/GL/wiki/Using_aria-label_to_provide_an_invisible_label
 https://www.npmjs.org/package/daemonize.redux
+http://www.yiiframework.com/extension/rediscache/
+http://www.yiiframework.com/extension/iwi/

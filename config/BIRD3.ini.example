@@ -13,9 +13,6 @@ app_port = 8200
 userName = www-data
 groupName = www-data
 
-; Version!
-version = BIRD 3.0-dev.0
-
 [Yii]
 
 ; Enable, when Yii should use path-style URLs.

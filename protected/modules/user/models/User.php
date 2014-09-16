@@ -76,4 +76,25 @@
         );
     }
 
+    // Yeah, we have to.
+    public function authentificate() {
+        $id = new BIRD3UserIdendity($this->username, $this->password);
+        $id->authentificate();
+        switch($id->errorCode) {
+            case BIRD3UserIdendity::ERROR_USERNAME_INVALID:
+                $this->addError("username", "Username invalid!");
+            break;
+            case BIRD3UserIdendity::ERROR_PASSWORD_INVALID:
+                $this->addError("password", "Password invalid!");
+            break;
+        }
+        return $id->errorCode;
+    }
+
+    public function login() {
+        $id = new BIRD3UserIdendity($this->username, $this->password);
+        Yii::app()->user->login($id, 3000*24);
+        Yii::app()->controller->redirect(Yii::app()->user->returnUrl);
+    }
+
 }

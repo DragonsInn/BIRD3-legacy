@@ -5,17 +5,9 @@
             $meta_desc = "The Dragon's Inn is a cozy place for furry and non-furry"
                 ." roleplayers as well as casual chatters."
                 ." Stop by and hang out with artists and freaks! =)";
-            $cs = Yii::app()->clientScript;
-            $theme = Yii::app()->theme;
-            $tbase = $theme->getBaseUrl();
-            $cdnUrl = Yii::app()->cdn->getBaseUrl();
-            $cs->registerCssFile($tbase.'/css/main.ws.php');
-            $cs->registerScriptFile($tbase."/js/panels.js", CClientScript::POS_END);
-            $cs->registerScriptFile($cdnUrl."/bootstrap/js/bootstrap.min.js");
-            $cs->registerScriptFile($cdnUrl."/bootstrap-accessibility/js/bootstrap-accessibility.min.js");
-            $cs->registerScriptFile($cdnUrl."/pick-a-color/js/tinycolor-0.9.15.min.js");
-            $cs->registerScriptFile($cdnUrl."/pick-a-color/js/pick-a-color-1.2.3.min.js");
             $pageTitle = Yii::app()->name.": ".$this->pageTitle;
+            $this->registerScripts();
+            $tbase = Yii::app()->theme->baseUrl;
         ?>
 
         <title><?=$pageTitle?></title>
@@ -44,6 +36,9 @@
                 var useBottomPanel = false;
             <?php } ?>
         </script>
+
+        <!-- The theme -->
+        <link rel="stylesheet" type="text/css" href="<?=$tbase.'/css/main.ws.php'?>" />
     </head>
     <body class="panel-pusher">
         <!-- Panels -->
@@ -64,7 +59,9 @@
         <div id="Pright" class="panel-default panel-side panel-right">
             <?php $this->widget("BIRD3LoginWidget"); ?>
             <hr>
-            <p>BIRD3@<?=Yii::app()->params['version']?></p>
+            <div>
+                BIRD3@<?=Yii::app()->params['version']?>
+            </div>
         </div>
         <?php if($this->panelBottom != false) { ?>
         <div id="Pbottom" class="panel-default panel-bottom">

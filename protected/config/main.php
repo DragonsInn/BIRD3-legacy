@@ -64,6 +64,12 @@ return array(
 			'class'=>'EClientScriptBoost',
          	'cacheDuration'=>30,
 		),
+		'dynamicRes'=>array(
+            'class' => 'application.extensions.DynamicRes.DynamicRes',
+            'urlConfig' => array(
+                'basePath' => dirname(__FILE__).'/../../',
+            )
+        ),
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname='.$BIRD3['DB']['mydb'],
 			'emulatePrepare' => true,

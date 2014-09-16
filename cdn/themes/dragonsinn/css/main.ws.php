@@ -25,19 +25,9 @@ function reactToAll($elem) {
         $elem
     );
 }
-function cdnRequire($path) {
-    echo WS()->import(Yii::app()->cdn->getBaseUrl() . $path)."\n";
-}
-
-// CSS includes
-cdnRequire("/css/normalize.css");
-cdnRequire("/bootstrap/css/bootstrap.min.css");
-cdnRequire("/bootstrap-accessibility/css/bootstrap-accessibility.css");
-cdnRequire("/font-awesome/css/font-awesome.min.css");
-cdnRequire("/pick-a-color/css/pick-a-color-1.2.3.min.css");
 
 // Variables
-$base = Yii::app()->theme->getBaseUrl();
+$base = Yii::app()->theme->baseUrl;
 
 // Panel styles
 include_once "panels.ws";

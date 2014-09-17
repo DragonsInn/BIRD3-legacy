@@ -68,6 +68,7 @@ return array(
             'class' => 'application.extensions.DynamicRes.DynamicRes',
             'urlConfig' => array(
                 'basePath' => dirname(__FILE__).'/../../',
+				'baseUrl'=>'/'
             )
         ),
 		'db'=>array(

@@ -27,10 +27,10 @@ class Controller extends CController
 		$cdnUrl = Yii::app()->cdn->baseUrl;
 
 		$cs->registerPackage('jquery');
+		$cs->registerScriptFile('/socket.io/socket.io.js');
 
 		$dr->registerScriptFile($tbase."/js/panels.js");
 		$dr->registerScriptFile($cdnUrl.'/js/jquery.sidr.min.js');
-		$dr->registerScriptFile($cdnUrl.'/js/socket.io.js');
 		$dr->registerScriptFile($cdnUrl."/bootstrap/js/bootstrap.min.js");
 		$dr->registerScriptFile($cdnUrl."/bootstrap-accessibility/js/bootstrap-accessibility.min.js");
 

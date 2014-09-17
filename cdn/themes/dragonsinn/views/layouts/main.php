@@ -30,10 +30,9 @@
         <meta name="twitter:image" content="<?=$this->og_image?>"/>
 
         <script>
+            var useBottomPanel = false;
             <?php if($this->panelBottom != false) { ?>
-                var useBottomPanel = true;
-            <?php } else { ?>
-                var useBottomPanel = false;
+                useBottomPanel = true;
             <?php } ?>
         </script>
 

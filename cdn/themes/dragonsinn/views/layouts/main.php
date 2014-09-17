@@ -59,7 +59,7 @@
             <?php $this->widget("BIRD3LoginWidget"); ?>
             <hr>
             <div>
-                BIRD3@<?=Yii::app()->params['version']?>
+                BIRD@<?=Yii::app()->params['version']?>
             </div>
         </div>
         <?php if($this->panelBottom != false) { ?>

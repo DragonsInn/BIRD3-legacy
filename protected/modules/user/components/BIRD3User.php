@@ -1,51 +1,52 @@
 <?php class BIRD3User extends CWebUser {
 
-    private $model;
+    private $_model=null;
 
-    public function login($idendity, $duration=0) {
-        // Catch the model so we can access it later.
-        $this->model=$idendity->model;
-        parent::login($idendity, $duration);
+    public function loadUser() {
+        if($this->_model == null){
+            $this->_model = User::model()->findByPk(Yii::app()->user->id);
+        }
+        if($this->_model==null) {
+            var_dump($this->_model);
+            die();
+        }
+        return $this->_model;
     }
-    public function logout($killSession=true) {
-        $this->model=null;
-        parent::logout($killSession);
-    }
+
+    #public function beforeLogin($id, $states, $fromCookie) {
+    #}
 
     public function isAdmin() {
-        return ($this->model->superuser == User::R_ADMIN);
+        return ($this->loadUser()->superuser == User::R_ADMIN);
     }
     public function isMod() {
         return (
-            $this->model->superuser == User::R_MOD
+            $this->loadUser()->superuser == User::R_MOD
             || $this->isAdmin()
         );
     }
     public function isVIP() {
         return (
-            $this->model->superuser == User::R_VIP
+            $this->loadUser()->superuser == User::R_VIP
             || $this->isMod()
             || $this->isAdmin()
         );
     }
     public function isUser() {
         return (
-            $this->model->superuser == User::R_USER
+            $this->loadUser()->superuser == User::R_USER
             || $this->isMod()
             || $this->isVIP()
             || $this->isAdmin()
         );
     }
     public function isBanned() {
-        return ($this->model->superuser == User::R_BANN);
-    }
-    public function isGuest() {
-        return is_null($this->model);
+        return ($this->loadUser()->superuser == User::R_BANN);
     }
 
-    public function getUsername() { return $model->username; }
-    public function getId()       { return $model->id;       }
-    public function getEmail()    { return $model->email;    }
+    #public function getUsername() { return $this->loadUser()->username; }
+    #public function getId()       { return $this->loadUser()->id;       }
+    public function getEmail()    { return $this->loadUser()->email;    }
     #public function getProfile() { return $model->profile;  } For later. o.o
 
 }

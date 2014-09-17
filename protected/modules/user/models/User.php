@@ -32,11 +32,16 @@
 
     public function rules() {
         return array(
-            array("username, password, email", "required"),
+            array("username, password", "required"),
             array('email', 'email'),
-            array("username, email", "unique", "allowEmpty"=>false, "attributeName"=>null),
+            array('email', 'required', 'on'=>'register'),
+            array(
+                "username, email", "unique", 'on'=>'register',
+                "allowEmpty"=>false, "attributeName"=>null
+            ),
             array('password_repeat', 'required', 'on'=>'register'),
             array('password', 'compare', 'compareAttribute'=>'password_repeat', 'on'=>'register'),
+            array("password", "checkValidPassword", "on"=>"login"),
         );
     }
 
@@ -44,6 +49,7 @@
         $crit = new CDbCriteria();
         $crit->compare("id",$this->id);
         $crit->compare("username",$this->username, true);
+        $crit->compare("email",$this->email, true);
         return new CActiveDataProvider($this, array(
             'criteria'=>$crit,
         ));
@@ -60,6 +66,7 @@
         );
     }*/
 
+    // Needs editing for user updates etc.
     public function beforeSave() {
         parent::beforeSave();
         if($this->isNewRecord) {
@@ -76,25 +83,29 @@
         );
     }
 
-    // Yeah, we have to.
-    public function authentificate() {
-        $id = new BIRD3UserIdendity($this->username, $this->password);
-        $id->authentificate();
-        switch($id->errorCode) {
-            case BIRD3UserIdendity::ERROR_USERNAME_INVALID:
-                $this->addError("username", "Username invalid!");
-            break;
-            case BIRD3UserIdendity::ERROR_PASSWORD_INVALID:
+    // User login logic.
+    private $_idendity;
+
+    public function checkValidPassword($attr,$params) {
+        if(!$this->hasErrors()) {
+            $this->_idendity = new BIRD3UserIdendity($this->username, $this->password);
+            if($this->_idendity->authenticate() == BIRD3UserIdendity::ERROR_NONE) {
                 $this->addError("password", "Password invalid!");
-            break;
+            }
         }
-        return $id->errorCode;
     }
 
     public function login() {
-        $id = new BIRD3UserIdendity($this->username, $this->password);
-        Yii::app()->user->login($id, 3000*24);
-        Yii::app()->controller->redirect(Yii::app()->user->returnUrl);
+        if($this->_idendity==null) {
+            $this->_idendity=new BIRD3UserIdendity($this->username, $this->password);
+            $this->_idendity->authenticate();
+        }
+        if($this->_idendity->errorCode==BIRD3UserIdendity::ERROR_NONE) {
+            if($this->_idendity->id == NULL) throw new CException("WTF, no user id??");
+            $rememberMe=3600*24*30;
+            Yii::app()->user->login($this->_idendity, $rememberMe);
+            return true;
+        } else return false;
     }
 
 }

@@ -42,8 +42,8 @@ return array(
 	'components'=>array(
 		'user'=>array(
 			'class'=>'BIRD3User',
-			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
+			'autoRenewCookie'=>true,
 		),
 		'themeManager'=>array(
 			'basePath'=>$base."/cdn/themes",
@@ -78,6 +78,10 @@ return array(
 			'password' => $BIRD3['DB']['pass'],
 			'charset' => 'utf8',
 			'tablePrefix' => 'tbl_'
+		),
+		'session'=>array(
+			'autoStart'=>true,
+			'timeout'=>1000000
 		),
 		'urlManager'=>array(
 			'urlFormat'=>'path',

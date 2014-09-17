@@ -3,7 +3,7 @@
 require_once('CssMin.php');
 require_once('JavaScriptPacker.php');
 
-class DynamicRes extends CWidget {
+class DynamicRes extends CClientScript {
     private $_urlConfig = array( // Configurar conversão Url To Path
         'baseUrl'  => 'http://meusite.com/',
         'basePath' => '/home/meusite/', // Absolete
@@ -11,7 +11,7 @@ class DynamicRes extends CWidget {
 	private $errors = array();
 	private $jsList = array();
 	private $cssList = array();
-	
+
 	public function setUrlConfig($valor) {
 		if(!is_dir($valor['basePath'])) $this->errors[] = 'Wrong Config: Your basePath is invalid (not exixts)';
 		$baseUrlArr = str_split($valor['baseUrl']);
@@ -21,35 +21,35 @@ class DynamicRes extends CWidget {
 			'basePath' => realpath($valor['basePath']) . '/',
 		);
 	}
-	
+
 	public function getUrlConfig() {
 		return $this->_urlConfig;
 	}
-	
+
 	public function debug() {
 		echo "dynamicRes: FUNCTION DEBUG CALLED \n <br />";
 		if(count($this->jsList)>0 || count($this->cssList)>0) {
 			$this->errors[] = 'You need to call function "saveScheme".';
 		}
-		
+
 		if(count($this->errors)==0) {
 			echo "all is ok";
 		} else foreach($this->errors as $error) {
 			echo "- $error <br /> \n";
 		}
-		
+
 		exit();
 	}
-    
+
     public function getCachePath() {
         return Yii::app()->assetManager->basePath;
     }
-    
+
     public function getUrlPath() {
         return Yii::app()->assetManager->baseUrl;
     }
-    
-    function urlToPath($url) { 
+
+    function urlToPath($url) {
         $dS = DIRECTORY_SEPARATOR;
         //$from = preg_quote($this->urlConfig['baseUrl'], '/');
 		$from = preg_quote(Yii::app()->request->baseUrl, '/');
@@ -59,7 +59,7 @@ class DynamicRes extends CWidget {
         if($result[0]=='\\') $result = substr($result, 1); // fix windows
         return $result;
     }
-    
+
     function parserCss($url, $content) {
         $newContent = $content;
         $aux = explode('/',$url);
@@ -67,7 +67,7 @@ class DynamicRes extends CWidget {
         $newContent = preg_replace('@url\((["\'])?([^/])@',"url($1$dir/$2", $newContent);
         return $newContent;
     }
-	
+
 	private function registerFile(&$array, $name) {
 		if(file_exists($this->urlToPath($name))) {
 			$array[] = $name;
@@ -77,15 +77,15 @@ class DynamicRes extends CWidget {
 			return false;
 		}
 	}
-	
+
 	public function registerCssFile($urlName) {
 		return $this->registerFile($this->cssList, $urlName);
 	}
-	
+
 	public function registerScriptFile($urlName) {
 		return $this->registerFile($this->jsList, $urlName);
 	}
-	
+
 	private function saveFileScheme(&$array, $extension) {
 		$virtualFiles = array();
 		foreach($array as $name) {
@@ -108,9 +108,9 @@ class DynamicRes extends CWidget {
 		if(!file_exists($name)) {
 			$this->generateFile($virtualFiles, $name);
 			return $urlName;
-		} else return $urlName; 
+		} else return $urlName;
 	}
-	
+
 	private function generateFile($virtualFiles, $name) {
 		$finalContent = '';
 		foreach($virtualFiles as $virtualFile) {
@@ -121,23 +121,23 @@ class DynamicRes extends CWidget {
 			$finalContent .= $thisContent;
 			$finalContent .= "\n/* END OF FILE {$virtualFile['nome']} ------------------------ */\n";
 		}
-        
+
 		file_put_contents($name, $finalContent);
 		return $name;
 	}
-	
+
 	private function generateName($virtualFiles, $extension) {
 		$total_hash = '';
 		foreach($virtualFiles as $array) $total_hash .= $array['hash'];
 		return md5($total_hash) . ".$extension";
 	}
-	
+
 	private function compressContent($content, $type) {
         if($type=='css') {
             return CssMin::minify($content, array(), array('CompressUnitValues' => true));
         } else if($type=='js') { // is js
             $jsSize = strlen($content);
-            if($jsSize > 256 && $jsSize < 1048576) { // prevent memory error 
+            if($jsSize > 256 && $jsSize < 1048576) { // prevent memory error
                 $packer = new JavaScriptPacker($content, 'Normal', true, false);
                 return $packer->pack();
             } else {
@@ -147,9 +147,9 @@ class DynamicRes extends CWidget {
             //dont Compress
             return $content;
         }
-		
+
 	}
-	
+
 	public function saveScheme() {
         if(count($this->jsList)>0) {
             $fileJs = $this->saveFileScheme($this->jsList, 'js');

@@ -16,3 +16,9 @@ $this->pageTitle="Home";
 		This is div 2
 	</div>
 </div>
+<div>
+	Class: <?=get_class(Yii::app()->user)?>
+</div>
+<div>
+	ID: <pre><?php var_dump(Yii::app()->user->getId()); ?></pre>
+</div>

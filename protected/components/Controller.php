@@ -46,8 +46,9 @@ class Controller extends CController
 	}
 
 	public function loadColorPicker() {
-		#$dr->registerScriptFile($cdnUrl."/pick-a-color/js/tinycolor-0.9.15.min.js");
-		#$dr->registerScriptFile($cdnUrl."/pick-a-color/js/pick-a-color-1.2.3.min.js");
-		#$dr->registerCssFile($cdnUrl."/pick-a-color/css/pick-a-color-1.2.3.min.css");
+		$cs = Yii::app()->clientScript;
+		$cs->registerScriptFile($cdnUrl."/pick-a-color/js/tinycolor-0.9.15.min.js");
+		$cs->registerScriptFile($cdnUrl."/pick-a-color/js/pick-a-color-1.2.3.min.js");
+		$cs->registerCssFile($cdnUrl."/pick-a-color/css/pick-a-color-1.2.3.min.css");
 	}
 }

@@ -1,4 +1,4 @@
-<?php if($this->controller->displayLogin) { ?>
+<?php if(Yii::app()->user->isGuest) { ?>
 <div id="login">
     <h3>Login</h3>
     <?php $form = $this->beginWidget('CActiveForm', array(
@@ -7,7 +7,6 @@
         'enableClientValidation'=>true,
         'action'=>$this->controller->createUrl("/user/user/login")
     )); ?>
-    <div><?=$form->errorSummary($model)?></div>
     <div class="input-group">
         <?=$form->textField($model, "username", array(
             "placeholder"=>"Username",
@@ -31,7 +30,8 @@
     </div>
     <?php $this->endWidget(); ?>
 </div>
+<?php } else { ?>
+<div id="user">
+    <p>Yo, <?=Yii::app()->user->name?>!</p>
+</div>
 <?php } ?>
-<div><pre>
-    <?php var_dump(Yii::app()->user->isGuest); ?>
-</pre></div>

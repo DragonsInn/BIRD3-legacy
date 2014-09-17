@@ -1,16 +1,12 @@
 <?php class BIRD3UserIdendity extends CUserIdentity {
 
-    private $_model;
+    private $_username;
     private $_id;
 
-    public function authentificate() {
-        if($this->_model == null) {
-            $model = User::model()->findByAttributes(array(
-                "username" => $this->username
-            ));
-        } else {
-            $model = $this->_model;
-        }
+    public function authenticate() {
+        $model = User::model()->findByAttributes(array(
+            "username" => $this->username
+        ));
         if($model == NULL) {
             $this->errorCode=self::ERROR_USERNAME_INVALID;
         } else if(md5($this->password) != $model->password) {
@@ -18,19 +14,13 @@
         } else {
             $this->errorCode=self::ERROR_NONE;
             $this->_id=$model->id;
-            $this->_model=$model;
+            $this->_username=$model->username;
         }
-        return $this->errorCode;
+        // NO idea why its negated...?
+        return !$this->errorCode;
     }
 
-    public function getId() {
-        return $this->_id;
-    }
+    public function getId()   { return $this->_id;       }
+    public function getName() { return $this->_username; }
 
-    public function getModel() {
-        return $this->_model;
-    }
-    public function setModel($m) {
-        $this->_model=$m;
-    }
 }

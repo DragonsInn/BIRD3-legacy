@@ -16,9 +16,22 @@ $this->pageTitle="Home";
 		This is div 2
 	</div>
 </div>
-<div>
-	Class: <?=get_class(Yii::app()->user)?>
-</div>
-<div>
-	ID: <pre><?php var_dump(Yii::app()->user->getId()); ?></pre>
+<?php $this->widget("BIRD3Tabbar",array(
+	#"brand"=>"Meep",
+	"entries"=>array(
+		"Intro"=>array("#Intro"),
+		"Litterature"=>array("#Litterature"),
+		"Pers"=>array("#Personality")
+	)
+)); ?>
+<div id="tab-content">
+  <div id="Intro">
+	<h2>Character intro</h2>
+  </div>
+  <div id="Litterature">
+	<h2>Literature that nobody reads</h2>
+  </div>
+  <div id="Personality">
+	<h2>Personality. Yeah, sex.</h2>
+  </div>
 </div>

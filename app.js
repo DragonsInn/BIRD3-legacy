@@ -7,7 +7,7 @@ var http = require('http'),
     app = connect(),
     connLogger = require("connect-logger"),
     responseTime = require("response-time"),
-    io = require('socket.io');
+    io = require('socket.io')();
 
 // Misc
 var fs = require('fs'),
@@ -53,7 +53,7 @@ httpServer.on("listening", function(){
     // Set up the web stuff.
     require("./lib/security_handler.js")();
     require("./lib/error_handler.js")();
-    require("./lib/request_handler.js")(app);
+    require("./lib/request_handler.js")(app, httpServer);
     require("./lib/status_worker.js")(redis);
     require("./lib/update_worker.js")();
     require("./lib/websocket_handler.js")(io);

@@ -8,6 +8,7 @@
             $pageTitle = Yii::app()->name.": ".$this->pageTitle;
             $this->registerScripts();
             $tbase = Yii::app()->theme->baseUrl;
+            $cdn = Yii::app()->cdn->baseUrl;
         ?>
 
         <title><?=$pageTitle?></title>
@@ -35,9 +36,6 @@
                 useBottomPanel = true;
             <?php } ?>
         </script>
-
-        <!-- The theme -->
-        <link rel="stylesheet" type="text/css" href="<?=$tbase.'/css/main.ws.php'?>" />
     </head>
     <body class="panel-pusher">
         <!-- Panels -->
@@ -73,19 +71,19 @@
             <div class="left">
                 <div style="float:left;" id="trigger-left">
                     <img
-                        src="<?=$tbase?>/images/icons/search.png"
+                        src="<?=$cdn?>/theme/images/icons/search.png"
                         class="icon"
                         aria-hidden="true"
                     />
                 </div>
                 <div class="text-left">
-                    <a href="#">o.o</a>
+                    <a href="#"><i class="fa fa-barcode"></i></a>
                 </div>
             </div>
             <div class="center">
                 <div id="trigger-top">
                     <img
-                        src="<?=$tbase?>/images/icons/download.png"
+                        src="<?=$cdn?>/theme/images/icons/download.png"
                         class="icon"
                         aria-hidden="true"
                     />
@@ -97,7 +95,7 @@
                 </div>
                 <div style="float:right;" id="trigger-right">
                     <img
-                        src="<?=$tbase?>/images/icons/pacman-games.png"
+                        src="<?=$cdn?>/theme/images/icons/pacman-games.png"
                         class="icon"
                         aria-hidden="true"
                     />

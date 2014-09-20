@@ -31,7 +31,10 @@ return array(
 		# Caching
 		#'ext.redis.*',
 		# Misc
-		#'ext.iwi.*',
+		'ext.iwi.*',
+		'ext.BIRD3.components.*',
+		'ext.ExtendedClientScript.cssmin.*',
+		'ext.ExtendedClientScript.jsmin.*',
 	),
 
 	'modules'=>array(
@@ -45,15 +48,15 @@ return array(
 			'allowAutoLogin'=>true,
 			'autoRenewCookie'=>true,
 		),
-		'themeManager'=>array(
-			'basePath'=>$base."/cdn/themes",
-			'baseUrl'=>$BIRD3['CDN']['baseUrl']."/themes"
-		),
 		'assetManager'=>array(
 			'basePath'=>$base."/cdn/assets",
 			'baseUrl'=>$BIRD3['CDN']['baseUrl']."/assets",
-			'class' => 'EAssetManagerBoost',
-      		'minifiedExtensionFlags'=>array('min.js','minified.js','packed.js')
+			#'class' => 'EAssetManagerBoost',
+      		#'minifiedExtensionFlags'=>array('min.js','minified.js','packed.js')
+		),
+		'themeManager'=>array(
+			'basePath'=>$base."/themes",
+			"baseUrl"=>"/themes"
 		),
 		'cdn'=>array(
 			'class'=>'CDNHelper',
@@ -61,8 +64,12 @@ return array(
 			'baseUrl'=>$BIRD3['CDN']['baseUrl']
 		),
 		'clientScript'=>array(
-			'class'=>'EClientScriptBoost',
-         	'cacheDuration'=>30,
+			#'class'=>'ext.minScript.components.ExtMinScript',
+			'class'=>'ext.ExtendedClientScript.ExtendedClientScript',
+			'combineCss'=>true,
+            'compressCss'=>false,
+            'combineJs'=>true,
+            'compressJs'=>true,
 		),
 		'dynamicRes'=>array(
             'class' => 'application.extensions.DynamicRes.DynamicRes',

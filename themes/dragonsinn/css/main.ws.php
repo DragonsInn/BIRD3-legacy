@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-$main = dirname(__FILE__)."/../../../..";
+$main = dirname(__FILE__)."/../../..";
 
 // Yii
 #define("YII_DEBUG", true);
@@ -27,7 +27,7 @@ function reactToAll($elem) {
 }
 
 // Variables
-$base = Yii::app()->theme->baseUrl;
+$base = Yii::app()->cdn->baseUrl."/theme";
 
 // Panel styles
 include_once "panels.ws";
@@ -170,17 +170,12 @@ WS("#Pright div", "#Pleft div", "#Ptop div", "#Pbottom div")
     ->padding(10, 10, 10, 10)
 ->end;
 
-// Bootstrap fixes
-WS(".form-control")
-    ->background->color(black)
-    ->color(white)
-->end;
 
 // Elements
-WS("a")
+WS("#outerContent * a")
     ->color(lime)
 ->end;
-WS("a:hover")
+WS("#outerContent * a:hover")
     ->color("#00DF00")
     ->text->decoration(none)
 ->end;

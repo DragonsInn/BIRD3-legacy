@@ -211,7 +211,8 @@ class ExtendedClientScript extends CClientScript
 												.$this->compressCss
 												.$this->ttlDays
 												.$this->prefix
-												.serialize($this->cssMinFilters . $this->cssMinPlugins)
+												.serialize($this->cssMinFilters)
+												.serialize($this->cssMinPlugins)
 											);
 
 		if ($this->autoRefresh)

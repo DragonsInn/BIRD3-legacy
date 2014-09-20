@@ -4,7 +4,7 @@ $c = $this->controller;
 
 $brand = (!empty($this->brand)?'<h4 class="navbar-text">'.$this->brand.'</h4>':"");
 $c->tabbar = '<!-- Tab bar begin -->
-<div class="navbar navbar-inverse navbar-inner" role="navigation">
+<nav class="navbar navbar-inverse navbar-inner" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#tabbarOptions">
@@ -33,7 +33,7 @@ foreach($this->entries as $name=>$options) {
 $c->tabbar .='</ul>
         </div>
     </div>
-</div>
+</nav>
 <!-- End of tabbar -->';
 
 // Now to the JS stuff...

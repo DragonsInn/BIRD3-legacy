@@ -48,6 +48,7 @@ class Controller extends CController
 
 		// BIRD3 Theme. We use the URL here to avoid minification. Trickery, yo.
 		$cs->registerCssFile($yiiUrl.$tbase."/css/main.ws.php");
+		$cs->registerCssFile($cdnUrl."/css/eureka-ui-kit.css");
 		$cs->registerScriptFile($tbase."/js/panels.js");
 
 		$faBase = $cdnUrl."/font-awesome";

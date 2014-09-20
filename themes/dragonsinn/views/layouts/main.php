@@ -45,7 +45,7 @@
             <div>
                 <input type="search"
                     name="search"
-                    class="form-control white-box"
+                    class="form-control white-box text_input"
                     placeholder="Search/Command..."
                     aria-label="Type search term or command"
                 />

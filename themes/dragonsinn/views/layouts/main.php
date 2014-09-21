@@ -73,8 +73,8 @@
                     </li>
                 </ul>
                 <ul class="nav nav-tabs" id="menu-tabs">
-		            <li class="show-onMedium"><a id="trigger-top" href="#">The Inn</a></li>
-                    <li class="show-onMini"><a id="trigger-top" href="#">Inn</a></li>
+		            <li class="show-onMedium active"><a id="trigger-top" href="#">The Inn</a></li>
+                    <li class="show-onMini active"><a id="trigger-top" href="#">Inn</a></li>
                     <li class="show-onLarge"><a href="#">Rules &amp; ToS</a></li>
                     <li class="show-onMedium"><a href="#">Chat <span style="color:lime;">33</span></a></li>
 		            <li><a href="#">Media</a></li>

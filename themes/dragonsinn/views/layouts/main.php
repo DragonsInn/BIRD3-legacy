@@ -7,7 +7,6 @@
                 ." Stop by and hang out with artists and freaks! =)";
             $pageTitle = Yii::app()->name.": ".$this->pageTitle;
             $this->registerScripts();
-            $tbase = Yii::app()->theme->baseUrl;
             $cdn = Yii::app()->cdn->baseUrl;
         ?>
 
@@ -31,10 +30,7 @@
         <meta name="twitter:image" content="<?=$this->og_image?>"/>
 
         <script>
-            var useBottomPanel = false;
-            <?php if($this->panelBottom != false) { ?>
-                useBottomPanel = true;
-            <?php } ?>
+            var useBottomPanel = <?=($this->panelBottom?"true":"false")?>;
         </script>
     </head>
     <body class="panel-pusher">
@@ -45,7 +41,7 @@
             <div>
                 <input type="search"
                     name="search"
-                    class="form-control white-box text_input"
+                    class="form-control white-box"
                     placeholder="Search/Command..."
                     aria-label="Type search term or command"
                 />
@@ -68,38 +64,29 @@
 
         <!-- Menu, bottom part -->
         <div id="menu">
-            <div class="left">
-                <div style="float:left;" id="trigger-left">
-                    <img
-                        src="<?=$cdn?>/theme/images/icons/search.png"
-                        class="icon"
-                        aria-hidden="true"
-                    />
-                </div>
-                <div class="text-left">
-                    <a href="#"><i class="fa fa-barcode"></i></a>
-                </div>
-            </div>
-            <div class="center">
-                <div id="trigger-top">
-                    <img
-                        src="<?=$cdn?>/theme/images/icons/download.png"
-                        class="icon"
-                        aria-hidden="true"
-                    />
-                </div>
-            </div>
-            <div class="right">
-                <div class="text-right">
-                    B DIV
-                </div>
-                <div style="float:right;" id="trigger-right">
-                    <img
-                        src="<?=$cdn?>/theme/images/icons/pacman-games.png"
-                        class="icon"
-                        aria-hidden="true"
-                    />
-                </div>
+            <div class="tabbable tabs-below tabs-multi">
+                <ul class="nav nav-tabs">
+                    <li id="trigger-left">
+                        <div class="circle circle-small">
+                            <i class="fa fa-search"></i>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="nav nav-tabs" id="menu-tabs">
+		            <li class="show-onMedium"><a id="trigger-top" href="#">The Inn</a></li>
+                    <li class="show-onMini"><a id="trigger-top" href="#">Inn</a></li>
+                    <li class="show-onLarge"><a href="#">Rules &amp; ToS</a></li>
+                    <li class="show-onMedium"><a href="#">Chat <span style="color:lime;">33</span></a></li>
+		            <li><a href="#">Media</a></li>
+                    <li><a href="#">Community</a></li>
+                </ul>
+                <ul class="nav nav-tabs" id="trigger-tabs">
+                    <li id="trigger-right">
+                        <div class="circle circle-small">
+                            <i class="fa fa-user"></i>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
 

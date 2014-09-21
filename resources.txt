@@ -11,3 +11,11 @@ http://www.w3.org/WAI/GL/wiki/Using_aria-label_to_provide_an_invisible_label
 https://www.npmjs.org/package/daemonize.redux
 http://www.yiiframework.com/extension/rediscache/
 http://www.yiiframework.com/extension/iwi/
+http://www.jasonbutz.info/bootstrap-lightbox/
+http://brianreavis.github.io/selectize.js/
+http://blueimp.github.io/Bootstrap-Image-Gallery/
+http://www.bootstrap-switch.org/
+http://mimo84.github.io/bootstrap-maxlength/
+http://labs.mintchaos.com/flippant.js/
+http://clu3.github.io/bootstro.js/#
+https://github.com/twitter/typeahead.js/blob/master/doc/jquery_typeahead.md

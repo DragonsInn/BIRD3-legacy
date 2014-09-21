@@ -69,7 +69,7 @@ return array(
 			'combineCss'=>true,
             'compressCss'=>false,
             'combineJs'=>true,
-            'compressJs'=>true,
+            'compressJs'=>false,
 		),
 		'dynamicRes'=>array(
             'class' => 'application.extensions.DynamicRes.DynamicRes',

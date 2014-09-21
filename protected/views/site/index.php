@@ -35,3 +35,8 @@ $this->pageTitle="Home";
 	<h2>Personality. Yeah, sex.</h2>
   </div>
 </div>
+<hr>
+<div>
+	<p>Here are some icons...</p>
+	<i class="m-icon-big-swapright m-icon-white"></i>
+</div>

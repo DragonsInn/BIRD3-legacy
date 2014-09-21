@@ -3,10 +3,30 @@ error_reporting(E_ALL);
 $main = dirname(__FILE__)."/../../..";
 
 // Yii
-#define("YII_DEBUG", true);
 include_once("$main/php_modules/yii/framework/yii.php");
 $config = include_once("$main/protected/config/main.php");
 Yii::createWebApplication($config);
+
+// Cause...yii.
+header_remove("Pragma");
+
+// Cache ourselves. Trick borrowed: http://css-tricks.com/snippets/php/intelligent-php-cache-control/
+$lastModified=filemtime(__FILE__);
+$etagFile = md5_file(__FILE__);
+// Obtain headers
+$ifModifiedSince=(isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : false);
+$etagHeader=(isset($_SERVER['HTTP_IF_NONE_MATCH']) ? trim($_SERVER['HTTP_IF_NONE_MATCH']) : false);
+// Send
+header("X-WingStyle: Alive");
+header("Cache-control: public, max-age=604800");
+header("Last-Modified: ".gmdate("D, d M Y H:i:s", $lastModified)." GMT");
+header("Etag: $etagFile");
+header('Cache-Control: public');
+//check if page has changed. If not, send 304 and exit
+if (($ifModifiedSince!=false && @strtotime($ifModifiedSince)==$lastModified) || $etagHeader == $etagFile) {
+       header("HTTP/1.1 304 Not Modified");
+       exit;
+}
 
 // WS
 include_once("$main/php_modules/WingStyle/WingStyle.php");
@@ -44,40 +64,9 @@ WS("body")
 ->end;
 
 WS("#menu")
-    ->position(absolute)
-    ->left(0)
-    ->right(0)
-    ->top(0)
-    ->height($menu_height)
+    ->height->min($menu_height)
     ->width("100%")
     ->background->rgba(0,0,0, 0.4)
-->end;
-
-WS("#menu div.left")
-    ->width("45%")
-    ->float(left)
-->end;
-WS("#menu div.right")
-    ->width("45%")
-    ->float(right)
-->end;
-WS("#menu div.center")
-    ->width("10%")
-    ->float(left)
-    ->text->align(center) # THAT ACTUALLY CENTERS A IMG? O.o
-->end;
-
-WS("#menu div img.icon")
-    ->height($menu_height)
-->end;
-
-WS("#menu div div.text-right")
-    ->text->align(left)
-    ->float(left)
-->end;
-WS("#menu div div.text-left")
-    ->text->align(right)
-    ->float(right)
 ->end;
 
 // This requires math.
@@ -115,8 +104,6 @@ WS("#tabbar")
     ->display(block)
     ->position(relative)
     ->width("75%")
-    ->color(white)
-    ->background->rgba(0,0,0, 0.3)
 ->end;
 
 WS("#content")
@@ -170,6 +157,12 @@ WS("#Pright div", "#Pleft div", "#Ptop div", "#Pbottom div")
     ->padding(10, 10, 10, 10)
 ->end;
 
+// Few customs
+WS("#Ptop")
+    #->addTxt("border-bottom: 2px solid white;")
+    ->border->bottom(1, solid, white)
+->end;
+
 
 // Elements
 WS("#outerContent * a")
@@ -193,66 +186,113 @@ WS(".white-button")
     ->border(2, solid, white)
 ->end;
 
+// Its an input, voerride a lot of things.
+WS("#allSearch")
+    ->margin->top(-$marg/2)
+    ->height($fsize*2)
+    ->background(black)
+    ->padding->left(5)
+    ->padding->right(5)
+    ->border(1)
+->end;
+
+WS(".circle")
+    ->borderRadius("50%")
+    ->display("inline-block")
+    ->text->align(center)
+->end;
+WS(".circle.circle-small")
+    ->padding->top(3)
+    ->font->size(20)
+    ->width(40)
+    ->height(40)
+    ->border(2, solid, white)
+->end;
+
+WS(".tabs-multi ul")
+    ->display(inlineBlock)
+->end;
+WS(".tabs-multi > .nav-tabs")
+    ->border->color("transparent")
+->end;
+WS(
+    ".tabs-multi > .nav-tabs > .active > a",
+    ".tabs-multi > .nav-tabs > .active > a:hover",
+    ".tabs-multi > .nav-tabs > .active > a:focus"
+)
+    ->background("transparent")
+->end;
+WS(".tabs-multi > .nav-tabs > li > a")
+    ->padding(10,10)
+    ->margin(0)
+->end;
+
+WS("#trigger-tabs")
+    ->float(right)
+->end;
+
+// Optics
+$mtabs = "#menu-tabs >";
+$onBig = "$mtabs .show-onBig";
+$onMini = "$mtabs .show-onMini";
+$onMedium = "$mtabs .show-onMedium";
+$onLarge = "$mtabs .show-onLarge";
+$onArray=array($onBig, $onMini, $onMedium);
+WS($onBig, $onMedium, $onLarge)
+    ->display(none)
+->end;
+// We start with the smallest, so this is always true.
+WS($onMini)
+    ->display(block)
+->end;
 ?>
 
 /* Media Queries */
-/* Smartphones (portrait and landscape) ----------- */
-@media only screen
-    and (min-device-width : 320px)
-    and (max-device-width : 480px) { <?php
+/* Goal is to stage the view:
+    On smartphones:
+        - No sidebars, move them to the right side, somehow.
+        - Tabbar and top menu are closer together.
+        - Site background varies
+*/
 
+/*
+    SCREEN COMPONENTS
+    The following queries are for the screen components:
+
+    - Content
+    - Tabbar
+*/
+@media only screen and (max-device-width: 760px) { <?php
+    WS("#outerContent")
+        ->width("98%")
+    ->end;
+    WS("#tabbar")
+        ->width("90%")
+        ->margin->top(10)
+        ->margin->bottom(0)
+    ->end;
+    WS(".extraMargin")
+        ->margin->top(45)
+    ->end;
+    WS(".no-extraMargin")
+        ->margin->top(25)
+    ->end;
 ?> }
 
-/* Smartphones (landscape) ----------- */
-@media only screen
-    and (min-width : 321px) { <?php
-
+/*
+    DISPLAY TYPES
+    Following media queries set up the show-onXXX components.
+*/
+@media only screen and (min-width: 400px) { <?php
+    WS($onMini)
+        ->display(none)
+    ->end;
+    WS($onMedium)
+        ->display(block)
+    ->end;
 ?> }
-
-/* Smartphones (portrait) ----------- */
-@media only screen
-    and (max-width : 320px) { <?php
-
-?> }
-
-/* iPads (portrait and landscape) ----------- */
-@media only screen
-    and (min-device-width : 768px)
-    and (max-device-width : 1024px) { <?php
-
-?> }
-
-/* iPads (landscape) ----------- */
-@media only screen
-    and (min-device-width : 768px)
-    and (max-device-width : 1024px)
-    and (orientation : landscape) { <?php
-
-?> }
-
-/* iPads (portrait) ----------- */
-@media only screen
-    and (min-device-width : 768px)
-    and (max-device-width : 1024px)
-    and (orientation : portrait) { <?php
-
-?> }
-
-/* Desktops and laptops ----------- */
-@media only screen
-    and (min-width : 1224px) { <?php
-
-?> }
-
-/* Large screens ----------- */
-@media only screen
-    and (min-width : 1824px) { <?php
-
-?> }
-
-/* iPhone 4 ----------- */
-@media
-    only screen and (-webkit-min-device-pixel-ratio : 1.5),
-    only screen and (min-device-pixel-ratio : 1.5) { <?php
-
+@media only screen and (min-width:500px) { <?php
+    WS($onLarge)
+        ->display(block)
+    ->end;
 ?> }

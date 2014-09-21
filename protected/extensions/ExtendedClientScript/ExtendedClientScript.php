@@ -89,9 +89,9 @@ class ExtendedClientScript extends CClientScript
 	*/
 	public $cssMinFilters = array
 	(
-        'ImportImports'                 => false,
+        'ImportImports'                 => true,
         'RemoveComments'                => true,
-        'RemoveEmptyRulesets'           => true,
+        'RemoveEmptyRulesets'           => false,
         'RemoveEmptyAtBlocks'           => true,
         'ConvertLevel3AtKeyframes'      => false,
         'ConvertLevel3Properties'       => false,
@@ -103,14 +103,14 @@ class ExtendedClientScript extends CClientScript
 	*/
 	public $cssMinPlugins = array
 	(
-		'Variables'                => true,
+		'Variables'                => false,
 		'ConvertFontWeight'        => true,
-		'ConvertHslColors'         => true,
-		'ConvertRgbColors'         => true,
-		'ConvertNamedColors'       => true,
+		'ConvertHslColors'         => false,
+		'ConvertRgbColors'         => false,
+		'ConvertNamedColors'       => false,
 		'CompressColorValues'      => true,
 		'CompressUnitValues'       => true,
-		'CompressExpressionValues' => true,
+		'CompressExpressionValues' => false,
 	);
 
 	private $_changesHash = '';

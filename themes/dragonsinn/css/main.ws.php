@@ -153,14 +153,16 @@ WS("#leftSide", "#rightSide", "#content")
     ->wordWrap(breakWord)
 ->end;
 
-WS("#Pright div", "#Pleft div", "#Ptop div", "#Pbottom div")
+WS("#Pright div", "#Pleft div", "#Pbottom div")
     ->padding(10, 10, 10, 10)
 ->end;
 
 // Few customs
 WS("#Ptop")
-    #->addTxt("border-bottom: 2px solid white;")
     ->border->bottom(1, solid, white)
+->end;
+WS("#Ptop > div")
+    ->display(none)
 ->end;
 
 
@@ -204,10 +206,17 @@ WS(".circle")
 WS(".circle.circle-small")
     ->padding->top(3)
     ->font->size(20)
-    ->width(40)
-    ->height(40)
     ->border(2, solid, white)
 ->end;
+WS(".circle.circle-icon")
+    ->padding(0, 0, 0, 0)
+    ->padding->top(10)
+    ->font->size(40)
+    ->width(80)
+    ->height(80)
+    ->border(2, solid, white)
+->end;
+
 
 WS(".tabs-multi ul")
     ->display(inlineBlock)
@@ -223,9 +232,23 @@ WS(
     ->background("transparent")
 ->end;
 WS(".tabs-multi > .nav-tabs > li > a")
-    ->padding(10,10)
     ->margin(0)
 ->end;
+
+WS(reactToAll(".linkBubble"))
+    ->display(inlineBlock)
+    ->float(left)
+    ->margin->top(5)
+    ->margin->left(5)
+    ->margin->right(5)
+    ->padding(5,10,5,10)
+    ->color(white)
+    ->borderRadius(10)
+->end;
+WS(".linkBubble:hover")
+    ->background->rgba(0,128,0,0.4)
+->end;
+
 
 WS("#trigger-tabs")
     ->float(right)
@@ -233,17 +256,35 @@ WS("#trigger-tabs")
 
 // Optics
 $mtabs = "#menu-tabs >";
-$onBig = "$mtabs .show-onBig";
-$onMini = "$mtabs .show-onMini";
-$onMedium = "$mtabs .show-onMedium";
-$onLarge = "$mtabs .show-onLarge";
-$onArray=array($onBig, $onMini, $onMedium);
-WS($onBig, $onMedium, $onLarge)
+$onMini = "$mtabs .show-onMini, .show-onMini";
+$onMedium = "$mtabs .show-onMedium, .show-onMedium";
+$onLarge = "$mtabs .show-onLarge, .show-onLarge";
+$onBig = "$mtabs .show-onBig, .show-onBig";
+$onArray=array($onMini, $onMedium, $onLarge, $onBig);
+WS($onArray)
     ->display(none)
 ->end;
 // We start with the smallest, so this is always true.
 WS($onMini)
     ->display(block)
+->end;
+
+WS(".linkBubble")
+    ->margin->right(2)
+    ->margin->left(2)
+->end;
+WS(".linkBubble div")
+    ->display(inlineBlock)
+    ->float(left)
+->end;
+WS(".linkBubble .circle")
+    ->height(10)
+    ->width(10)
+    ->margin->right(5)
+->end;
+WS(".linkBubble div", ".linkBubble .circle")
+    ->font->size(15)
+    ->padding(0)
 ->end;
 ?>
 
@@ -265,6 +306,7 @@ WS($onMini)
 @media only screen and (max-device-width: 760px) { <?php
     WS("#outerContent")
         ->width("98%")
+        ->background(orange)
     ->end;
     WS("#tabbar")
         ->width("90%")
@@ -277,22 +319,100 @@ WS($onMini)
     WS(".no-extraMargin")
         ->margin->top(25)
     ->end;
+    WS(".tabs-multi > .nav-tabs > li > a")
+        ->padding(2,2)
+    ->end;
+    WS(".circle.circle-small")
+        ->width(25)
+        ->height(25)
+        ->font->size(10)
+    ->end;
+    WS(".circle")
+        ->border(none)
+    ->end;
 ?> }
 
 /*
     DISPLAY TYPES
     Following media queries set up the show-onXXX components.
 */
-@media only screen and (min-width: 400px) { <?php
+@media only screen and (min-width: 401px) { <?php
     WS($onMini)
         ->display(none)
     ->end;
     WS($onMedium)
         ->display(block)
     ->end;
+    WS(".tabs-multi > .nav-tabs > li > a")
+        ->padding(5,5)
+    ->end;
+    WS(".circle.circle-small")
+        ->width(50)
+        ->height(50)
+        ->font->size(25)
+    ->end;
 ?> }
 @media only screen and (min-width:500px) { <?php
+    WS($onMedium)
+        ->display(none)
+    ->end;
     WS($onLarge)
         ->display(block)
+    ->end;
+    WS(".tabs-multi > .nav-tabs > li > a")
+        ->padding(10,10)
+    ->end;
+    WS(".circle.circle-small")
+        ->width(40)
+        ->height(40)
+        ->font->size(20)
+    ->end;
+
+    WS(".linkBubble .circle", ".tsection")
+        ->float(none)
+    ->end;
+    WS(".tsection")
+        ->display(block)
+    ->end;
+    WS(".linkBubble")
+        ->margin->right(5)
+        ->margin->left(5)
+    ->end;
+    WS(".linkBubble .circle")
+        ->height(50)
+        ->width(50)
+        ->margin->right(10)
+        ->font->size(30)
+        ->display(block)
+    ->end;
+    WS(".linkBubble .tsection")
+        ->font->size(20)
+    ->end;
+?> }
+@media only screen and (min-width:715px) { <?php
+    WS($onLarge)
+        ->display(none)
+    ->end;
+    WS($onBig)
+        ->display(block)
+    ->end;
+    WS(".tabs-multi > .nav-tabs > li > a")
+        ->padding(15,15)
+    ->end;
+    WS(".circle.circle-small")
+        ->width(50)
+        ->height(50)
+        ->font->size(25)
+    ->end;
+    WS(".tsection")
+        ->width("90%")
+    ->end;
+    WS(".circle.circle-icon")
+        ->padding(0, 0, 0, 0)
+        ->padding->top(10)
+        ->font->size(40)
+        ->width(80)
+        ->height(80)
+        ->border(2, solid, white)
     ->end;
 ?> }

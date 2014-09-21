@@ -4,7 +4,7 @@
  * In here, we're going to set up variables and CSS for the panels.
  */
 $panel_side_width    = 240;
-$panel_top_height    = 150;
+$panel_top_height    = 130;
 $panel_bottom_height = 150;
 
 WS(".panel-default")

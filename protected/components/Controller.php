@@ -29,7 +29,7 @@ class Controller extends CController
 
 		// jQuery
 		Yii::app()->cdn
-			->js("jquery-1.11.1.min.js")
+			->js("jquery-1.11.1.js")
 			->js("jquery-migrate-1.2.1.js")
 			->js('jquery.easytabs.js');
 
@@ -57,7 +57,7 @@ class Controller extends CController
 		$cs->registerCssFile($tbase."/css/bs-extra.css");
 		$cs->registerScriptFile($tbase."/js/panels.js");
 		Yii::app()->cdn
-			->css("eureka-ui-kit.css")
+			#->css("eureka-ui-kit.css")
 			->css("combination-ui.css")
 			->css("bs-tabs-extended.css");
 

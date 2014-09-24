@@ -55,10 +55,12 @@
                     "TheInn"=>array(
                         "Home"=>array("icon"=>"fa fa-home", "url"=>array("/")),
                         "Staff"=>array("icon"=>"glyphicon glyphicon-certificate", "url"=>array("/home/staff")),
-                        "Infos"=>array("icon"=>"fa fa-exclamation", "url"=>array("/home/infos")),
+                        "Infos/Credits"=>array("icon"=>"fa fa-exclamation", "url"=>array("/home/infos")),
+                        "Manage"=>array("icon"=>"fa fa-cogs","url"=>array("/home/manage"))
                     ),
                     "Hotel"=>array(
                         "Story"=>array("icon"=>"fa fa-file-text","url"=>array("/hotel/story")),
+                        "Places"=>array("icon"=>"fa fa-compass","url"=>array("/hotel/places")),
                         "Jobs"=>array("icon"=>"fa fa-building","url"=>array("/hotel/jobs"))
                     ),
                     "Characters"=>array(
@@ -72,7 +74,7 @@
                         "All"=>array("icon"=>"fa fa-folder","url"=>array("/media/all/list")),
                         "Art"=>array("icon"=>"fa fa-paint-brush","url"=>array("/media/art")),
                         "Music"=>array("icon"=>"glyphicon glyphicon-headphones","url"=>array("/media/audio")),
-                        "Stories"=>array("icon"=>"glyphicon glyphicon-bookmark","url"=>array("/media/story"))
+                        "Essay"=>array("icon"=>"glyphicon glyphicon-bookmark","url"=>array("/media/story"))
                     ),
                     "Community"=>array(
                         "Users"=>array("icon"=>"fa fa-users","url"=>array("/user/list")),
@@ -94,7 +96,70 @@
                 </div>
             </div>
             <div id="Pright" class="panel-default panel-side panel-right">
-                <?php $this->widget("BIRD3LoginWidget"); ?>
+                <?php if(Yii::app()->user->isGuest) $this->widget("BIRD3LoginWidget"); else { ?>
+                    <div>
+                        <?php $user = Yii::app()->user; ?>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <span class="badge"><?=$user->username?></span>
+                                <p>You</p>
+                                <div class="btn-group btn-group-xs">
+                                    <button type="button" class="btn btn-default">Profile</button>
+                                    <button type="button" class="btn btn-default">Settings</button>
+                                    <button type="button" class="btn btn-danger">Logout</button>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <span class="badge alert-warning">On</span>
+                                Developer Mode
+                            </li>
+                            <li class="list-group-item">
+                                <span class="badge alert-info">14</span>
+                                <p>Private Messages</p>
+                                <div class="btn-group btn-group-xs">
+                                    <button type="button" class="btn btn-info">Compose</button>
+                                    <button type="button" class="btn btn-info">Inbox</button>
+                                    <button type="button" class="btn btn-info">Outbox</button>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <span class="badge alert-success">14</span>
+                                Characters
+                            </li>
+                            <li class="list-group-item">
+                                <span class="badge alert-success">14</span>
+                                Art
+                            </li>
+                            <li class="list-group-item">
+                                <span class="badge alert-success">14</span>
+                                Music
+                            </li>
+                            <li class="list-group-item">
+                                <span class="badge alert-success">14</span>
+                                Essays
+                            </li>
+                        </ul>
+                        <hr>
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Create / Upload</div>
+                            <div class="panel-body">
+                                <form name="ContentCreate" class="form-inline">
+                                    <div class="form-group">
+                                        <select class="form-control">
+                                            <option>Character</option>
+                                            <option>Art</option>
+                                            <option>Music</option>
+                                            <option>Essay</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="m-btn blue icn-only">
+                                        <i class="m-icon-swapright m-icon-white"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
                 <hr>
                 <div>
                     BIRD@<?=Yii::app()->params['version']?>

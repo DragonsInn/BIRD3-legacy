@@ -29,7 +29,7 @@ return array(
 		# Booster
 		'ext.EScriptBoost.*',
 		# Caching
-		#'ext.redis.*',
+		'ext.redis.*',
 		# Misc
 		'ext.iwi.*',
 		'ext.BIRD3.components.*',
@@ -48,6 +48,10 @@ return array(
 			'allowAutoLogin'=>true,
 			'autoRenewCookie'=>true,
 		),
+		'cleanTalk'=>array(
+            'class'=>'ext.yii-antispam.CleanTalkApi',
+            'apiKey'=>$BIRD3["API"]["cleantalk.key"],
+        ),
 		'assetManager'=>array(
 			'basePath'=>$base."/cdn/assets",
 			'baseUrl'=>$BIRD3['CDN']['baseUrl']."/assets",
@@ -71,13 +75,6 @@ return array(
             'combineJs'=>true,
             'compressJs'=>false,
 		),
-		'dynamicRes'=>array(
-            'class' => 'application.extensions.DynamicRes.DynamicRes',
-            'urlConfig' => array(
-                'basePath' => dirname(__FILE__).'/../../',
-				'baseUrl'=>'/'
-            )
-        ),
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname='.$BIRD3['DB']['mydb'],
 			'emulatePrepare' => true,
@@ -87,8 +84,8 @@ return array(
 			'tablePrefix' => 'tbl_'
 		),
 		'session'=>array(
-			'autoStart'=>true,
-			'timeout'=>1000000
+			'class'=>"ext.redis.ARedisSession",
+			"keyPrefix" => "BIRD3.Session."
 		),
 		'urlManager'=>array(
 			'urlFormat'=>'path',
@@ -99,8 +96,15 @@ return array(
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),
 		),
+		"redis" => array(
+        	"class" => "ext.redis.ARedisConnection",
+        	"hostname" => "localhost",
+        	"port" => 6379,
+			"prefix" => "", # Empty
+			"database" => 0 #To match nodejs.
+    	),
 		'cache'=>array(
-			'class'=>'ext.redis.CRedisCache',
+			'class'=>'ext.redis.ARedisCache',
 		),
 		'iwi' => array(
     		'class' => 'application.extensions.iwi.IwiComponent',

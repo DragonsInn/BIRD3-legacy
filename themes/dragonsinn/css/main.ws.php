@@ -386,10 +386,11 @@ WS(".linkBubble div", ".linkBubble .circle")
         ->display(block)
     ->end;
     WS(".linkBubble .tsection")
-        ->font->size(20)
+        ->font->size(15)
     ->end;
 ?> }
-@media only screen and (min-width:715px) { <?php
+
+@media only screen and (min-width:885px) { <?php
     WS($onLarge)
         ->display(none)
     ->end;

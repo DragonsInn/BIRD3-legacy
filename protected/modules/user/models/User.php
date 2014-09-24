@@ -1,10 +1,27 @@
 <?php class User extends CActiveRecord {
 
-    const R_BANN  = -1;
-    const R_USER  =  0;
-    const R_VIP   =  1;
-    const R_MOD   =  2;
-    const R_ADMIN =  3;
+    /**
+     * Database Structure
+     * @int id PK               | ID
+     * @string username         | Username
+     * @md5 password            | Hashed password
+     * @string email            | User's registration email
+     * @string activkey         | Used to verify email address
+     * @int superuser           | Determines between usergroups.
+     * @int status              | Inactive, Active, Banned
+     * @bool developer          | If user is a dev or not.
+     * @timestamp create_at     | Registration time
+     * @timestamp lastvisit_at  | Last visited
+     */
+
+    const R_USER     =  0;
+    const R_VIP      =  1;
+    const R_MOD      =  2;
+    const R_ADMIN    =  3;
+
+    const S_INACTIVE =  0;
+    const S_ACTIVE   =  1;
+    const S_BANNED   =  2;
 
     public static function model($className=__CLASS__) {
         return parent::model($className);
@@ -16,7 +33,7 @@
     public function scopes() {
         return array(
             'banned'=>array(
-                'condition'=>'superuser='.self::R_BANN
+                'condition'=>'status='.self::S_BANNED
             ),
             'vips'=>array(
                 'condition'=>'superuser='.self::R_VIP
@@ -27,23 +44,45 @@
             'admins'=>array(
                 'condition'=>'superuser='.self::R_ADMIN
             ),
+            'inactive'=>array(
+                'condition'=>'status='.self::S_ACTIVE
+            ),
+            'active'=>array(
+                'condition'=>'status='.self::S_INACTIVE
+            )
         );
     }
 
     public function rules() {
         return array(
-            array("username, password", "required"),
-            array('email', 'email'),
-            array('email', 'required', 'on'=>'register'),
+            # Register
+            array('username, email, password', 'required', 'on'=>'register'),
+            array('username',
+                'ext.yii-antispam.CleanTalkValidator',
+                'check'=>'user', /* Check type message or user */
+                'emailAttribute'=>'email',
+                'nickNameAttribute'=>'username',
+                'on'=>'register'
+            ),
             array(
                 "username, email", "unique", 'on'=>'register',
                 "allowEmpty"=>false, "attributeName"=>null
             ),
-            array('password_repeat', 'required', 'on'=>'register'),
-            array('password', 'compare', 'compareAttribute'=>'password_repeat', 'on'=>'register'),
+            # Login
+            array("username, password", "required", "on"=>"login"),
             array("password", "checkValidPassword", "on"=>"login"),
+            # Search
+            array("username, email", "required", "on"=>"search"),
+            # Update
+            array("username, password, email", "safe", "on"=>"update"),
+            # Always
+            array('email', 'email'),
         );
     }
+    /*
+        Dont forget! To use cleantalk:
+        <?php echo Yii::app()->cleanTalk->checkJsHiddenField(); ?>
+    */
 
     public function search() {
         $crit = new CDbCriteria();
@@ -55,21 +94,22 @@
         ));
     }
 
-    /*public function relations() {
+    public function relations() {
         return array(
-            'profile'=>array(self::HAS_ONE, 'UserProfile', 'u_id'),
-            'characters'=>array(self::HAS_MANY, "Character", "uID"),
-            'gallery'=>array(self::HAS_ONE, "Gallery", "u_id"),
-            'blogPosts'=>array(self::HAS_MANY, "BlogPost", "u_id"),
-            'forumTopics'=>array(self::HAS_MANY, "ForumTopic", "u_id"),
-            'forumPosts'=>array(self::HAS_MANY, "ForumPost", 'u_id')
+            'profile'=>array(self::HAS_ONE, 'UserProfile', 'uID'),
+            'updates'=>array(self::HAS_MANY, "UserUpdate", "tID"),
+            #'characters'=>array(self::HAS_MANY, "Character", "uID"),
+            #'gallery'=>array(self::HAS_ONE, "Gallery", "u_id"),
+            #'blogPosts'=>array(self::HAS_MANY, "BlogPost", "u_id"),
+            #'forumTopics'=>array(self::HAS_MANY, "ForumTopic", "u_id"),
+            #'forumPosts'=>array(self::HAS_MANY, "ForumPost", 'u_id')
         );
-    }*/
+    }
 
     // Needs editing for user updates etc.
     public function beforeSave() {
         parent::beforeSave();
-        if($this->isNewRecord) {
+        if($this->isNewRecord || $this->scenario=="update") {
             $this->password = md5($this->password);
         }
     }

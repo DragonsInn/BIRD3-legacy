@@ -19,3 +19,4 @@ http://mimo84.github.io/bootstrap-maxlength/
 http://labs.mintchaos.com/flippant.js/
 http://clu3.github.io/bootstro.js/#
 https://github.com/twitter/typeahead.js/blob/master/doc/jquery_typeahead.md
+parse audio file time http://de1.php.net/sscanf

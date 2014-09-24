@@ -125,7 +125,7 @@ The new view will be tabbed. In fact, a bunch of new fields may be added to set 
   * Importance (Main, Casual, New, Not played, Abandoned)
   * Birthplace
   * Birthdate
-  * Profile language
+  * Profile language ?
   * Created at
   * Edited at
   * Owned by

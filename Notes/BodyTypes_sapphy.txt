@@ -1,0 +1,30 @@
+## body types
+Skinny-related Builds
+
+o Bulemic
+o Very Skinny
+o Skinny
+
+Normal-related Builds
+
+o Feminine
+o Average
+o Normal
+o Athletic
+o Masculine
+
+Chubby-related Builds
+
+o Tubby
+o Chubby
+o Stocky
+o Overweight
+o Obese
+
+Muscular-related Builds
+
+o Slightly Muscular
+o Muscular
+o Very Muscular
+o Herculean
+o Steroid-Muscular

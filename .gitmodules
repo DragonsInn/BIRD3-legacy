@@ -10,3 +10,12 @@
 [submodule "php_modules/predis"]
 	path = php_modules/predis
 	url = https://github.com/nrk/predis.git
+[submodule "php_modules/CSS-Parser"]
+	path = php_modules/CSS-Parser
+	url = https://github.com/Schepp/CSS-Parser.git
+[submodule "php_modules/Mimex"]
+	path = php_modules/Mimex
+	url = https://github.com/nocive/Mimex.git
+[submodule "protected/extensions/YiiRedis"]
+	path = protected/extensions/YiiRedis
+	url = https://github.com/phpnode/YiiRedis.git

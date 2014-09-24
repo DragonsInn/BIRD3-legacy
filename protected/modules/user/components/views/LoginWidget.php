@@ -1,4 +1,3 @@
-<?php if(Yii::app()->user->isGuest) { ?>
 <div id="login">
     <h3>Login</h3>
     <?php $form = $this->beginWidget('CActiveForm', array(
@@ -23,15 +22,10 @@
             "aria-label"=>"Password"
         ))?>
         <span class="input-group-btn">
-            <?=CHtml::submitButton("Go!", array(
-                "class"=>"btn btn-inverse"
-            ))?>
+            <button type="submit" class="btn btn-default">
+                <i class="fa fa-arrow-right"></i>
+            </button>
         </span>
     </div>
     <?php $this->endWidget(); ?>
 </div>
-<?php } else { ?>
-<div id="user">
-    <p>Yo, <?=Yii::app()->user->name?>!</p>
-</div>
-<?php } ?>

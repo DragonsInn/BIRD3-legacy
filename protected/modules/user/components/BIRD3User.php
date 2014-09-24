@@ -44,7 +44,7 @@
         return ($this->loadUser()->superuser == User::R_BANN);
     }
 
-    #public function getUsername() { return $this->loadUser()->username; }
+    public function getUsername() { return $this->loadUser()->username; }
     #public function getId()       { return $this->loadUser()->id;       }
     public function getEmail()    { return $this->loadUser()->email;    }
     #public function getProfile() { return $model->profile;  } For later. o.o

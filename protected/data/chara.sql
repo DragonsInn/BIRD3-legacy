@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `tbl_charabase` (
   `uID` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `edited_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `last_updated` timestamp NOT NULL DEFAULT,
+  `last_updated` timestamp NOT NULL,
   `last_played` timestamp NOT NULL,
   -- Main, Casual
   `importance` int(2) NOT NULL,

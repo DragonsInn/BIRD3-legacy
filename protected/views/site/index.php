@@ -37,3 +37,6 @@ $this->pageTitle="Home";
 </div>
 
 <?php Yii::app()->session["foo"]="bar"; ?>
+
+<div><pre><?php print_r(Yii::app()->session); ?></pre></div>
+<div><pre><?php print_r($_COOKIE); ?></pre></div>

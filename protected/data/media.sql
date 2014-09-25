@@ -56,5 +56,7 @@ CREATE TABLE IF NOT EXISTS `tbl_media_faves` (
 );
 
 CREATE TABLE IF NOT EXISTS `tbl_media_rating` (
-    ``
+    `mID` int(11) NOT NULL,
+    `uID` int(11) NOT NULL,
+    `rating` int(5) NOT NULL
 );

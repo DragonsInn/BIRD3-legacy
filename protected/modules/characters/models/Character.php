@@ -4,7 +4,7 @@
         return parent::model($className);
     }
     public function tableName() {
-        return "{{users}}";
+        return "{{charabase}}";
     }
 
     /**
@@ -345,6 +345,13 @@
 
             // This, however, must be a true one.
             #'associations'=>array(self::MANY_MANY, "CharacteRAssociation", "tbl_charabase_AssocRel(cID,aID)")
+        );
+    }
+
+    public function attributeLabels() {
+        return array(
+            "sex"=>"Gender",
+            "style"=>"Form style"
         );
     }
 

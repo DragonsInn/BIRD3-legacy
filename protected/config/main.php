@@ -26,6 +26,8 @@ return array(
 		# User
 		'application.modules.user.components.*',
 		'application.modules.user.models.*',
+		'application.modules.characters.components.*',
+		'application.modules.characters.models.*',
 		# Booster
 		'ext.EScriptBoost.*',
 		# Caching
@@ -38,7 +40,7 @@ return array(
 	),
 
 	'modules'=>array(
-		"user"
+		"user", "characters"
 	),
 
 	// application components

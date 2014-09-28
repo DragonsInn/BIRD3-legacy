@@ -17,6 +17,13 @@ class Controller extends CController
 	public $leftSide;
 	public $rightSide;
 
+	// Set to true to get ALL the page.
+	public $allPage=false;
+
+	// Used to load the various scripts in
+	public $rqSwitch=false;
+	public $rqMarkdown=false;
+
 	public function registerScripts() {
 		$cs = Yii::app()->clientScript;
 
@@ -40,7 +47,7 @@ class Controller extends CController
 
 		Yii::app()->cdn
 			->css("normalize.css")
-			->alt("css", "/bootstrap/css/bootstrap.min.css")
+			->alt("css", "/bootstrap/css/bootstrap-cyborg.css")
 			->alt("css", "/bootstrap-accessibility/css/bootstrap-accessibility.css")
 			->css("social-buttons.css")
 			->alt("css", "/font-awesome/css/font-awesome.css");
@@ -57,8 +64,6 @@ class Controller extends CController
 		$cs->registerCssFile($tbase."/css/bs-extra.css");
 		$cs->registerScriptFile($tbase."/js/panels.js");
 		Yii::app()->cdn
-			#->css("eureka-ui-kit.css")
-			->css("combination-ui.css")
 			->css("bs-tabs-extended.css");
 
 		$faBase = $cdnUrl."/font-awesome";
@@ -92,6 +97,10 @@ class Controller extends CController
 		[class^=\"m-icon-big-\"]  { background-image: url({$mImg}/syncfusion-icons.png); }
 		.m-icon-white             { background-image: url({$mImg}/syncfusion-icons-white.png); }
 		/* Fixes end */");
+
+		// Aditions
+		if($this->rqSwitch) $this->requireSwitch();
+		if($this->rqMarkdown) $this->requireMarkdown();
 	}
 
 	public function requireColorPicker() {
@@ -102,10 +111,10 @@ class Controller extends CController
 	}
 	public function requireSwitch() {
 		Yii::app()->cdn
-			->css("bootstrap-switch.css")
-			->js("bootstrap-switch.js");
+			->js("bootstrap-ddselect.js")
+			->js("bootstrap-checkbox.js");
 	}
-	public function requireMarkdownEditor() {
+	public function requireMarkdown() {
 		Yii::app()->cdn
 			->css("bootstrap-markdown.min.css")
 			->js("bootstrap-markdown.js");

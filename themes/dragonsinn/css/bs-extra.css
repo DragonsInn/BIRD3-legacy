@@ -72,3 +72,11 @@
         color: #333;
     }
 }
+
+/* Form controlz */
+.form-control {
+    background: black;
+    color: white;
+}
+
+/* Markdown editor */

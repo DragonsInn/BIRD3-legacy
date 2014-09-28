@@ -83,14 +83,16 @@
                     ),
                 )); ?>
             </div>
-            <div id="Pleft" class="panel-default panel-side panel-left">
-                <div>
-                    <input type="search"
-                        name="search"
-                        class="form-control white-box"
-                        placeholder="Search/Command..."
-                        aria-label="Type search term or command"
-                    />
+            <div id="Pleft" class="panel-default panel-side panel-left container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="text"
+                            name="search"
+                            class="form-control white-box"
+                            placeholder="Search/Command..."
+                            aria-label="Type search term or command"
+                        />
+                    </div>
                 </div>
                 <div id="searchResults" aria-label="Search results">
                 </div>
@@ -255,14 +257,16 @@
             }
             if(empty($this->tabbar)) $tClass = "extraMargin";
             else                     $tClass = "no-extraMargin";
+            if($this->allPage)       $acClass = "AllYourPageAreBelongToUs";
+            else                     $acClass = "";
         ?>
-        <div id="outerContent" class="<?=$tClass?>">
+        <div id="outerContent" class="<?=$tClass?> <?=$acClass?>">
             <?php if(!empty($this->leftSide)) { ?>
             <div id="leftSide">
                 <?=$this->leftSide?>
             </div>
             <?php } ?>
-            <div id="content" class="<?=$cClass?> white-box">
+            <div id="content" class="<?=$cClass?> white-box container">
                 <?=$content?>
             </div>
             <?php if(!empty($this->rightSide)) { ?>

@@ -91,6 +91,10 @@ WS(".extraMargin")
 WS(".no-extraMargin")
     ->margin->top(70)
 ->end;
+WS(".AllYourPageAreBelongToUs")
+    ->width("100%")
+    ->margin(0)
+->end;
 
 WS("#outerContent > div")
     ->display("inline-block")
@@ -153,7 +157,7 @@ WS("#leftSide", "#rightSide", "#content")
     ->wordWrap(breakWord)
 ->end;
 
-WS("#Pright div", "#Pleft div", "#Pbottom div")
+WS("#Pright", "#Pleft", "#Pbottom")
     ->padding(10, 10, 10, 10)
 ->end;
 
@@ -167,13 +171,14 @@ WS("#Ptop > div")
 
 
 // Elements
-WS("#outerContent * a")
+/*WS("#outerContent * a")
     ->color(lime)
 ->end;
 WS("#outerContent * a:hover")
     ->color("#00DF00")
     ->text->decoration(none)
 ->end;
+*/
 
 // Helper classes
 WS(reactToAll(".white-box"))

@@ -7,36 +7,35 @@ $this->pageTitle="Home";
 #$this->leftSide="some app links";
 ?>
 
-<h1>Latest Characters...</h1>
-<div>
-	<div style="width:50%; position:relative; float: left;">
+<div class="row">
+	<h1 class="col-sm-12">Latest Characters...</h1>
+</div>
+<div class="row">
+	<div class="col-md-6">
 		this is div 1
 	</div>
-	<div style="width:50%; position:relative; float: left;">
+	<div class="col-md-6">
 		This is div 2
 	</div>
 </div>
-<?php $this->widget("BIRD3Tabbar",array(
+
+<?php /* $this->widget("BIRD3Tabbar",array(
 	#"brand"=>"Meep",
 	"entries"=>array(
 		"Intro"=>array("#Intro"),
 		"Litterature"=>array("#Litterature"),
 		"Pers"=>array("#Personality")
 	)
-)); ?>
-<div id="tab-content">
-  <div id="Intro">
+)); */ ?>
+
+<div id="tab-content" class="row">
+  <div id="Intro" class="col-md-12">
 	<h2>Character intro</h2>
   </div>
-  <div id="Litterature">
+  <div id="Litterature" class="col-md-12">
 	<h2>Literature that nobody reads</h2>
   </div>
-  <div id="Personality">
+  <div id="Personality" class="col-md-12">
 	<h2>Personality. Yeah, sex.</h2>
   </div>
 </div>
-
-<?php Yii::app()->session["foo"]="bar"; ?>
-
-<div><pre><?php print_r(Yii::app()->session); ?></pre></div>
-<div><pre><?php print_r($_COOKIE); ?></pre></div>

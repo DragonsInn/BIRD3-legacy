@@ -41,6 +41,7 @@ Yii::app()->clientScript->registerScript(
     "BIRD3Tabbar__".$this->tabContainer,
     "$('body').easytabs({
         panelContext: $('".$this->tabContainer."'),
-        tabs: '#etabList > li'
+        tabs: '#etabList > li',
+        updateHash: ".($this->updateHash?"true":"false")."
     });"
 );

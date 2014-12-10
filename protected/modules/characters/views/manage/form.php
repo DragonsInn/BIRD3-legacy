@@ -18,21 +18,17 @@
 
 <?php $this->widget("BIRD3Tabbar",array(
     "brand"=>"Sections",
+    "updateHash"=>false,
     "entries"=>array(
         "Basic"=>array("#Basic"),
-        #"Litterature"=>array("#Litterature"),
-        #"Personality"=>array("#Personality"),
-        #"Adult"=>array("#Adult", "class"=>"alert alert-danger")
+        "Birth and Death"=>array("#BirthAndDeath"),
+        "Alignment"=>array("#Alignment"),
+        "Story"=>array("#Story"),
+        "Appearance"=>array("#Appearance"),
+        "Adult"=>array("#Adult", "class"=>"alert alert-danger")
     )
 )); ?>
-<!--
-<div id="tab-content">
-    <div id="Basic">bas</div>
-    <div id="Litterature">lit</div>
-    <div id="Personality">pers</div>
-    <div id="Adult">adult</div>
-</div>
--->
+
 <div id="tab-content">
     <div id="Basic">
         <div class="row">
@@ -54,7 +50,10 @@
                 <ul class="list-group">
                     <li class="list-group-item">
                         <?=$form->labelEx($model, "species", array("class"=>"col-md-6"))?>
-                        <?=$form->textField($model, "species", array("class"=>"form-control"))?>
+                        <?=$form->textField($model, "species", array(
+                            "class"=>"form-control",
+                            "placeholder"=>"Phoenix, Dragon, Fox, ..."
+                        ))?>
                     </li>
                     <li class="list-group-item">
                         <?=$form->labelEx($model, "importance", array("class"=>"col-md-6"))?>
@@ -116,11 +115,97 @@
                 <div class="panel-body">
                     <?=$form->textArea($model, "personality", array(
                         "class"=>"form-control col-md-12 input-lg",
-                        "rows"=>5
+                        "rows"=>5,
+                        "placeholder"=>"This is a summary of your character. Describe him/her shortly."
                     ))?>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div id="BirthAndDeath">
+        <h4>Birth and Death <small>Your character's CV, in a away.</small></h4>
+        <div class="well">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <?=$form->labelEx($model, "birthday", array("class"=>"col-md-4 control-label"))?>
+                        <div class="col-md-8">
+                            <?=$form->textField($model, "birthday", array(
+                                "class"=>"form-control",
+                                "placeholder"=>"Date (I.e.: DD.MM.YYYY)"
+                            ))?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <?=$form->labelEx($model, "birthPlace", array("class"=>"col-md-4 control-label"))?>
+                        <div class="col-md-8">
+                            <?=$form->textField($model, "birthPlace", array(
+                                "class"=>"form-control",
+                                "placeholder"=>"I.e.: Dallas, Texas, USA"
+                            ))?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="well">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <?=$form->labelEx($model, "spirit_death_date", array("class"=>"col-md-4 control-label"))?>
+                        <div class="col-md-8">
+                            <?=$form->textField($model, "spirit_death_date", array(
+                                "class"=>"form-control",
+                                "placeholder"=>"Date (I.e.: DD.MM.YYYY)"
+                            ))?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <?=$form->labelEx($model, "spirit_death_place", array("class"=>"col-md-4 control-label"))?>
+                        <div class="col-md-8">
+                            <?=$form->textField($model, "spirit_death_place", array(
+                                "class"=>"form-control",
+                                "placeholder"=>"I.e.: At home."
+                            ))?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <?=$form->labelEx($model, "spirit_death_cause", array("class"=>"col-md-4 control-label"))?>
+                        <div class="col-md-8">
+                            <?=$form->textField($model, "spirit_death_cause", array(
+                                "class"=>"form-control",
+                                "placeholder"=>"I.e.: Due to his/her age."
+                            ))?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="Alignment">
+    </div>
+
+    <div id="Story">
+    </div>
+
+    <div id="Appearance">
+    </div>
+
+    <div id="Adult">
     </div>
 </div>
 

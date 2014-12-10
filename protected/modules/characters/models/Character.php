@@ -73,6 +73,50 @@
      * @string theme | url, youtube link
      */
 
+    /**
+     * Sections:
+     *
+     * Basic
+     *      - Name
+     *      - Nick Name
+     *      - Species
+     *      - Sex
+     *      - Orientation
+     *      - Is adult?
+     *      - Visibility
+     *      - Importance
+     *      - Style
+     *
+     * Birth and Death
+     *      - Birthday
+     *      - Place of birth
+     *      - Death date
+     *      - Place of death
+     *      - Cause of death
+     *
+     * Alignment
+     *      - Status
+     *      - Condition
+     *      - Alignment
+     *      - Sub-Alignment
+     *      - Type
+     *
+     * Story
+     *      - History
+     *      - Likes
+     *      - Dislikes
+     *      - Additional Description
+     *
+     * Appearance
+     *      - Eye color, style
+     *      - Hair color, style, length
+     *      - height, Weight
+     *
+     * Adult
+     *      - Behavior
+     *      - Preferences
+     */
+
 
      // Methods to produce and return lists or type names / id's.
      // Sort of labeling the stuff, yknow o.o
@@ -351,7 +395,11 @@
     public function attributeLabels() {
         return array(
             "sex"=>"Gender",
-            "style"=>"Form style"
+            "style"=>"Form style",
+            "spirit_death_date"=>"Death date",
+            "spirit_death_cause"=>"Cause of death",
+            "spirit_death_place"=>"Place of death",
+            "birthPlace"=>"Place of birth"
         );
     }
 

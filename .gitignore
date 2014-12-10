@@ -8,5 +8,4 @@ config/gitlabhook.json
 config/BIRD3.ini
 *.bin
 .tmp
-dump.rdb
-http://www.yiiframework.com/extension/dynamicres/
+*.rdb

@@ -9,3 +9,4 @@ config/BIRD3.ini
 *.bin
 .tmp
 *.rdb
+*.dump

@@ -24,7 +24,7 @@ $this->pageTitle="Home";
 	"entries"=>array(
 		"Intro"=>array("#Intro"),
 		"Litterature"=>array("#Litterature"),
-		"Pers"=>array("#Personality")
+		#"Pers"=>array("#Personality")
 	)
 )); */ ?>
 
@@ -34,8 +34,5 @@ $this->pageTitle="Home";
   </div>
   <div id="Litterature" class="col-md-12">
 	<h2>Literature that nobody reads</h2>
-  </div>
-  <div id="Personality" class="col-md-12">
-	<h2>Personality. Yeah, sex.</h2>
   </div>
 </div>

@@ -1,9 +1,11 @@
-<?php #print_r($_SERVER); die();
+<?php
 
+// Stupid time zone .... >.>
 date_default_timezone_set("UTC");
 
+// error handling?
 error_reporting(E_ALL);
-ini_set( 'display_errors','1');
+ini_set('display_errors','1');
 
 // change the following paths if necessary
 $yii=dirname(__FILE__).'/php_modules/yii/framework/yii.php';

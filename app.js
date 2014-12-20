@@ -15,6 +15,13 @@ var fs = require('fs'),
     redis = require("redis"),
     ini = require("multilevel-ini");
 
+// We use this to dump emergency errors.
+process.on("uncaughtException", function(e){
+    console.error(e.stack);
+    fs.writeFileSync("error.dump", e.stack);
+    process.exit(-1);
+});
+
 // Global eventing
 global.BIRD3 = require("./lib/communicator.js");
 

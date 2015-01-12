@@ -37,68 +37,9 @@
         <div id="TopSection">
             <!-- Panels -->
             <div id="Ptop" class="panel-default panel-top">
-                <!--
-                <?php function makeBubbles(array $links) { foreach($links as $id=>$obj) { ?>
-                <div id="<?=$id?>">
-                    <?php foreach($obj as $title=>$data) { ?>
-                    <a class="linkBubble" href="<?=CHtml::normalizeUrl($data["url"])?>">
-                        <div class="circle circle-icon">
-                            <i class="<?=$data["icon"]?>"></i>
-                        </div>
-                        <div style="text-align:center;" class="tsection">
-                            <?=$title?>
-                        </div>
-                    </a>
-                    <?php } ?>
-                </div>
-                <?php } } ?>
-                <?php makeBubbles(array(
-                    "TheInn"=>array(
-                        "Home"=>array("icon"=>"fa fa-home", "url"=>array("/")),
-                        "Staff"=>array("icon"=>"glyphicon glyphicon-certificate", "url"=>array("/home/staff")),
-                        "Infos/Credits"=>array("icon"=>"fa fa-exclamation", "url"=>array("/home/infos")),
-                        "Manage"=>array("icon"=>"fa fa-cogs","url"=>array("/home/manage"))
-                    ),
-                    "Hotel"=>array(
-                        "Story"=>array("icon"=>"fa fa-file-text","url"=>array("/hotel/story")),
-                        "Places"=>array("icon"=>"fa fa-compass","url"=>array("/hotel/places")),
-                        "Jobs"=>array("icon"=>"fa fa-building","url"=>array("/hotel/jobs"))
-                    ),
-                    "Characters"=>array(
-                        "Latest"=>array("icon"=>"fa fa-list","url"=>array("/chars/latest")),
-                        "All"=>array("icon"=>"fa fa-database","url"=>array("/chars/all")),
-                        "Families &amp; Clans"=>array("icon"=>"fa fa-child","url"=>array("/chars/associations")),
-                        "Jobs"=>array("icon"=>"fa fa-building","url"=>array("/chars/jobs"))
-                    ),
-                    "Media"=>array(
-                        "Latest"=>array("icon"=>"fa fa-list","url"=>array("/media/all/latest")),
-                        "All"=>array("icon"=>"fa fa-folder","url"=>array("/media/all/list")),
-                        "Art"=>array("icon"=>"fa fa-paint-brush","url"=>array("/media/art")),
-                        "Music"=>array("icon"=>"glyphicon glyphicon-headphones","url"=>array("/media/audio")),
-                        "Essay"=>array("icon"=>"glyphicon glyphicon-bookmark","url"=>array("/media/story"))
-                    ),
-                    "Community"=>array(
-                        "Users"=>array("icon"=>"fa fa-users","url"=>array("/user/list")),
-                        "Forum"=>array("icon"=>"fa fa-comment","url"=>array("/form")),
-                        "Blogs"=>array("icon"=>"glyphicon glyphicon-list-alt","url"=>array("/blog"))
-                    ),
-                )); ?>
-                -->
             </div>
-            <!--
             <div id="Pleft" class="panel-default panel-side panel-left container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <input type="text"
-                            name="search"
-                            class="form-control white-box"
-                            placeholder="Search/Command..."
-                            aria-label="Type search term or command"
-                        />
-                    </div>
-                </div>
-                <div id="searchResults" aria-label="Search results">
-                </div>
+                <p>Search not implemented yet.</p>
             </div>
             <div id="Pright" class="panel-default panel-side panel-right">
                 <?php if(Yii::app()->user->isGuest) $this->widget("BIRD3LoginWidget"); else { ?>
@@ -148,18 +89,22 @@
                         <div class="panel panel-primary">
                             <div class="panel-heading">Create / Upload</div>
                             <div class="panel-body">
-                                <form name="ContentCreate" class="form-inline">
-                                    <div class="form-group">
-                                        <select class="form-control">
-                                            <option>Character</option>
-                                            <option>Art</option>
-                                            <option>Music</option>
-                                            <option>Essay</option>
-                                        </select>
+                                <form name="ContentCreate">
+                                    <div class="row">
+                                        <div class="col-xs-8">
+                                            <select class="form-control">
+                                                <option>Character</option>
+                                                <option>Art</option>
+                                                <option>Music</option>
+                                                <option>Essay</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <button type="submit" class="m-btn blue icn-only">
+                                                <i class="m-icon-swapright m-icon-white"></i>
+                                            </button>
+                                        </div>
                                     </div>
-                                    <button type="submit" class="m-btn blue icn-only">
-                                        <i class="m-icon-swapright m-icon-white"></i>
-                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -175,25 +120,6 @@
                 <?=$this->panelBottom?>
             </div>
             <?php } ?>
-            -->
-            <!--
-            <nav id="BIRD3mmenu" style="background:rgba(0,0,0,1);color:white;">
-                <ul>
-                    <li><span>Meep meep.</span></li>
-                </ul>
-            </nav>
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    $("#BIRD3mmenu").mmenu({
-                        header: {
-                            add: true,
-                            update: true,
-                            title: "o.o"
-                        }
-                    });
-                });
-            </script>
-            -->
 
             <!-- Menu, bottom part -->
             <nav class="navbar navbar-soft">
@@ -208,10 +134,14 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <span class="navbar-brand">
+                        <a class="navbar-brand" href="#" id="trigger-left">
+                            <i class="fa fa-search"></i>&nbsp;
+                        </a>
+                        <a class="navbar-brand" href="/">
                             <img src="/cdn/images/di_icon.png" height=50 style="margin-top:-15px;">
-                        </span>
+                        </a>
                     </div>
+
                     <!-- navs -->
                     <div class="collapse navbar-collapse" id="BIRD3mainBar">
                         <ul class="nav navbar-nav">
@@ -221,19 +151,19 @@
                                     "href"=>"#",
                                     "entries"=>array(
                                         array("Home", "icon"=>"fa fa-home", "url"=>array("/")),
+                                        array("<font color=\"red\">Rules/TOS</font>", "icon"=>"fa fa-legal", "url"=>array("/docs/rules")),
                                         array("Staff", "icon"=>"glyphicon glyphicon-certificate", "url"=>array("/home/staff")),
                                         array("Infos/Credits", "icon"=>"fa fa-exclamation", "url"=>array("/home/infos")),
                                         array("Manage", "icon"=>"fa fa-cogs","url"=>array("/home/manage"))
                                     )
                                 ),
-                                "<font color=\"red\">Rules/TOS</font>"=>array(
-                                    "href"=>array("/docs/rules")
-                                ),
                                 "Chat <font color=lime>NN</font>"=>array(
-                                    "href"=>array("/chat")
+                                    "href"=>array("/chat"),
+                                    "icon"=>"fa fa-comments"
                                 ),
                                 "Hotel"=>array(
                                     "href"=>"#",
+                                    "icon"=>"fa fa-globe",
                                     "entries"=>array(
                                         array("Story", "icon"=>"fa fa-file-text","url"=>array("/hotel/story")),
                                         array("Places", "icon"=>"fa fa-compass","url"=>array("/hotel/places")),
@@ -242,6 +172,7 @@
                                 ),
                                 "Characters"=>array(
                                     "href"=>"#",
+                                    "icon"=>"fa fa-book",
                                     "entries"=>array(
                                         array("Latest", "icon"=>"fa fa-list","url"=>array("/chars/latest")),
                                         array("All", "icon"=>"fa fa-database","url"=>array("/chars/all")),
@@ -251,6 +182,7 @@
                                 ),
                                 "Media"=>array(
                                     "href"=>"#",
+                                    "icon"=>"glyphicon glyphicon-eye-open",
                                     "entries"=>array(
                                         array("Latest", "icon"=>"fa fa-list","url"=>array("/media/all/latest")),
                                         array("All", "icon"=>"fa fa-folder","url"=>array("/media/all/list")),
@@ -261,6 +193,7 @@
                                 ),
                                 "Community"=>array(
                                     "href"=>"#",
+                                    "icon"=>"fa fa-users",
                                     "entries"=>array(
                                         array("Users", "icon"=>"fa fa-users","url"=>array("/user/list")),
                                         array("Forum", "icon"=>"fa fa-comment","url"=>array("/form")),
@@ -288,8 +221,12 @@
                                     )
                                     : array()
                                 );
+                                if(isset($data["icon"]))
+                                    $icon = '<i class="visible-lg-inline-block '.$data["icon"].'"></i> ';
+                                else
+                                    $icon = '';
                                 $link = CHtml::link(
-                                    $name.($isDropdown ? ' <i class="fa fa-caret-down"></i>':""),
+                                    $icon.$name.($isDropdown ? ' <i class="fa fa-caret-down"></i>':""),
                                     $data["href"], $htmlops
                                 );
 
@@ -308,6 +245,15 @@
                                 echo "</li>\n";
                             }
                             ?>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="#" id="trigger-right">
+                                <i class="fa fa-user"></i> <?=(
+                                    Yii::app()->user->isGuest
+                                    ? "Login/Register"
+                                    : Yii::app()->user->username
+                                )?> <i class="fa fa-caret-right"></i>
+                            </a></li>
                         </ul>
                     </div>
                 </div>
@@ -418,6 +364,18 @@
 
         <!-- Copyright and the like. -->
         <div id="footer">
+            <div>Dragon's Inn was created using BIRD3. Both by Ingwie Phoenix</div>
+            <div>Background by <a href="#" style="background:black;">Max Killion</a></div>
+            <div>Design "Exciting Night" by Ingwie Phoenix</div>
+            <div>Staff | Contact | Credits</div>
+            <div>
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="5N3GJGG42QJ2G">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="Donate to Dragon's Inn!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                </form>
+            </div>
         </div>
     </body>
 </html>

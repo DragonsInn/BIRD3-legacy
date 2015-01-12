@@ -1,5 +1,3 @@
-<?php $this->displayLogin=false; ?>
-
 <h2>Login</h2>
 <?php $form = $this->beginWidget('CActiveForm', array(
     'id'=>'bird3-login',

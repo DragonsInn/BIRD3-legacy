@@ -61,6 +61,12 @@ $menu_height=40;
 WS("body")
     ->background->url($base."/images/bg.jpg") // $config['components']['cdn']['baseUrl']
     ->color(white)
+    ->height("100%")
+    ->width("100%")
+    # Not implemented, yet.
+    ->backgroundRepeat("no-repeat")
+    ->backgroundPosition("50% 50%")
+    ->backgroundAttachment(fixed)
 ->end;
 
 WS("#menu")
@@ -111,7 +117,7 @@ WS("#tabbar")
 ->end;
 
 WS("#content")
-    ->background->rgba(0,0,0, 0.7)
+    ->background->rgba(0,0,0, 0.5)
     # Fix for overflow-x+box-shadow
     ->margin->bottom(10)
     # Responsible design implementation: http://stackoverflow.com/a/25634192/2423150
@@ -133,6 +139,24 @@ WS(".cType2")
 WS(".cType3")
     # Type 3: Both sidebars shown
     ->width("60%")
+->end;
+WS("#footer")
+    # Fix and clear the mess from above.
+    ->display(block)
+    ->position(relative)
+    ->clear("both")
+    # Now the style.
+    ->border(1, solid, white)
+    ->borderRadius(5)
+    ->text->align(center)
+    ->background->rgba(0,0,0,0.3)
+    #->background(orange)
+    ->padding(5,2.5,5,2.5)
+    ->margin->left(auto)
+    ->margin->right(auto)
+    ->minWidth(200)
+    ->maxWidth(800)
+    ->width("30%")
 ->end;
 
 WS("#leftSide", "#rightSide")
@@ -162,9 +186,9 @@ WS("#Pright", "#Pleft", "#Pbottom")
 ->end;
 
 // Few customs
-WS("#Ptop")
-    ->border->bottom(1, solid, white)
-->end;
+#WS("#Ptop")
+#    ->border->bottom(1, solid, white)
+#->end;
 WS("#Ptop > div")
     ->display(none)
 ->end;
@@ -431,3 +455,10 @@ WS(".iconblock")
         ->border(2, solid, white)
     ->end;
 ?> }
+
+/* Special query for the background... */
+@media only screen and (min-width:1920px) {
+    body {
+        background-size: 100% 100%;
+    }
+}

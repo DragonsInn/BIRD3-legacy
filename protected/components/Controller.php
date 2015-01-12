@@ -65,7 +65,7 @@ class Controller extends CController
 		// BIRD3 Theme. We use the URL here to avoid minification. Trickery, yo.
 		$cs->registerCssFile($yiiUrl.$tbase."/css/main.ws.php");
 		$cs->registerCssFile($tbase."/css/bs-extra.css");
-		#$cs->registerScriptFile($tbase."/js/panels.js");
+		$cs->registerScriptFile($tbase."/js/panels.js");
 		Yii::app()->cdn
 			->css("bs-tabs-extended.css");
 

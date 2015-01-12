@@ -102,7 +102,8 @@
             #'gallery'=>array(self::HAS_ONE, "Gallery", "u_id"),
             #'blogPosts'=>array(self::HAS_MANY, "BlogPost", "u_id"),
             #'forumTopics'=>array(self::HAS_MANY, "ForumTopic", "u_id"),
-            #'forumPosts'=>array(self::HAS_MANY, "ForumPost", 'u_id')
+            #'forumPosts'=>array(self::HAS_MANY, "ForumPost", 'u_id'),
+            #'permissions'=>array(self::HAS_MANY, "UserPermissions", "uID")
         );
     }
 

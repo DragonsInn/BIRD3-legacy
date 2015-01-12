@@ -37,6 +37,7 @@
         <div id="TopSection">
             <!-- Panels -->
             <div id="Ptop" class="panel-default panel-top">
+                <!--
                 <?php function makeBubbles(array $links) { foreach($links as $id=>$obj) { ?>
                 <div id="<?=$id?>">
                     <?php foreach($obj as $title=>$data) { ?>
@@ -66,7 +67,7 @@
                     "Characters"=>array(
                         "Latest"=>array("icon"=>"fa fa-list","url"=>array("/chars/latest")),
                         "All"=>array("icon"=>"fa fa-database","url"=>array("/chars/all")),
-                        "Fams/Clans"=>array("icon"=>"fa fa-child","url"=>array("/chars/associations")),
+                        "Families &amp; Clans"=>array("icon"=>"fa fa-child","url"=>array("/chars/associations")),
                         "Jobs"=>array("icon"=>"fa fa-building","url"=>array("/chars/jobs"))
                     ),
                     "Media"=>array(
@@ -82,7 +83,9 @@
                         "Blogs"=>array("icon"=>"glyphicon glyphicon-list-alt","url"=>array("/blog"))
                     ),
                 )); ?>
+                -->
             </div>
+            <!--
             <div id="Pleft" class="panel-default panel-side panel-left container">
                 <div class="row">
                     <div class="col-md-12">
@@ -172,8 +175,144 @@
                 <?=$this->panelBottom?>
             </div>
             <?php } ?>
+            -->
+            <!--
+            <nav id="BIRD3mmenu" style="background:rgba(0,0,0,1);color:white;">
+                <ul>
+                    <li><span>Meep meep.</span></li>
+                </ul>
+            </nav>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $("#BIRD3mmenu").mmenu({
+                        header: {
+                            add: true,
+                            update: true,
+                            title: "o.o"
+                        }
+                    });
+                });
+            </script>
+            -->
 
             <!-- Menu, bottom part -->
+            <nav class="navbar navbar-soft">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button
+                            type="button" class="navbar-toggle collapsed"
+                            data-toggle="collapse" data-target="#BIRD3mainBar"
+                        >
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <span class="navbar-brand">
+                            <img src="/cdn/images/di_icon.png" height=50 style="margin-top:-15px;">
+                        </span>
+                    </div>
+                    <!-- navs -->
+                    <div class="collapse navbar-collapse" id="BIRD3mainBar">
+                        <ul class="nav navbar-nav">
+                            <?php
+                            $lis = array(
+                                "Dragon's Inn"=>array(
+                                    "href"=>"#",
+                                    "entries"=>array(
+                                        array("Home", "icon"=>"fa fa-home", "url"=>array("/")),
+                                        array("Staff", "icon"=>"glyphicon glyphicon-certificate", "url"=>array("/home/staff")),
+                                        array("Infos/Credits", "icon"=>"fa fa-exclamation", "url"=>array("/home/infos")),
+                                        array("Manage", "icon"=>"fa fa-cogs","url"=>array("/home/manage"))
+                                    )
+                                ),
+                                "<font color=\"red\">Rules/TOS</font>"=>array(
+                                    "href"=>array("/docs/rules")
+                                ),
+                                "Chat <font color=lime>NN</font>"=>array(
+                                    "href"=>array("/chat")
+                                ),
+                                "Hotel"=>array(
+                                    "href"=>"#",
+                                    "entries"=>array(
+                                        array("Story", "icon"=>"fa fa-file-text","url"=>array("/hotel/story")),
+                                        array("Places", "icon"=>"fa fa-compass","url"=>array("/hotel/places")),
+                                        array("Jobs", "icon"=>"fa fa-building","url"=>array("/hotel/jobs"))
+                                    ),
+                                ),
+                                "Characters"=>array(
+                                    "href"=>"#",
+                                    "entries"=>array(
+                                        array("Latest", "icon"=>"fa fa-list","url"=>array("/chars/latest")),
+                                        array("All", "icon"=>"fa fa-database","url"=>array("/chars/all")),
+                                        array("Families &amp; Clans", "icon"=>"fa fa-child","url"=>array("/chars/associations")),
+                                        array("Jobs", "icon"=>"fa fa-building","url"=>array("/chars/jobs"))
+                                    ),
+                                ),
+                                "Media"=>array(
+                                    "href"=>"#",
+                                    "entries"=>array(
+                                        array("Latest", "icon"=>"fa fa-list","url"=>array("/media/all/latest")),
+                                        array("All", "icon"=>"fa fa-folder","url"=>array("/media/all/list")),
+                                        array("Art", "icon"=>"fa fa-paint-brush","url"=>array("/media/art")),
+                                        array("Music", "icon"=>"glyphicon glyphicon-headphones","url"=>array("/media/audio")),
+                                        array("Essay", "icon"=>"glyphicon glyphicon-bookmark","url"=>array("/media/story"))
+                                    )
+                                ),
+                                "Community"=>array(
+                                    "href"=>"#",
+                                    "entries"=>array(
+                                        array("Users", "icon"=>"fa fa-users","url"=>array("/user/list")),
+                                        array("Forum", "icon"=>"fa fa-comment","url"=>array("/form")),
+                                        array("Blogs", "icon"=>"glyphicon glyphicon-list-alt","url"=>array("/blog"))
+                                    )
+                                ),
+                            );
+                            foreach($lis as $name=>$data) {
+                                $elem = "";
+                                $hash = md5($name);
+                                $dropdown = "";
+                                $isDropdown = (isset($data["entries"]) && !empty($data["entries"]));
+                                if($isDropdown)
+                                    $elem = '<li class="dropdown">';
+                                else
+                                    $elem = '<li>';
+
+                                // Generate the link tag
+                                $htmlops = ( $isDropdown
+                                    ? array(
+                                        "class"=>"dropdown-toggle",
+                                        "data-toggle"=>"dropdown",
+                                        "role"=>"button",
+                                        "aria-expanded"=>"false"
+                                    )
+                                    : array()
+                                );
+                                $link = CHtml::link(
+                                    $name.($isDropdown ? ' <i class="fa fa-caret-down"></i>':""),
+                                    $data["href"], $htmlops
+                                );
+
+                                echo "{$elem}{$link}\n";
+
+                                if($isDropdown) {
+                                    echo '<ul class="dropdown-menu" role="menu">'."\n";
+                                    foreach($data["entries"] as $info) {
+                                        echo '<li>'.CHtml::link(
+                                            '<span class="iconblock"><i class="'.$info["icon"].'"></i></span> '.$info[0],
+                                            $info["url"]
+                                        ).'</li>';
+                                    }
+                                    echo '</ul>';
+                                }
+                                echo "</li>\n";
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!--
             <div id="menu">
                 <div class="tabbable tabs-below tabs-multi">
                     <ul class="nav nav-tabs">
@@ -234,6 +373,7 @@
                     </ul>
                 </div>
             </div>
+            -->
         </div>
 
         <!-- Tab menu -->

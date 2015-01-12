@@ -291,6 +291,15 @@ WS(".linkBubble div", ".linkBubble .circle")
     ->font->size(15)
     ->padding(0)
 ->end;
+WS(".mm-menu")
+    ->width("20%")
+->end;
+WS(".iconblock")
+    # text-align: center; display: inline-block; width: 15px;
+    ->textAlign(center)
+    ->display("inline-block")
+    ->width(15)
+->end;
 ?>
 
 /* Media Queries */

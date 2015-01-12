@@ -43,12 +43,15 @@ class Controller extends CController
 		Yii::app()->cdn
 			->alt("js", "/bootstrap/js/bootstrap.min.js")
 			->alt("js", "/bootstrap-accessibility/js/bootstrap-accessibility.min.js")
-			->js('socket.io.js');
+			->alt("js", "/mmenu/js/jquery.mmenu.min.all.js")
+			->js('socket.io.js')
+			->js('delivery.js');
 
 		Yii::app()->cdn
 			->css("normalize.css")
 			->alt("css", "/bootstrap/css/bootstrap-cyborg.css")
 			->alt("css", "/bootstrap-accessibility/css/bootstrap-accessibility.css")
+			->alt("css", "/mmenu/css/jquery.mmenu.all.css")
 			->css("social-buttons.css")
 			->alt("css", "/font-awesome/css/font-awesome.css");
 
@@ -62,7 +65,7 @@ class Controller extends CController
 		// BIRD3 Theme. We use the URL here to avoid minification. Trickery, yo.
 		$cs->registerCssFile($yiiUrl.$tbase."/css/main.ws.php");
 		$cs->registerCssFile($tbase."/css/bs-extra.css");
-		$cs->registerScriptFile($tbase."/js/panels.js");
+		#$cs->registerScriptFile($tbase."/js/panels.js");
 		Yii::app()->cdn
 			->css("bs-tabs-extended.css");
 

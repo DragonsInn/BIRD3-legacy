@@ -10,3 +10,4 @@ config/BIRD3.ini
 .tmp
 *.rdb
 *.dump
+cdn/oj/*.js

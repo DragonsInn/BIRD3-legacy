@@ -24,6 +24,63 @@ class Controller extends CController
 	public $rqSwitch=false;
 	public $rqMarkdown=false;
 
+	// Menu
+	public $navEntries = array(
+		"Dragon's Inn"=>array(
+			"href"=>"#",
+			"entries"=>array(
+				array("Home", "icon"=>"fa fa-home", "url"=>array("/")),
+				array("<font color=\"red\">Rules/TOS</font>", "icon"=>"fa fa-legal", "url"=>array("/docs/rules")),
+				array("Staff", "icon"=>"glyphicon glyphicon-certificate", "url"=>array("/home/staff")),
+				array("Infos/Credits", "icon"=>"fa fa-exclamation", "url"=>array("/home/infos")),
+				array("Manage", "icon"=>"fa fa-cogs","url"=>array("/home/manage"))
+			)
+		),
+		"Chat <font color=lime>NN</font>"=>array(
+			"href"=>array("/chat"),
+			"icon"=>"fa fa-comments"
+		),
+		"Hotel"=>array(
+			"href"=>"#",
+			"icon"=>"fa fa-globe",
+			"entries"=>array(
+				array("Story", "icon"=>"fa fa-file-text","url"=>array("/hotel/story")),
+				array("Places", "icon"=>"fa fa-compass","url"=>array("/hotel/places")),
+				array("Jobs", "icon"=>"fa fa-building","url"=>array("/hotel/jobs"))
+			),
+		),
+		"Characters"=>array(
+			"href"=>"#",
+			"icon"=>"fa fa-book",
+			"entries"=>array(
+				array("Latest", "icon"=>"fa fa-list","url"=>array("/chars/latest")),
+				array("All", "icon"=>"fa fa-database","url"=>array("/chars/all")),
+				array("Families &amp; Clans", "icon"=>"fa fa-child","url"=>array("/chars/associations")),
+				array("Jobs", "icon"=>"fa fa-building","url"=>array("/chars/jobs"))
+			),
+		),
+		"Media"=>array(
+			"href"=>"#",
+			"icon"=>"glyphicon glyphicon-eye-open",
+			"entries"=>array(
+				array("Latest", "icon"=>"fa fa-list","url"=>array("/media/all/latest")),
+				array("All", "icon"=>"fa fa-folder","url"=>array("/media/all/list")),
+				array("Art", "icon"=>"fa fa-paint-brush","url"=>array("/media/art")),
+				array("Music", "icon"=>"glyphicon glyphicon-headphones","url"=>array("/media/audio")),
+				array("Essay", "icon"=>"glyphicon glyphicon-bookmark","url"=>array("/media/story"))
+			)
+		),
+		"Community"=>array(
+			"href"=>"#",
+			"icon"=>"fa fa-users",
+			"entries"=>array(
+				array("Users", "icon"=>"fa fa-users","url"=>array("/user/list")),
+				array("Forum", "icon"=>"fa fa-comment","url"=>array("/form")),
+				array("Blogs", "icon"=>"glyphicon glyphicon-list-alt","url"=>array("/blog"))
+			)
+		),
+	);
+
 	public function registerScripts() {
 		$cs = Yii::app()->clientScript;
 
@@ -62,8 +119,12 @@ class Controller extends CController
 			->js("m-dropdown.js")
 			->js("m-radio.js");
 
+		Yii::app()->cdn
+			->js("oj-runtime.js");
+
 		// BIRD3 Theme. We use the URL here to avoid minification. Trickery, yo.
 		$cs->registerCssFile($yiiUrl.$tbase."/css/main.ws.php");
+		$cs->registerScriptFile($yiiUrl."/cdn/oj/BIRD3.oj");
 		$cs->registerCssFile($tbase."/css/bs-extra.css");
 		$cs->registerScriptFile($tbase."/js/panels.js");
 		Yii::app()->cdn
@@ -79,8 +140,8 @@ class Controller extends CController
 			src: url('{$faBase}/fonts/fontawesome-webfont.eot?v=4.2.0');
 			src: url('{$faBase}/fonts/fontawesome-webfont.eot?#iefix') format('embedded-opentype'),
 			     url('{$faBase}/fonts/fontawesome-webfont.woff?v=4.2.0') format('woff'),
-				url('{$faBase}/fonts/fontawesome-webfont.ttf?v=4.2.0') format('truetype'),
-				url('{$faBase}/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular') format('svg');
+				 url('{$faBase}/fonts/fontawesome-webfont.ttf?v=4.2.0') format('truetype'),
+				 url('{$faBase}/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular') format('svg');
 			font-weight: normal;
 			font-style: normal;
 		}
@@ -89,9 +150,9 @@ class Controller extends CController
   			font-family: 'Glyphicons Halflings';
 			src: url('{$bsBase}/fonts/glyphicons-halflings-regular.eot');
 			src: url('{$bsBase}/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
-				url('{$bsBase}/fonts/glyphicons-halflings-regular.woff') format('woff'),
-				url('{$bsBase}/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
-				url('{$bsBase}/fonts/glyphicons-halflings-regular.svg#glyphicons') format('svg');
+				 url('{$bsBase}/fonts/glyphicons-halflings-regular.woff') format('woff'),
+				 url('{$bsBase}/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
+				 url('{$bsBase}/fonts/glyphicons-halflings-regular.svg#glyphicons') format('svg');
 		}
 		/* Metro Icon fix */
 		.m-btn [class^=\"icon-\"] { background-image: url({$mImg}/glyphicons-halflings.png); }
@@ -120,7 +181,15 @@ class Controller extends CController
 	public function requireMarkdown() {
 		Yii::app()->cdn
 			->css("bootstrap-markdown.min.css")
-			->js("bootstrap-markdown.js");
+			->js("bootstrap-markdown.js")
+			->css("jshl/hybrid.css")
+			->js("highlight.pack.js");
+		Yii::app()->clientScript->registerScript("jshl_init",'// JSHL init
+			hljs.configure({
+				tabReplace: "    "
+			});
+			hljs.initHighlighting();
+		// end', CClientScript::POS_READY);
 	}
 	public function requireMaxlength() {
 		Yii::app()->cdn

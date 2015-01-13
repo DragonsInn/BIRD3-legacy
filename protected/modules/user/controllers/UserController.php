@@ -21,6 +21,6 @@
 
     public function actionLogout() {
         Yii::app()->user->logout();
-        echo "Yo.";
+        $this->redirect(Yii::app()->user->returnUrl);
     }
 }

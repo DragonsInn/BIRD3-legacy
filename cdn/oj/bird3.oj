@@ -1,0 +1,16 @@
+@implementation BIRD3App {
+    var sio;
+}
++(id)init {
+    console.log("Init...");
+    sio = io();
+    console.log("Connected using:", sio.io.engine.transport.name);
+    return self;
+}
+-(SocketIO)socket {
+    return sio;
+}
+@end
+
+var app = [BIRD3App init];
+//var sio = [app socket];

@@ -72,6 +72,7 @@ return array(
 		'clientScript'=>array(
 			#'class'=>'ext.minScript.components.ExtMinScript',
 			'class'=>'ext.ExtendedClientScript.ExtendedClientScript',
+			'basePath'=>$base,
 			'combineCss'=>true,
             'compressCss'=>false,
             'combineJs'=>true,
@@ -93,6 +94,9 @@ return array(
 			'urlFormat'=>'path',
 			'showScriptName'=>false,
 			'rules'=>array(
+				# Non-default
+				'/user/<action:\w+>'=>'/user/user/<action>',
+				# Default
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
@@ -140,7 +144,7 @@ return array(
 	// using Yii::app()->params['paramName']
 	'params'=>array(
 		// this is used in contact page
-		'adminEmail'=>'webmaster@example.com',
+		'adminEmail'=>'ingwie2000@googlemail.com',
 		'version'=>$version
 	),
 );

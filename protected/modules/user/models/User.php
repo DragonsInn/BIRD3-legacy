@@ -29,6 +29,7 @@
     public function tableName() {
         return "{{users}}";
     }
+    public function primaryKey() { return "id"; }
 
     public function scopes() {
         return array(
@@ -97,7 +98,7 @@
     public function relations() {
         return array(
             'profile'=>array(self::HAS_ONE, 'UserProfile', 'uID'),
-            'updates'=>array(self::HAS_MANY, "UserUpdate", "tID"),
+            #'updates'=>array(self::HAS_MANY, "UserUpdate", "tID"),
             #'characters'=>array(self::HAS_MANY, "Character", "uID"),
             #'gallery'=>array(self::HAS_ONE, "Gallery", "u_id"),
             #'blogPosts'=>array(self::HAS_MANY, "BlogPost", "u_id"),

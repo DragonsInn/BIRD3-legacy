@@ -48,6 +48,7 @@ function reactToAll($elem) {
 
 // Variables
 $base = Yii::app()->cdn->baseUrl."/theme";
+$img = Yii::app()->cdn->baseUrl."/images";
 
 // Panel styles
 include_once "panels.ws";
@@ -154,6 +155,7 @@ WS("#footer")
     ->padding(5,2.5,5,2.5)
     ->margin->left(auto)
     ->margin->right(auto)
+    ->margin->top(50)
     ->minWidth(200)
     ->maxWidth(800)
     ->width("30%")
@@ -246,7 +248,6 @@ WS(".circle.circle-icon")
     ->border(2, solid, white)
 ->end;
 
-
 WS(".tabs-multi ul")
     ->display(inlineBlock)
 ->end;
@@ -322,6 +323,24 @@ WS(".iconblock")
     # text-align: center; display: inline-block; width: 15px;
     ->textAlign(center)
     ->display("inline-block")
+    ->width(15)
+->end;
+
+// Icons
+WS(".psn")
+    ->background->url("$img/brands/playstation.png")
+    ->display("inline-block")
+    ->backgroundSize(15, 15)
+    ->backgroundRepeat("no-repeat")
+    ->height(15)
+    ->width(15)
+->end;
+WS(".xbl")
+    ->background->url("$img/brands/xbox_360.png")
+    ->display("inline-block")
+    ->backgroundSize(15, 15)
+    ->backgroundRepeat("no-repeat")
+    ->height(15)
     ->width(15)
 ->end;
 ?>

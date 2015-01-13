@@ -12,7 +12,7 @@
     "connect-cachify-static": "^0.2.0",
     "connect-form2": "^0.1.2",
     "connect-logger": "0.0.1",
-    "connect-oj": "^1.0.2",
+    "connect-oj": "^1.0.3",
     "connect-redis": "^2.1.0",
     "connect-rest": "^1.5.1",
     "connect-slashes": "^1.3.0",

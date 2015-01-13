@@ -40,7 +40,7 @@
     "node_cloudflare": "0.0.2",
     "nodemailer": "^0.7.1",
     "normalize.css": "^3.0.2",
-    "ojc": "git://github.com/musictheory/oj.git#1.0",
+    "ojc": "^1.1.2",
     "phpjs": "^1.3.2",
     "portscanner": "^1.0.0",
     "process-finder": "^0.1.3",

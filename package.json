@@ -6,7 +6,7 @@
   "dependencies": {
     "body-parser": "^1.10.0",
     "bootstrap-accessibility-plugin": "^1.0.2",
-    "cachelicious": "0.0.3",
+    "cachelicious.x": "0.0.3",
     "cloudflare": "0.0.6",
     "connect": "^3.3.1",
     "connect-cachify-static": "^0.2.0",

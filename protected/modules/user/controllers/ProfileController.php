@@ -14,8 +14,7 @@
         $finfo = new finfo(FILEINFO_MIME);
         $mt = $finfo->buffer($profile->avatar);
         header("Content-type: $mt");
-        #header("Content-length: 3");
-        #header("Content-length: ".sizeof($profile->avatar));
+        header("Content-length: ".strlen($profile->avatar));
         echo $profile->avatar;
         Yii::app()->end();
     }

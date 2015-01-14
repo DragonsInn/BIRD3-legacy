@@ -18,4 +18,13 @@ require_once("php_modules/deps_check.php");
 
 require_once($yii);
 $c=include_once($config);
-Yii::createWebApplication($c)->run();
+Yii::createWebApplication($c);
+
+// I really want this, gdamnit
+/*Yii::app()->onBeginRequest = function($e) {
+    #return ob_start("ob_gzhandler");
+};
+Yii::app()->onEndRequest = function($e) {
+};*/
+
+Yii::app()->run();

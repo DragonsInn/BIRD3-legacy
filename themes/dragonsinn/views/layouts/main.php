@@ -59,8 +59,7 @@
             <nav class="navbar navbar-soft">
                 <div class="container-fluid">
                     <div class="navbar-header">
-                        <button
-                            type="button" class="navbar-toggle collapsed"
+                        <button class="navbar-toggle collapsed"
                             data-toggle="collapse" data-target="#BIRD3mainBar"
                         >
                             <span class="sr-only">Toggle navigation</span>

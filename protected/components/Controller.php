@@ -199,4 +199,19 @@ class Controller extends CController
 		Yii::app()->cdn
 			->js("typeahead.bundle.js");
 	}
+
+	public function render($view, $data = null, $return = false, $options = null) {
+		$output = parent::render($view, $data, true);
+		$compactor = Yii::app()->contentCompactor;
+		if($compactor == null) {
+			throw new CHttpException(500, Yii::t('messages',
+				'Missing component ContentCompactor in configuration.'
+			));
+		}
+		$coutput = $compactor->compact($output, $options);
+		if($return)
+			return $coutput;
+		else
+			echo $coutput;
+	}
 }

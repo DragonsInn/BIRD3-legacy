@@ -15,7 +15,7 @@ $lastModified=filemtime(__FILE__);
 $etagFile = md5_file(__FILE__);
 // Obtain headers
 $ifModifiedSince=(isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : false);
-$etagHeader=(isset($_SERVER['HTTP_IF_NONE_MATCH']) ? trim($_SERVER['HTTP_IF_NONE_MATCH']) : false);
+$etagHeader=(isset($_SERVER['HTTP_IF_NONE-MATCH']) ? $_SERVER['HTTP_IF_NONE-MATCH'] : false);
 // Send
 header("X-WingStyle: Alive");
 header("Cache-control: public, max-age=604800");
@@ -23,11 +23,10 @@ header("Last-Modified: ".gmdate("D, d M Y H:i:s", $lastModified)." GMT");
 header("Etag: $etagFile");
 header('Cache-Control: public');
 //check if page has changed. If not, send 304 and exit
-if (($ifModifiedSince!=false && @strtotime($ifModifiedSince)==$lastModified) || $etagHeader == $etagFile) {
-       header("HTTP/1.1 304 Not Modified");
-       exit;
+if($etagHeader && $etagHeader == $etagFile) {
+    header("HTTP/1.1 304 Not Modified");
+    exit;
 }
-
 // WS
 include_once("$main/php_modules/WingStyle/WingStyle.php");
 ws_copyright();

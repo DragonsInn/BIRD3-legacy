@@ -78,6 +78,23 @@ return array(
             'combineJs'=>true,
             'compressJs'=>false,
 		),
+		'contentCompactor' => array(
+			'class' => 'ext.contentCompactor.ContentCompactor',
+			'options' => array(
+				'compress_css' => true, // Compress CSS
+				'strip_comments' => true, // Remove comments
+				'keep_conditional_comments' => true, // Remove conditional comments
+				'compress_horizontal' => true, // Compress horizontally
+				'compress_vertical' => true, // Compress vertically
+				'compress_scripts' => true, // Compress inline scripts using basic algorithm
+				'line_break' => PHP_EOL, // The type of rowbreak you use in your document
+				'preserved_tags' => array('textarea', 'pre', 'script', 'style', 'code'),
+				'preserved_boundry' => '@@PRESERVEDTAG@@',
+				'conditional_boundries' => array('@@IECOND-OPEN@@', '@@IECOND-CLOSE@@'),
+				'script_compression_callback' => false,
+				'script_compression_callback_args' => array(),
+			)
+		),
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname='.$BIRD3['DB']['mydb'],
 			'emulatePrepare' => true,

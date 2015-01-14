@@ -22,13 +22,14 @@ header("Cache-control: public, max-age=604800");
 header("Last-Modified: ".gmdate("D, d M Y H:i:s", $lastModified)." GMT");
 header("Etag: $etagFile");
 header('Cache-Control: public');
+
+include_once("$main/php_modules/WingStyle/WingStyle.php");
 //check if page has changed. If not, send 304 and exit
 if($etagHeader && $etagHeader == $etagFile) {
     header("HTTP/1.1 304 Not Modified");
     exit;
 }
-// WS
-include_once("$main/php_modules/WingStyle/WingStyle.php");
+
 ws_copyright();
 WS()->load(
     "transition", "position", "float", "border",

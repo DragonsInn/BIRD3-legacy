@@ -21,15 +21,16 @@ header("X-WingStyle: Alive");
 header("Cache-control: public, max-age=604800");
 header("Last-Modified: ".gmdate("D, d M Y H:i:s", $lastModified)." GMT");
 header("Etag: $etagFile");
-header('Cache-Control: public');
+header("Content-type: text/css");
 
-include_once("$main/php_modules/WingStyle/WingStyle.php");
 //check if page has changed. If not, send 304 and exit
 if($etagHeader && $etagHeader == $etagFile) {
     header("HTTP/1.1 304 Not Modified");
     exit;
 }
 
+// WingStyle
+include_once("$main/php_modules/WingStyle/WingStyle.php");
 ws_copyright();
 WS()->load(
     "transition", "position", "float", "border",
@@ -61,6 +62,8 @@ $menu_height=40;
 
 WS("body")
     ->background->url($base."/images/bg.jpg") // $config['components']['cdn']['baseUrl']
+    # Fallback for image loading
+    ->background->color(black)
     ->color(white)
     ->height("100%")
     ->width("100%")

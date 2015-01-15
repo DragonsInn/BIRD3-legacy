@@ -11,3 +11,4 @@ config/BIRD3.ini
 *.rdb
 *.dump
 cdn/oj/*.js
+cache/*

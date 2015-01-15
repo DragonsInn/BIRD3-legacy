@@ -22,29 +22,28 @@ process.on("uncaughtException", function(e){
     process.exit(-1);
 });
 
+// Logging and configuring it
+global.log = new (winston.Logger)({
+    transports: [
+    new (winston.transports.Console)({
+        colorize: true,
+        timestamp: true
+    }),
+    new (winston.transports.File)({
+        filename: __dirname+'/log/bird3.log',
+        json: false,
+        maxsize: 50*1024^2
+    })
+    ]
+});
+
 // Global eventing
-global.BIRD3 = require("./lib/communicator.js");
+global.BIRD3 = require("./lib/communicator.js")(io, redis);
 
 // Initialize the config object.
 global.config = ini.getSync("./config/BIRD3.ini");
 config.base = __dirname;
 config.version = fs.readFileSync("./config/version.txt").toString().replace("\n","");
-
-// Logging and configuring it
-global.log = new (winston.Logger)({
-    transports: [
-        new (winston.transports.Console)({
-            colorize: true,
-            timestamp: true
-        }),
-        new (winston.transports.File)({
-            filename: __dirname+'/log/bird3.log',
-            json: false,
-            maxsize: 50*1024^2
-        })
-    ]
-});
-
 // Intro!
 log.info("BIRD3@"+config.version+" starting up!");
 
@@ -61,7 +60,5 @@ httpServer.on("listening", function(){
     require("./lib/security_handler.js")();
     require("./lib/error_handler.js")();
     require("./lib/request_handler.js")(app, httpServer);
-    require("./lib/status_worker.js")(redis);
     require("./lib/update_worker.js")();
-    require("./lib/websocket_handler.js")(io);
 });

@@ -5,7 +5,10 @@
     if(self = [super init]) {
         console.log("Init...");
         sio = io();
-        console.log("Connected using:", sio.io.engine.transport.name);
+        sio.on("connect", function(sock){
+            console.log("Connected using:", sio.io.engine.transport.name);
+            sio.emit("foo", "bar");
+        });
     }
     return self;
 }

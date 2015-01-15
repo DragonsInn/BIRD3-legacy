@@ -198,17 +198,6 @@ WS("#Ptop > div")
     ->display(none)
 ->end;
 
-
-// Elements
-/*WS("#outerContent * a")
-    ->color(lime)
-->end;
-WS("#outerContent * a:hover")
-    ->color("#00DF00")
-    ->text->decoration(none)
-->end;
-*/
-
 // Helper classes
 WS(reactToAll(".white-box"))
     ->boxShadow(0, 0, 20, 2, white)
@@ -323,7 +312,6 @@ WS(".mm-menu")
     ->width("20%")
 ->end;
 WS(".iconblock")
-    # text-align: center; display: inline-block; width: 15px;
     ->textAlign(center)
     ->display("inline-block")
     ->width(15)
@@ -345,6 +333,12 @@ WS(".xbl")
     ->backgroundRepeat("no-repeat")
     ->height(15)
     ->width(15)
+->end;
+
+WS("code", "pre")
+    ->background->rgba(0,0,0,0.3)
+    ->border(1, solid, white)
+    ->color(white)
 ->end;
 ?>
 

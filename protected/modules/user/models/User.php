@@ -58,13 +58,15 @@
         return array(
             # Register
             array('username, email, password', 'required', 'on'=>'register'),
+            /*
             array('username',
                 'ext.yii-antispam.CleanTalkValidator',
-                'check'=>'user', /* Check type message or user */
+                'check'=>'user', // Check type message or user
                 'emailAttribute'=>'email',
                 'nickNameAttribute'=>'username',
                 'on'=>'register'
             ),
+            */
             array(
                 "username, email", "unique", 'on'=>'register',
                 "allowEmpty"=>false, "attributeName"=>null
@@ -97,14 +99,17 @@
 
     public function relations() {
         return array(
+            // Module local
             'profile'=>array(self::HAS_ONE, 'UserProfile', 'uID'),
-            #'updates'=>array(self::HAS_MANY, "UserUpdate", "tID"),
+            'updates'=>array(self::HAS_MANY, "UserUpdate", "tID"),
+            'permissions'=>array(self::HAS_MANY, "UserPermissions", "uID"),
+            'settings'=>array(self::HAS_ONE, "UserSettings", "uID"),
+            // External
             #'characters'=>array(self::HAS_MANY, "Character", "uID"),
             #'gallery'=>array(self::HAS_ONE, "Gallery", "u_id"),
             #'blogPosts'=>array(self::HAS_MANY, "BlogPost", "u_id"),
             #'forumTopics'=>array(self::HAS_MANY, "ForumTopic", "u_id"),
             #'forumPosts'=>array(self::HAS_MANY, "ForumPost", 'u_id'),
-            #'permissions'=>array(self::HAS_MANY, "UserPermissions", "uID")
         );
     }
 

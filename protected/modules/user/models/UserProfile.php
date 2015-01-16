@@ -6,7 +6,7 @@
     public function tableName() {
         return "{{user_profile}}";
     }
-    #public function primaryKey() { return "uID"; }
+    public function primaryKey() { return "uID"; }
 
     /**
      * DB Structure
@@ -24,22 +24,22 @@
      * @data avatar         | Image data representing the avvie.
      */
 
-     public function relations() {
-         return array(
-             "user"=>array(self::BELONGS_TO, "User", "uID")
-         );
-     }
+    public function relations() {
+        return array(
+            "user"=>array(self::BELONGS_TO, "User", "uID")
+        );
+    }
 
-     public function attributeLabels() {
-         return [
-             "skype"=>'<i class="fa fa-skype"></i> Skype',
-             "steam"=>'<i class="fa fa-steam"></i> Steam',
-             "psn"=>'<span class="psn"></span> Playstation Network',
-             "xboxlife"=>'<span class="xbl"></span> XBox Live',
-             "facebook"=>'<i class="fa fa-facebook"></i> Facebook',
-             "twitter"=>'<i class="fa fa-twitter"></i> Twitter',
-             "furaffinity"=>'FurAffinity',
-             "sofurry"=>'SoFurry'
-         ];
-     }
+    public function attributeLabels() {
+        return [
+            "skype"=>'<i class="fa fa-skype"></i> Skype',
+            "steam"=>'<i class="fa fa-steam"></i> Steam',
+            "psn"=>'<span class="psn"></span> Playstation Network',
+            "xboxlife"=>'<span class="xbl"></span> XBox Live',
+            "facebook"=>'<i class="fa fa-facebook"></i> Facebook',
+            "twitter"=>'<i class="fa fa-twitter"></i> Twitter',
+            "furaffinity"=>'FurAffinity',
+            "sofurry"=>'SoFurry'
+        ];
+    }
 }

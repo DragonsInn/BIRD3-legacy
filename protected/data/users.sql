@@ -1,15 +1,15 @@
 /* Users */
 CREATE TABLE IF NOT EXISTS `tbl_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(20) NOT NULL DEFAULT '',
-  `password` varchar(128) NOT NULL DEFAULT '',
-  `email` varchar(128) NOT NULL DEFAULT '',
-  `activkey` varchar(128) NOT NULL DEFAULT '',
-  `superuser` int(1) NOT NULL DEFAULT '0',
-  `status` int(1) NOT NULL DEFAULT '0',
+  `username` varchar(20) NOT NULL DEFAULT ``,
+  `password` varchar(128) NOT NULL DEFAULT ``,
+  `email` varchar(128) NOT NULL DEFAULT ``,
+  `activkey` varchar(128) NOT NULL DEFAULT ``,
+  `superuser` int(1) NOT NULL DEFAULT `0`,
+  `status` int(1) NOT NULL DEFAULT `0`,
   `developer` int(1) NOT NULL,
-  `create_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `lastvisit_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `create_at` int(11) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `lastvisit_at` int(11) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_username` (`username`),
   UNIQUE KEY `user_email` (`email`)
@@ -30,7 +30,8 @@ CREATE TABLE IF NOT EXISTS `tbl_user_profile` (
   -- Bios
   `about` text NOT NULL,
   -- Avvie
-  `avatar` longblob NOT NULL
+  `avatar` longblob NOT NULL,
+  PRIMARY KEY (`uID`)
 );
 
 /* Private messages */
@@ -56,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `tbl_user_pm_conv` (
 
 /* User Subscription
    Users can subscribe to other users.
-   When a user does something its nodejs' task to pick it up and write an entry.
+   When a user does something its nodejs` task to pick it up and write an entry.
 */
 CREATE TABLE IF NOT EXISTS `tbl_user_sub` (
   `sID` int(11) NOT NULL,
@@ -72,4 +73,20 @@ CREATE TABLE IF NOT EXISTS `tbl_user_update` (
   `contentID` int(11) NOT NULL,
   `inserted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `tbl_user_settings` (
+    `id` int(11) NOT NULL,
+    `adult` tinyint(1) NOT NULL,
+    `newsletter` tinyint(1) NOT NULL,
+    `public` tinyint(1) NOT NULL,
+    `showEmail` tinyint(1) NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `tbl_user_permissions` (
+    `id` int(11) NOT NULL,
+    `publicBlog` tinyint(1) NOT NULL,
+    `manageJobs` tinyint(1) NOT NULL,
+    PRIMARY KEY (`id`)
 );

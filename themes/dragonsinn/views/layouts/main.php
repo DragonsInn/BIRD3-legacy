@@ -179,21 +179,25 @@
         </div>
         <div class="clearfix"></div>
         <!-- Copyright and the like. -->
-        <div id="footer">
-            <div>Dragon's Inn was created using BIRD3. Both by Ingwie Phoenix</div>
-            <div>Background by <a href="#" style="background:black;">Max Killion</a></div>
-            <div>Design "Exciting Night" by Ingwie Phoenix</div>
-            <div>Version: <i>BIRD@<?=Yii::app()->params['version']?></i></div>
-            <div>Staff | Contact | Credits</div>
-            <div>&nbsp;</div>
-            <div>
+        <div id="footer" class="container-fluid">
+            <div class="col-md-5">
+                <div>Dragon's Inn was created using BIRD3. Both by Ingwie Phoenix</div>
+                <div>Background by <a href="#" style="background:black;">Max Killion</a></div>
+                <div>Design "Exciting Night" by Ingwie Phoenix</div>
+            </div>
+            <div class="col-md-2">
                 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
                     <input type="hidden" name="cmd" value="_s-xclick">
                     <input type="hidden" name="hosted_button_id" value="5N3GJGG42QJ2G">
                     <button type="submit" class="btn btn-primary" name="submit">
-                        Donate using <i class="fa fa-paypal"></i> Paypal!
+                        <div>Buy me a <i class="fa fa-beer"></i> beer and say thanks!</div>
+                        <div>Donate via <i class="fa fa-paypal"></i> Paypal</div>
                     </button>
                 </form>
+            </div>
+            <div class="col-md-5">
+                <div>Version: <i>BIRD@<?=Yii::app()->params['version']?></i></div>
+                <div>Staff | Contact | Credits</div>
             </div>
         </div>
     </body>

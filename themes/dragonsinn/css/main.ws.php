@@ -148,20 +148,12 @@ WS("#footer")
     # Fix and clear the mess from above.
     ->display(block)
     ->position(relative)
-    ->clear("both")
     # Now the style.
-    ->border(1, solid, white)
-    ->borderRadius(5)
     ->text->align(center)
-    ->background->rgba(0,0,0,0.3)
-    #->background(orange)
+    ->background->rgba(0,0,0,0.8)
     ->padding(5,2.5,5,2.5)
-    ->margin->left(auto)
-    ->margin->right(auto)
-    ->margin->top(50)
-    ->minWidth(200)
-    ->maxWidth(800)
-    ->width("30%")
+    ->margin->top("5%")
+    ->width("100%")
 ->end;
 
 WS("#leftSide", "#rightSide")
@@ -336,9 +328,20 @@ WS(".xbl")
 ->end;
 
 WS("code", "pre")
-    ->background->rgba(0,0,0,0.3)
+    ->background->rgba(0,0,0,0.5)
     ->border(1, solid, white)
     ->color(white)
+->end;
+
+// Editing some BS again...
+WS(".well", ".list-group-item", ".panel")
+    ->background->rgba(21,21,21, 0.6)
+->end;
+WS(".well")
+    ->padding(round(19/2))
+->end;
+WS(".panel-primary > .panel-heading")
+    ->background->rgba(42,159,214, 0.6)
 ->end;
 ?>
 

@@ -69,6 +69,9 @@ return array(
 			'basePath'=>$base.'/cdn',
 			'baseUrl'=>$BIRD3['CDN']['baseUrl']
 		),
+		'clientCache'=>array(
+			'class'=>'ClientCache'
+		),
 		'clientScript'=>array(
 			#'class'=>'ext.minScript.components.ExtMinScript',
 			'class'=>'ext.ExtendedClientScript.ExtendedClientScript',

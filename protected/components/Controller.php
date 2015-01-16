@@ -1,13 +1,7 @@
-<?php
-/**
- * Controller is the customized base controller class.
- * All controller classes for this application should extend from this base class.
- */
-class Controller extends CController
-{
+<?php class Controller extends CController {
 	public $layout='//layouts/main';
-	public $menu=array();
 	public $breadcrumbs=array();
+	public $showingBan=false;
 
 	// Style stuff...
 	public $og_type="website";
@@ -82,6 +76,16 @@ class Controller extends CController
 	);
 
 	public function registerScripts() {
+		// Kinda redundant, but easier to read.
+		if(Ban::isBanned($_SERVER['REMOTE_ADDR'], Ban::BY_IP)) {
+			return $this->redirect("/banned");
+		} else if(
+			!Yii::app()->user->isGuest
+			&& Ban::isBanned(Yii::app()->user->id, Ban::BY_USER)
+		) {
+			return $this->redirect("/banned");
+		}
+
 		$cs = Yii::app()->clientScript;
 
 		$tbase = Yii::app()->theme->baseUrl;

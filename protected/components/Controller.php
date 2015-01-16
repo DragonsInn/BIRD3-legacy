@@ -75,6 +75,12 @@
 		),
 	);
 
+	public function init() {
+		// Amma CHEEEETAH. a CHEEEEETAH- *cough.* >v>
+		include_once "Helpers.php";
+		return parent::init();
+	}
+
 	public function registerScripts() {
 		// Kinda redundant, but easier to read.
 		if(Ban::isBanned($_SERVER['REMOTE_ADDR'], Ban::BY_IP)) {
@@ -106,7 +112,9 @@
 			->alt("js", "/bootstrap-accessibility/js/bootstrap-accessibility.min.js")
 			->alt("js", "/mmenu/js/jquery.mmenu.min.all.js")
 			->js('socket.io.js')
-			->js('delivery.js');
+			->js('delivery.js')
+			# Plugins
+			->js("circle-progress.js");
 
 		Yii::app()->cdn
 			->css("normalize.css")
@@ -167,6 +175,8 @@
 		[class^=\"m-icon-big-\"]  { background-image: url({$mImg}/syncfusion-icons.png); }
 		.m-icon-white             { background-image: url({$mImg}/syncfusion-icons-white.png); }
 		/* Fixes end */");
+
+		// Make our footer sticky
 
 		// Aditions
 		if($this->rqSwitch) $this->requireSwitch();

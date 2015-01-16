@@ -8,4 +8,6 @@ $this->pageTitle="Home";
 ?>
 
 <h3>Don't mind the below, its dev stuff.</h3>
-<pre><?php print_r($_SERVER); ?></pre>
+<pre><?php
+    echo joinPaths([Yii::getPathOfAlias("ext"), "file.md"]);
+?></pre>

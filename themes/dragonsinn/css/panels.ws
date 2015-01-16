@@ -10,6 +10,7 @@ $panel_bottom_height = 150;
 WS(".panel-default")
     ->position(fixed)
     ->background->rgba(0,0,0, 0.5)
+    ->visibility("hidden")
 ->end;
 
 WS(".panel-side")
@@ -58,6 +59,13 @@ WS(".panel-top.panel-top-active")
 ->end;
 WS(".panel-bottom.panel-bottom-active")
     ->bottom(0)
+->end;
+
+WS(
+    ".panel-bottom-active", ".panel-top-active",
+    ".panel-side-active"
+)
+    ->visibility("visible")
 ->end;
 
 // Pushing

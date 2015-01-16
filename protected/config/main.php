@@ -95,7 +95,7 @@ return array(
 				'keep_conditional_comments' => true, // Remove conditional comments
 				'compress_horizontal' => true, // Compress horizontally
 				'compress_vertical' => true, // Compress vertically
-				'compress_scripts' => true, // Compress inline scripts using basic algorithm
+				'compress_scripts' => false, // Compress inline scripts using basic algorithm
 				'line_break' => PHP_EOL, // The type of rowbreak you use in your document
 				'preserved_tags' => array('textarea', 'pre', 'script', 'style', 'code'),
 				'preserved_boundry' => '@@PRESERVEDTAG@@',

@@ -13,7 +13,7 @@
         <title><?=$pageTitle?></title>
 
         <!-- casual -->
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta name="description" content="<?=$meta_desc?>"/>
         <!-- Facebook -->
         <meta property="og:title" content="<?=$pageTitle?>"/>
@@ -28,9 +28,15 @@
         <meta name="twitter:title" content="<?=$pageTitle?>"/>
         <meta name="twitter:description" content="<?=$meta_desc?>"/>
         <meta name="twitter:image" content="<?=$this->og_image?>"/>
-
+        <!-- Tiny bit of JS -->
         <script>
             var useBottomPanel = <?=($this->panelBottom?"true":"false")?>;
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+            ga('create', 'UA-58656116-1', 'auto');
+            ga('send', 'pageview');
         </script>
     </head>
     <body class="panel-pusher">
@@ -67,11 +73,13 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#" id="trigger-left">
+                        <a class="navbar-brand" href="#Pleft" title="Search" aria-label="Search" id="trigger-left">
                             <i class="fa fa-search"></i>&nbsp;
                         </a>
                         <a class="navbar-brand" href="/">
-                            <img src="/cdn/images/di_icon.png" height=50 style="margin-top:-15px;">
+                            <img title="Dragon's Inn icon" alt="Dragon's Inn icon"
+                                src="/cdn/images/di_icon.png"
+                                height="50" style="margin-top:-15px;">
                         </a>
                     </div>
 
@@ -125,7 +133,7 @@
                             ?>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
-                            <li><a href="#" id="trigger-right">
+                            <li><a href="#Pright" id="trigger-right">
                                 <i class="fa fa-user"></i> <?=(
                                     Yii::app()->user->isGuest
                                     ? "Login/Register"

@@ -152,8 +152,8 @@ WS("#footer")
     ->text->align(center)
     ->background->rgba(0,0,0,0.8)
     ->padding(5,2.5,5,2.5)
-    ->margin->top("5%")
     ->width("100%")
+    ->margin->top("5%")
 ->end;
 
 WS("#leftSide", "#rightSide")

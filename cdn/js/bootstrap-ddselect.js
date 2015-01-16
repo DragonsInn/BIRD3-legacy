@@ -1,4 +1,4 @@
-﻿/**
+/**
  * bootstrap-ddselect.js
  * v1.0.1
  *
@@ -99,7 +99,7 @@
             //
             function addOptionGroup($optgroup, $parent) {
                 var $submenu = $('<li class="dropdown-submenu"><a tabindex="-1" href="#">' + $optgroup.attr('label') + '</a><ul class="dropdown-menu"></ul></li>');
-                
+
                 $optgroup.children('option').each(function () {
                     addOption($(this), $submenu.children('.dropdown-menu'));
                 });
@@ -183,7 +183,7 @@
 				api = ddSelect.getApi();
 				method = 'refresh';
 			}
-			
+
             if (method) {
 				if (api[method]) {
 					api[method]();

@@ -1,4 +1,9 @@
-<?php Yii::app()->clientScript->registerScript(
+<?php
+    // We gotta tell the engine that we want this.
+    #$this->rqSwitch = true;
+?>
+
+<?php /*Yii::app()->clientScript->registerScript(
     "switchInit", '$("select").ddselect({
         buttonClass: "btn-default",
         sizeClass: "btn-xs"
@@ -10,7 +15,7 @@
         onClass: "btn-success btn-xs"
     });',
     CClientScript::POS_READY
-); ?>
+); */?>
 <?php $form=$this->beginWidget("CActiveForm", array(
     'id'=>'character-form',
     'focus'=>array($model,'name')
@@ -58,7 +63,8 @@
                     <li class="list-group-item">
                         <?=$form->labelEx($model, "importance", array("class"=>"col-md-6"))?>
                         <?=$form->dropDownList($model, "importance", $model->listImportance(), array(
-                            "data-style"=>"col-md-6 form-control"
+                            "data-style"=>"col-md-6 form-control",
+                            "data-role"=>"dropdown"
                         ))?>
                     </li>
                     <li class="list-group-item">

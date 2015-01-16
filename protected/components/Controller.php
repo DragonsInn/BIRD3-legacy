@@ -126,6 +126,8 @@
 		Yii::app()->cdn
 			->js("oj-runtime.js");
 
+		#Yii::app()->booster->getBooster()->init();
+
 		// BIRD3 Theme. We use the URL here to avoid minification. Trickery, yo.
 		$cs->registerCssFile($yiiUrl.$tbase."/css/main.ws.php");
 		$cs->registerScriptFile($yiiUrl."/cdn/oj/BIRD3.oj");

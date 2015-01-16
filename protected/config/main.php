@@ -64,6 +64,12 @@ return array(
 			'basePath'=>$base."/themes",
 			"baseUrl"=>"/themes"
 		),
+		'booster'=>array(
+			'class'=>'ext.yiibooster.components.Booster',
+			'bootstrapCss'=>false,
+			'jqueryCss'=>false,
+			'disableZooming'=>false
+		),
 		'cdn'=>array(
 			'class'=>'CDNHelper',
 			'basePath'=>$base.'/cdn',

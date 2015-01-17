@@ -59,7 +59,7 @@ $(function(){
 -(bootstrapDialog)alert:(string)msg withTitle:(string)title {
     return [self alert:msg
                  withTitle:self.ptitle
-                 type:BootstrapDialog.TYPE_PRIMARY
+                 type:BootstrapDialog.TYPE_DEFAULT
             ];
 }
 -(bootstrapDialog)alert:(string)msg {

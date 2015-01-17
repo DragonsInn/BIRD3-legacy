@@ -104,8 +104,8 @@
 		// jQuery
 		Yii::app()->cdn
 			->js("jquery-1.11.1.js")
-			->js("jquery-migrate-1.2.1.js")
-			->js('jquery.easytabs.js');
+			->js("jquery-migrate-1.2.1.js");
+			#easytabs
 
 		Yii::app()->cdn
 			->alt("js", "/bootstrap/js/bootstrap.min.js")
@@ -130,6 +130,10 @@
 			->css("m-icons.css")
 			->js("m-dropdown.js")
 			->js("m-radio.js");
+
+		Yii::app()->cdn
+			->css("bootstrap-dialog.min.css")
+			->js("bootstrap-dialog.min.js");
 
 		Yii::app()->cdn
 			->js("oj-runtime.js");

@@ -104,6 +104,9 @@ return array(
 				'script_compression_callback_args' => array(),
 			)
 		),
+		'browser'=>array(
+			'class'=>'Browser'
+		),
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname='.$BIRD3['DB']['mydb'],
 			'emulatePrepare' => true,

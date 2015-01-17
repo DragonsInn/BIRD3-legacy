@@ -1,8 +1,25 @@
+// Tiny jQuery plugin
+// http://stackoverflow.com/questions/6524288/jquery-event-for-user-pressing-enter-in-a-textbox
+$(function(){
+    $.fn.pressEnter = function(fn) {
+
+        return this.each(function() {
+            $(this).bind('enterPress', fn);
+            $(this).keyup(function(e){
+                if(e.keyCode == 13)
+                {
+                    $(this).trigger("enterPress");
+                }
+            })
+        });
+    };
 @implementation BIRD3App {
     var sio;
+    var ptitle;
 }
 -(id)init {
     if(self = [super init]) {
+        self.ptitle = "Dragon's Inn";
         console.log("Init...");
         sio = io();
         sio.on("connect", function(sock){
@@ -12,10 +29,120 @@
     }
     return self;
 }
--(SocketIO)socket {
+-(SocketIO)getSocketIO {
     return sio;
+}
+-(string)getTitle {
+    return self.ptitle;
+}
+-(bootstrapDialog)alert:(string)msg withTitle:(string)title type:(dtype)t {
+    return BootstrapDialog.show({
+        type: t,
+        title: title,
+        message: msg,
+        closable: true,
+        onshown: function(dialog) {
+            dialog.getModalFooter().find("#btn-ok")[0].focus();
+        },
+        buttons: [{
+            id: 'btn-ok',
+            icon: 'fa fa-check',
+            label: 'OK',
+            cssClass: 'btn-default',
+            autospin: false,
+            action: function(dialogRef){
+                dialogRef.close();
+            }
+        }]
+    });
+}
+-(bootstrapDialog)alert:(string)msg withTitle:(string)title {
+    return [self alert:msg
+                 withTitle:self.ptitle
+                 type:BootstrapDialog.TYPE_PRIMARY
+            ];
+}
+-(bootstrapDialog)alert:(string)msg {
+    return [self alert:msg withTitle:self.ptitle];
+}
+-(bootstrapDialog)prompt:(string)what thenDo:(callable)cb {
+    var msg="";
+    if(typeof what == "object") {
+        var holder="";
+        if(typeof what.text != "undefined")
+            msg = '<p>'+what.text+'</p>';
+        if(typeof what.placeholder != "undefined")
+            holder = 'placeholder="'+what.placeholder+'"';
+        msg += '<input type="text" class="form-control bootstrap-dialog-input" '+holder+'>';
+    } else {
+        msg = what;
+    }
+    return BootstrapDialog.show({
+        title: self.ptitle,
+        message: msg,
+        closable: true,
+        onshown: function(dialog) {
+            var $footer = dialog.getModalFooter();
+            var $body = dialog.getModalBody();
+            $body.find("input")[0].focus();
+            $(".bootstrap-dialog-input").pressEnter(function(e){
+                var $button = $footer.find("#btn-ok")[0];
+                $button.click();
+            });
+        },
+        buttons: [{
+            id: 'btn-ok',
+            icon: 'fa fa-check',
+            label: 'OK',
+            cssClass: 'btn-default',
+            autospin: false,
+            action: function(dialog) {
+                var data, $body = dialog.getModalBody();
+                data = $body.find("input")[0].value;
+                cb(data);
+                dialog.close();
+            }
+        },{
+            id: 'btn-cancel',
+            //icon: 'fa fa-ellipsis-h',
+            label: 'Cancel',
+            cssClass: 'btn-danger',
+            autospin: false,
+            action: function(dialog) {
+                dialog.close();
+            }
+        }]
+    });
+}
+-(BIRD3App)emit:(string)name data:(id)obj {
+    sio.emit(name, obj);
+    return self;
+}
+-(BIRD3App)on:(string)name callback:(callable)cb {
+    sio.on(name, cb);
+    return self;
 }
 @end
 
-var app = [[BIRD3App alloc] init];
-var sio = [app socket];
+// The global object, that other scripts will understand.
+window.app = [[BIRD3App alloc] init];
+app.socket = function() {
+    return [app socket];
+}
+app.alert = function(msg, title, _type) {
+    if(typeof title == "undefined" && typeof _type == "undefined") {
+        return [app alert:msg];
+    } else if(typeof title != "undefined" && typeof _type == "undefined") {
+        return [app alert:msg withTitle:title];
+    } else {
+        return [app alert:msg withTitle:title type:_type];
+    }
+}
+app.prompt = function(what, cb) { return [app prompt:what thenDo:cb]; }
+app.on = function(name, cb) { return [app on:name callback:cb]; }
+app.emit = function(name, obj) { return [app emit:name data:obj]; }
+app.getTitle = function() { return [app getTitle]; }
+
+// Hax.
+alert = app.alert;
+});

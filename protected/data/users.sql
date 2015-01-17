@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `tbl_user_pm_conv` (
   `sID` int(11) NOT NULL, -- Sender
   `rID` int(11) NOT NULL, -- Reciever
   `mID` int(11) NOT NULL, -- MSG
-  -- Response to mID if gt 0
+  -- Response to mID if gt -1
   `response` int(11) NOT NULL DEFAULT 0,
   -- Timestap = a long int! :D So, make it a PK
   -- YII must set this!

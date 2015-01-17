@@ -1,4 +1,5 @@
 <?php
+    $this->pageTitle = "Character form";
     // We gotta tell the engine that we want this.
     #$this->rqSwitch = true;
 ?>

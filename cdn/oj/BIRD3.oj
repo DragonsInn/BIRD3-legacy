@@ -78,6 +78,7 @@ $(function(){
         msg = what;
     }
     return BootstrapDialog.show({
+        type: "type-default",
         title: self.ptitle,
         message: msg,
         closable: true,

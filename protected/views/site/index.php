@@ -15,13 +15,24 @@ $this->pageTitle="Home";
     To get more information, see the <code>TODO.md</code> file at the
     <a href="http://git.ingwie.me/ingwie/bird3" target="_blank">source repository</a>.
 </p>
+
 <h4>Try out some small things.</h4>
+<script type="text/javascript">
+function p_test() {
+    app.prompt({
+        text: "This is cool",
+        placeholder: "And this is shady."
+    }, function(data){
+        app.alert("Got: "+data);
+    });
+};
+</script>
 <p>
     Click this, to show the new dialogs.
     <button onclick="p_test();" id="dlgt" class="btn btn-info">Trigger dialog</button>
 </p>
 <p>
-    Click for an alert. 
+    Click for an alert.
     <button onclick="alert('Yo.')" class="btn btn-success">Alert</button>
 </p>
 <p>
@@ -45,14 +56,3 @@ $this->pageTitle="Home";
         Danger
     </button>
 </p>
-
-<script type="text/javascript">
-function p_test() {
-    app.prompt({
-        text: "This is cool",
-        placeholder: "And this is shady."
-    }, function(data){
-        app.alert("Got: "+data);
-    });
-};
-</script>

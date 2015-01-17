@@ -33,8 +33,8 @@
 .navbar-soft .navbar-nav > .open > a,
 .navbar-soft .navbar-nav > .open > a:hover,
 .navbar-soft .navbar-nav > .open > a:focus {
-    color: #555;
-    background-color: #D5D5D5;
+    color: white;
+    background-color: rgba(48,48,48,0.8);
 }
 /* caret */
 .navbar-soft .navbar-nav > .dropdown > a .caret {

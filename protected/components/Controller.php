@@ -181,6 +181,12 @@
 		/* Fixes end */");
 
 		// Make our footer sticky
+		Yii::app()->cdn
+			->js("jquery.stickyfooter.min.js")
+			->css("jquery.stickyfooter.css");
+		$cs->registerScript("stickyFooter",
+			'$("#footer").stickyFooter({content:"#content"});',
+		CClientScript::POS_READY);
 
 		// Aditions
 		if($this->rqSwitch) $this->requireSwitch();

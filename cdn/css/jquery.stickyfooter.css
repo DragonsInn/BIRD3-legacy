@@ -1,0 +1,6 @@
+.sticky-footer
+{
+	position: absolute !important;
+	bottom: 0;
+	width: 100%;
+}

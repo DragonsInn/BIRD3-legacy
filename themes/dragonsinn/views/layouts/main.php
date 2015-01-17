@@ -102,8 +102,8 @@
                                     ? array(
                                         "class"=>"dropdown-toggle",
                                         "data-toggle"=>"dropdown",
-                                        "role"=>"button",
-                                        "aria-expanded"=>"false"
+                                        "aria-expanded"=>"false",
+                                        "role"=>"button"
                                     )
                                     : array()
                                 );

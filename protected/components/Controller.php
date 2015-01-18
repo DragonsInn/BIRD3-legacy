@@ -24,9 +24,10 @@
 			"href"=>"#",
 			"entries"=>array(
 				array("Home", "icon"=>"fa fa-home", "url"=>array("/")),
-				array("<font color=\"red\">Rules/TOS</font>", "icon"=>"fa fa-legal", "url"=>array("/docs/rules")),
+				array("<font color=\"red\">Rules &amp; TOS</font>", "icon"=>"fa fa-legal", "url"=>array("/docs/Rules_and_TOS")),
+				array("Roleplaying etiquette", "icon"=>"fa fa-info-circle", "url"=>array("/docs/Roleplaying_Etiquette")),
 				array("Staff", "icon"=>"glyphicon glyphicon-certificate", "url"=>array("/home/staff")),
-				array("Infos/Credits", "icon"=>"fa fa-exclamation", "url"=>array("/home/infos")),
+				array("Infos and credits", "icon"=>"fa fa-exclamation", "url"=>array("/docs/Infos_and_credits")),
 				array("Manage", "icon"=>"fa fa-cogs","url"=>array("/home/manage"))
 			)
 		),
@@ -120,7 +121,7 @@
 			->css("normalize.css")
 			->alt("css", "/bootstrap/css/bootstrap-cyborg.css")
 			->alt("css", "/bootstrap-accessibility/css/bootstrap-accessibility.css")
-			->alt("css", "/mmenu/css/jquery.mmenu.all.css")
+			#->alt("css", "/mmenu/css/jquery.mmenu.all.css")
 			->css("social-buttons.css")
 			->alt("css", "/font-awesome/css/font-awesome.css");
 
@@ -185,7 +186,7 @@
 			->js("jquery.stickyfooter.min.js")
 			->css("jquery.stickyfooter.css");
 		$cs->registerScript("stickyFooter",
-			'$("#footer").stickyFooter({content:"#content"});',
+			'$("#footer").stickyFooter({content:"#outerContent"});',
 		CClientScript::POS_READY);
 
 		// Aditions

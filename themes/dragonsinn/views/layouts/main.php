@@ -45,7 +45,8 @@
             <div id="Ptop" class="panel-default panel-top">
             </div>
             <div id="Pleft" class="panel-default panel-side panel-left container">
-                <p>Search not implemented yet.</p>
+                <p>This search will look for Characters, Media and Forum entries.</p>
+                <div><input type="text" id="allSearch" class="form-control white-box"></div>
             </div>
             <div id="Pright" class="panel-default panel-side panel-right">
                 <?php
@@ -146,31 +147,39 @@
             </nav>
         </div>
 
-        <!-- Tab menu -->
-        <?php if(!empty($this->tabbar)) { ?>
-        <div id="tabbar">
-            <?=$this->tabbar?>
-        </div>
-        <?php } ?>
-
         <!-- Content -->
         <?php # Decide the #content class.
             if(empty($this->leftSide) && empty($this->rightSide)) {
                 $cClass = "cType1";
+                $tClass = "oType1";
             } elseif(
                 empty($this->leftSide) && !empty($this->rightSide)
                 || !empty($this->leftSide) && empty($this->rightSide)
             ) {
                 $cClass = "cType2";
+                $tClass = "oType2";
             } elseif(!empty($this->leftSide) && !empty($this->rightSide)) {
                 $cClass = "cType3";
+                $tClass = "oType3";
             }
-            if(empty($this->tabbar)) $tClass = "extraMargin";
-            else                     $tClass = "no-extraMargin";
-            if($this->allPage)       $acClass = "AllYourPageAreBelongToUs";
-            else                     $acClass = "";
+            if($this->allPage) {
+                $acClass = "AllYourPageAreBelongToUs";
+                $tClass = "";
+            } else {
+                if(empty($this->tabbar)) {
+                    $acClass = "normalPage";
+                } else {
+                    $acClass = "normalPage-tabbed";
+                }
+            }
         ?>
-        <div id="outerContent" class="<?=$tClass?> <?=$acClass?>">
+        <div id="outerContent" class="<?=$acClass?> <?=$tClass?>">
+            <!-- Tab menu -->
+            <?php if(!empty($this->tabbar)) { ?>
+                <div id="tabbar">
+                    <?=$this->tabbar?>
+                </div>
+            <?php } ?>
             <?php if(!empty($this->leftSide)) { ?>
             <div id="leftSide">
                 <?=$this->leftSide?>
@@ -184,8 +193,10 @@
                 <?=$this->rightSide?>
             </div>
             <?php } ?>
+            <div class="clearfix"></div>
         </div>
-        <div class="clearfix"></div>
+
+        <?php if(!$this->allPage): ?>
         <!-- Copyright and the like. -->
         <div id="footer" class="container-fluid">
             <div class="col-md-5">
@@ -197,7 +208,7 @@
                 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
                     <input type="hidden" name="cmd" value="_s-xclick">
                     <input type="hidden" name="hosted_button_id" value="5N3GJGG42QJ2G">
-                    <button type="submit" class="btn btn-primary" name="submit">
+                    <button type="submit" class="btn btn-default btn-sm" name="submit">
                         <div>Buy me a <i class="fa fa-beer"></i> beer and say thanks!</div>
                         <div>Donate via <i class="fa fa-paypal"></i> Paypal</div>
                     </button>
@@ -205,8 +216,9 @@
             </div>
             <div class="col-md-5">
                 <div>Version: <i>BIRD@<?=Yii::app()->params['version']?></i></div>
-                <div>Staff | Contact | Credits</div>
+                <div>Staff | Contact | Credits | Report issue</div>
             </div>
         </div>
+        <?php endif; ?>
     </body>
 </html>

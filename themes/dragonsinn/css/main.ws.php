@@ -89,47 +89,53 @@ WS("#menu div div.text-right", "#menu div div.text-left")
 
 // This fixes some odd padding behavior and adresses flaoting divs.
 WS("#outerContent")
-    ->width("85%")
     ->margin->left(auto)
     ->margin->right(auto)
     ->whiteSpace(nowrap)
     ->display(block)
-->end;
-WS(".extraMargin")
-    ->margin->top("8%")
-->end;
-WS(".no-extraMargin")
-    ->margin->top("4%")
+    #->background(lime)
 ->end;
 WS(".AllYourPageAreBelongToUs")
     ->width("100%")
-    ->margin(0)
+    ->margin->top(0)
 ->end;
-
-WS("#outerContent > div")
-    ->display("inline-block")
+WS(".normalPage")
+    ->margin->top("4%")
+->end;
+WS(".normalPage-tabbed")
+    ->margin->top("2%")
+->end;
+WS(".oType1")
+# Type 1: Full width
+    ->width("85%")
+->end;
+WS(".oType2")
+    # Type 2: One sidebar shown
+    ->width("90%")
+->end;
+WS(".oType3")
+    # Type 3: Both sidebars shown
+    ->width("95%")
 ->end;
 
 WS("#tabbar")
-    ->margin->bottom(30)
-    ->margin->top(100)
+    ->margin->bottom(50)
     ->margin->left(auto)
     ->margin->right(auto)
-    ->display(block)
+    ->display("block !important")
     ->position(relative)
     ->width("75%")
 ->end;
 
 WS("#content")
     ->background->rgba(0,0,0, 0.5)
-    # Fix for overflow-x+box-shadow
-    ->margin->bottom(10)
     # Responsible design implementation: http://stackoverflow.com/a/25634192/2423150
     ->padding->left("1%")
     ->padding->right("1%")
     ->padding->top(5)
     ->padding->bottom(5)
     ->float(left)
+    ->position(relative)
     ->border(1, solid, white)
 ->end;
 WS(".cType1")
@@ -153,12 +159,12 @@ WS("#footer")
     ->background->rgba(0,0,0,0.8)
     ->padding(5,2.5,5,2.5)
     ->width("100%")
-    ->margin->top("5%")
+    ->margin->top("2%")
 ->end;
 
 WS("#leftSide", "#rightSide")
     ->background->rgba(0,0,0, 0.8)
-    ->width("18%")
+    ->width("19%")
     ->margin->top(20)
     ->float(left)
     ->border(1, solid, white)
@@ -167,10 +173,10 @@ WS("#leftSide", "#rightSide")
     ->borderRadius(10)
 ->end;
 WS("#leftSide")
-    ->margin->right("2%")
+    ->margin->right("1%")
 ->end;
 WS("#rightSide")
-    ->margin->left("2%")
+    ->margin->left("1%")
 ->end;
 
 WS("#leftSide", "#rightSide", "#content")
@@ -262,8 +268,13 @@ WS(".xbl")
 // Bootstrap fixes
 WS("code", "pre")
     ->background->rgba(0,0,0,0.5)
-    ->border(1, solid, white)
     ->color(white)
+->end;
+WS("pre")
+    ->border(1, solid, white)
+->end;
+WS("blockquote")
+    ->background->rgba(0,0,0,0.7)
 ->end;
 WS(".well", ".list-group-item", ".panel")
     ->background->rgba(21,21,21, 0.6)
@@ -320,7 +331,6 @@ WS(".bootstrap-dialog.type-danger .modal-header")
 @media only screen and (max-device-width: 760px) { <?php
     WS("#outerContent")
         ->width("98%")
-        ->background(orange)
     ->end;
     WS("#tabbar")
         ->width("90%")

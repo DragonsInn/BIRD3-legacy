@@ -10,6 +10,7 @@
      * @int superuser           | Determines between usergroups.
      * @int status              | Inactive, Active, Banned
      * @bool developer          | If user is a dev or not.
+     * @string role             | The role this user plays at the site.
      * @timestamp create_at     | Registration time
      * @timestamp lastvisit_at  | Last visited
      */
@@ -18,10 +19,12 @@
     const R_VIP      =  1;
     const R_MOD      =  2;
     const R_ADMIN    =  3;
+    public $superuser=self::R_USER;
 
     const S_INACTIVE =  0;
     const S_ACTIVE   =  1;
     const S_BANNED   =  2;
+    public $status=self::S_INACTIVE;
 
     public static function model($className=__CLASS__) {
         return parent::model($className);
@@ -104,6 +107,8 @@
             'updates'=>array(self::HAS_MANY, "UserUpdate", "tID"),
             'permissions'=>array(self::HAS_MANY, "UserPermissions", "uID"),
             'settings'=>array(self::HAS_ONE, "UserSettings", "uID"),
+            'sent_pms'=>array(self::HAS_MANY, "PrivateConversation", "sID"),
+            'rec_pms'=>array(self::HAS_MANY, "PrivateConversation", "tID"),
             // External
             #'characters'=>array(self::HAS_MANY, "Character", "uID"),
             #'gallery'=>array(self::HAS_ONE, "Gallery", "u_id"),

@@ -6,6 +6,7 @@
 .navbar-soft {
     background-color: rgba(0,0,0,0.1);
     border-color: transparent;
+    margin-bottom: 0;
 }
 /* title */
 .navbar-soft .navbar-brand {

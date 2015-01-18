@@ -2,9 +2,10 @@
 /* @var $this SiteController */
 
 $this->pageTitle="Home";
-
+#$this->allPage=true;
 #$this->tabbar="WHADAFU1";
 #$this->leftSide="some app links";
+#$this->rightSide="o3o";
 ?>
 
 <h3>This is a demo!</h3>

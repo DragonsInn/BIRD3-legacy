@@ -125,6 +125,7 @@ return array(
 			'rules'=>array(
 				# Non-default
 				'/user/<action:\w+>'=>'/user/user/<action>',
+				'/docs/<name:\w+>'=>'/docs/show/name/<name>',
 				# Default
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',

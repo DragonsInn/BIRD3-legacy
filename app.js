@@ -3,6 +3,8 @@ process.title="BIRD3";
 
 // HTTP, WS, Socket.IO
 var http = require('http'),
+    cluster = require("cluster"),
+    cpus = require("os").cpus().length;
     connect = require("connect"),
     app = connect(),
     connLogger = require("connect-logger"),
@@ -61,4 +63,5 @@ httpServer.on("listening", function(){
     require("./lib/error_handler.js")();
     require("./lib/request_handler.js")(app, httpServer);
     require("./lib/update_worker.js")();
+    // Performance...
 });

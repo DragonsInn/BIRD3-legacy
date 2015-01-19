@@ -24,7 +24,7 @@
 			"href"=>"#",
 			"entries"=>array(
 				array("Home", "icon"=>"fa fa-home", "url"=>array("/")),
-				array("<font color=\"red\">Rules &amp; TOS</font>", "icon"=>"fa fa-legal", "url"=>array("/docs/Rules_and_TOS")),
+				array("Rules & TOS", "icon"=>"fa fa-legal", "url"=>array("/docs/Rules_and_TOS")),
 				array("Roleplaying etiquette", "icon"=>"fa fa-info-circle", "url"=>array("/docs/Roleplaying_Etiquette")),
 				array("Staff", "icon"=>"glyphicon glyphicon-certificate", "url"=>array("/home/staff")),
 				array("Infos and credits", "icon"=>"fa fa-exclamation", "url"=>array("/docs/Infos_and_credits")),
@@ -103,26 +103,26 @@
 		$cs->scriptMap["jquery.js"]=false;
 
 		// jQuery
-		Yii::app()->cdn
-			->js("jquery-1.11.1.js")
-			->js("jquery-migrate-1.2.1.js");
-			#easytabs
+		Yii::app()->cdn->js("jquery-1.11.1.js");
 
+		# Bootstrap
+		$vers = "-3.3.1";
 		Yii::app()->cdn
-			->alt("js", "/bootstrap/js/bootstrap.min.js")
-			->alt("js", "/bootstrap-accessibility/js/bootstrap-accessibility.min.js")
-			->alt("js", "/mmenu/js/jquery.mmenu.min.all.js")
-			->js('socket.io.js')
+			->alt("css", "/bootstrap/css/bootstrap-cyborg{$vers}.css")
+			->alt("js", "/bootstrap/js/bootstrap.min{$vers}.js")
+			->alt("js", "/bootstrap-accessibility/js/bootstrap-accessibility.js");
+
+		# Socket.IO
+		Yii::app()->cdn
 			->js('delivery.js')
-			# Plugins
-			->js("circle-progress.js");
+			->js('socket.io.js');
 
+			# Plugins
+			#->js("circle-progress.js");
+			#->alt("js", "/mmenu/js/jquery.mmenu.min.all.js")
+
+		// Font Awesome
 		Yii::app()->cdn
-			->css("normalize.css")
-			->alt("css", "/bootstrap/css/bootstrap-cyborg.css")
-			->alt("css", "/bootstrap-accessibility/css/bootstrap-accessibility.css")
-			#->alt("css", "/mmenu/css/jquery.mmenu.all.css")
-			->css("social-buttons.css")
 			->alt("css", "/font-awesome/css/font-awesome.css");
 
 		Yii::app()->cdn
@@ -133,11 +133,11 @@
 			->js("m-radio.js");
 
 		Yii::app()->cdn
-			->css("bootstrap-dialog.min.css")
+			#->js("bootbox.min.js")
+			->css("bootstrap-dialog.css")
 			->js("bootstrap-dialog.min.js");
 
-		Yii::app()->cdn
-			->js("oj-runtime.js");
+		Yii::app()->cdn->js("oj-runtime.js");
 
 		#Yii::app()->booster->getBooster()->init();
 
@@ -146,14 +146,12 @@
 		$cs->registerScriptFile($yiiUrl."/cdn/oj/BIRD3.oj");
 		$cs->registerCssFile($tbase."/css/bs-extra.css");
 		$cs->registerScriptFile($tbase."/js/panels.js");
-		Yii::app()->cdn
-			->css("bs-tabs-extended.css");
+		#Yii::app()->cdn->css("bs-tabs-extended.css");
 
 		$faBase = $cdnUrl."/font-awesome";
 		$bsBase = $cdnUrl."/bootstrap";
 		$mImg = $cdnUrl."/metro-img";
-		$cs->registerCss("fa_bs-fix","/* Fixes begin */
-		/* FontAwesome fix. Generated. */
+		$cs->registerCss("fa_bs-fix","
 		@font-face {
 			font-family: 'FontAwesome';
 			src: url('{$faBase}/fonts/fontawesome-webfont.eot?v=4.2.0');
@@ -164,7 +162,6 @@
 			font-weight: normal;
 			font-style: normal;
 		}
-		/* Glyphcon fix */
 		@font-face {
   			font-family: 'Glyphicons Halflings';
 			src: url('{$bsBase}/fonts/glyphicons-halflings-regular.eot');
@@ -173,13 +170,12 @@
 				 url('{$bsBase}/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
 				 url('{$bsBase}/fonts/glyphicons-halflings-regular.svg#glyphicons') format('svg');
 		}
-		/* Metro Icon fix */
 		.m-btn [class^=\"icon-\"] { background-image: url({$mImg}/glyphicons-halflings.png); }
 		.m-btn .icon-white        { background-image: url({$mImg}/glyphicons-halflings-white.png); }
 		[class^=\"m-icon-\"]      { background-image: url({$mImg}/syncfusion-icons.png); }
 		[class^=\"m-icon-big-\"]  { background-image: url({$mImg}/syncfusion-icons.png); }
 		.m-icon-white             { background-image: url({$mImg}/syncfusion-icons-white.png); }
-		/* Fixes end */");
+		");
 
 		// Make our footer sticky
 		Yii::app()->cdn

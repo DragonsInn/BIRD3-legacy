@@ -82,19 +82,19 @@ return array(
 			#'class'=>'ext.minScript.components.ExtMinScript',
 			'class'=>'ext.ExtendedClientScript.ExtendedClientScript',
 			'basePath'=>$base,
-			'combineCss'=>true,
+			'combineCss'=>!isset($_GET["dev"]),
             'compressCss'=>false,
-            'combineJs'=>true,
+            'combineJs'=>!isset($_GET["dev"]),
             'compressJs'=>false,
 		),
 		'contentCompactor' => array(
 			'class' => 'ext.contentCompactor.ContentCompactor',
 			'options' => array(
-				'compress_css' => true, // Compress CSS
-				'strip_comments' => true, // Remove comments
-				'keep_conditional_comments' => true, // Remove conditional comments
-				'compress_horizontal' => true, // Compress horizontally
-				'compress_vertical' => true, // Compress vertically
+				'compress_css' => !isset($_GET["dev"]), // Compress CSS
+				'strip_comments' => !isset($_GET["dev"]), // Remove comments
+				'keep_conditional_comments' => !isset($_GET["dev"]), // Remove conditional comments
+				'compress_horizontal' => !isset($_GET["dev"]), // Compress horizontally
+				'compress_vertical' => !isset($_GET["dev"]), // Compress vertically
 				'compress_scripts' => false, // Compress inline scripts using basic algorithm
 				'line_break' => PHP_EOL, // The type of rowbreak you use in your document
 				'preserved_tags' => array('textarea', 'pre', 'script', 'style', 'code'),

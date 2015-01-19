@@ -287,7 +287,7 @@ WS(".panel-primary > .panel-heading")
 ->end;
 
 // Bootstrap dialog
-WS(".bootstrap-dialog")
+WS(".bootstrap-dialog .modal-dialog")
     ->margin->top("7%")
 ->end;
 WS(".bootstrap-dialog.type-default .modal-header")

@@ -29,9 +29,21 @@ if($etagHeader && $etagHeader == $etagFile) {
     exit;
 }
 
+// Internal cache
+$key = "ws-$etagFile";
+$cache = Yii::app()->cache;
+if($cache->offsetExists($key)) {
+    echo $cache->get($key);
+    Yii::app()->end();
+    exit();
+}
+// This is pretty much the else condition.
+ob_start();
+
 // WingStyle
 include_once("$main/php_modules/WingStyle/WingStyle.php");
 ws_copyright();
+WS()->beauty = false;
 WS()->load(
     "transition", "position", "float", "border",
     "whiteSpace", "wordWrap", "display"
@@ -61,7 +73,7 @@ include_once "panels.ws";
 $menu_height=40;
 
 WS("body")
-    ->background->url($base."/images/bg.jpg") // $config['components']['cdn']['baseUrl']
+    ->background->url($base."/images/min.bg.jpg") // $config['components']['cdn']['baseUrl']
     # Fallback for image loading
     ->background->color(black)
     ->color(white)
@@ -69,8 +81,8 @@ WS("body")
     ->width("100%")
     # Not implemented, yet.
     ->backgroundRepeat("no-repeat")
-    ->backgroundPosition("50% 50%")
-    ->backgroundAttachment(fixed)
+    ->backgroundPosition("0 0")
+    ->backgroundSize("cover")
 ->end;
 
 WS("#menu")
@@ -377,3 +389,9 @@ WS(".bootstrap-dialog.type-danger .modal-header")
         background-size: 100% 100%;
     }
 }
+
+<?php
+// Here we are again!
+$cache->set($key, ob_get_contents());
+ob_end_flush();
+?>

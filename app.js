@@ -59,7 +59,7 @@ io.listen(httpServer);
 httpServer.on("listening", function(){
     log.info("BIRD3 Listening now: "+config.BIRD3.host+":"+config.BIRD3.http_port);
     // Set up the web stuff.
-    require("./lib/security_handler.js")();
+    require("./lib/security_handler.js");
     require("./lib/error_handler.js")();
     require("./lib/request_handler.js")(app, httpServer);
     require("./lib/update_worker.js")();

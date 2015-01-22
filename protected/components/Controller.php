@@ -154,11 +154,11 @@
 		$cs->registerCss("fa_bs-fix","
 		@font-face {
 			font-family: 'FontAwesome';
-			src: url('{$faBase}/fonts/fontawesome-webfont.eot?v=4.2.0');
+			src: url('{$faBase}/fonts/fontawesome-webfont.eot');
 			src: url('{$faBase}/fonts/fontawesome-webfont.eot?#iefix') format('embedded-opentype'),
-			     url('{$faBase}/fonts/fontawesome-webfont.woff?v=4.2.0') format('woff'),
-				 url('{$faBase}/fonts/fontawesome-webfont.ttf?v=4.2.0') format('truetype'),
-				 url('{$faBase}/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular') format('svg');
+			     url('{$faBase}/fonts/fontawesome-webfont.woff') format('woff'),
+				 url('{$faBase}/fonts/fontawesome-webfont.ttf') format('truetype'),
+				 url('{$faBase}/fonts/fontawesome-webfont.svg#fontawesomeregular') format('svg');
 			font-weight: normal;
 			font-style: normal;
 		}

@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS `tbl_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(20) NOT NULL DEFAULT ``,
-  `password` varchar(128) NOT NULL DEFAULT ``,
+  `password` varchar(40) NOT NULL DEFAULT ``,
   `email` varchar(128) NOT NULL DEFAULT ``,
   `activkey` varchar(128) NOT NULL DEFAULT ``,
   `superuser` int(1) NOT NULL DEFAULT `0`,

@@ -1,3 +1,4 @@
+Error.stackTraceLimit = Infinity;
 // In order to obtain all information that we need:
 process.title="BIRD3";
 
@@ -5,11 +6,11 @@ process.title="BIRD3";
 var http = require('http'),
     cluster = require("cluster"),
     cpus = require("os").cpus().length;
-    connect = require("connect"),
+    connect = require("express"),
     app = connect(),
-    connLogger = require("connect-logger"),
     responseTime = require("response-time"),
-    io = require('socket.io')();
+    io = require('socket.io')(),
+    concat = require("buffer-concat");
 
 // Misc
 var fs = require('fs'),
@@ -50,8 +51,26 @@ config.version = fs.readFileSync("./config/version.txt").toString().replace("\n"
 log.info("BIRD3@"+config.version+" starting up!");
 
 // Configure connect...
-app.use(connLogger());
-app.use(responseTime());
+app.use(function(req,res,next){
+    req._rawBodyParts = [];
+    req._rawBodyPartsLength = 0;
+    req.rawBody = "";
+    req.on("data", function(ch){
+        req._rawBodyPartsLength += ch.length;
+        req._rawBodyParts.push(ch);
+    });
+    req.on("end", function(){
+        req.rawBody = Buffer.concat(req._rawBodyParts, req._rawBodyPartsLength);
+    });
+    next();
+});
+app.get(responseTime());
+app.use(function(req, res, next){
+    req.on("end", function(){
+        log.info(req.method+" "+res.statusCode+": "+req.url);
+    });
+    return next();
+});
 
 // make the server listen
 var httpServer = app.listen(config.BIRD3.http_port, config.BIRD3.host);

@@ -57,10 +57,18 @@
         );
     }
 
+    // This is used only for the case below
+    public $repeat_password;
+    public $read_tos;
+
     public function rules() {
         return array(
             # Register
-            array('username, email, password', 'required', 'on'=>'register'),
+            array('username, email, read_tos', 'required', 'on'=>'register'),
+            array('password, repeat_password', 'required', 'on'=>'register'),
+            # These buddies will only be needed a few times.
+            array('password, repeat_password', 'length', 'min'=>6, 'max'=>40),
+            array('password', 'compare', 'compareAttribute'=>'repeat_password'),
             /*
             array('username',
                 'ext.yii-antispam.CleanTalkValidator',
@@ -120,10 +128,12 @@
 
     // Needs editing for user updates etc.
     public function beforeSave() {
-        parent::beforeSave();
-        if($this->isNewRecord || $this->scenario=="update") {
-            $this->password = md5($this->password);
-        }
+        if(parent::beforeSave() != false) {
+            if($this->isNewRecord || ($this->scenario=="update"||$this->scenario=="register")) {
+                $this->password = md5($this->password);
+            }
+            return true;
+        } else return false;
     }
 
     public function attributeLabels() {
@@ -141,7 +151,7 @@
     public function checkValidPassword($attr,$params) {
         if(!$this->hasErrors()) {
             $this->_idendity = new BIRD3UserIdendity($this->username, $this->password);
-            if($this->_idendity->authenticate() == BIRD3UserIdendity::ERROR_NONE) {
+            if($this->_idendity->authenticate() == BIRD3UserIdendity::ERROR_PASSWORD_INVALID) {
                 $this->addError("password", "Password invalid!");
             }
         }

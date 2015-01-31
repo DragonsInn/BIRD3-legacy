@@ -43,7 +43,7 @@ ob_start();
 // WingStyle
 include_once("$main/php_modules/WingStyle/WingStyle.php");
 ws_copyright();
-WS()->beauty = false;
+#WS()->beauty = false;
 WS()->load(
     "transition", "position", "float", "border",
     "whiteSpace", "wordWrap", "display"
@@ -81,8 +81,9 @@ WS("body")
     ->width("100%")
     # Not implemented, yet.
     ->backgroundRepeat("no-repeat")
-    ->backgroundPosition("0 0")
+    #->backgroundPosition("0 0")
     ->backgroundSize("cover")
+    #->backgroundAttachment("fixed")
 ->end;
 
 WS("#menu")
@@ -172,6 +173,7 @@ WS("#footer")
     ->padding(5,2.5,5,2.5)
     ->width("100%")
     ->margin->top("2%")
+    ->margin->bottom(10)
 ->end;
 
 WS("#leftSide", "#rightSide")

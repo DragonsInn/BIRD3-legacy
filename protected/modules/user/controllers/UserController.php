@@ -32,10 +32,9 @@
             $this->render("register",["model"=>$user]);
         } else {
             $user->attributes=$_POST["User"];
-            if(!$user->validate()) {
+            if(!$user->save()) {
                 $this->render("register",["model"=>$user]);
             } else {
-                $user->save();
                 $this->render("register_success",["model"=>$user]);
             }
         }

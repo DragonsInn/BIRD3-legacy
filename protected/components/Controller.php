@@ -23,7 +23,7 @@
 		"Dragon's Inn"=>array(
 			"href"=>"#",
 			"entries"=>array(
-				array("Home", "icon"=>"fa fa-home", "url"=>array("/")),
+				array("Home", "icon"=>"fa fa-home", "url"=>"/"),
 				array("Rules & TOS", "icon"=>"fa fa-legal", "url"=>array("/docs/Rules_and_TOS")),
 				array("Roleplaying etiquette", "icon"=>"fa fa-info-circle", "url"=>array("/docs/Roleplaying_Etiquette")),
 				array("Staff", "icon"=>"glyphicon glyphicon-certificate", "url"=>array("/home/staff")),

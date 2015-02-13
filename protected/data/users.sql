@@ -5,8 +5,11 @@ CREATE TABLE IF NOT EXISTS `tbl_users` (
   `password` varchar(40) NOT NULL DEFAULT ``,
   `email` varchar(128) NOT NULL DEFAULT ``,
   `activkey` varchar(128) NOT NULL DEFAULT ``,
+  -- Admin, Moderator, VIP or User.
   `superuser` int(1) NOT NULL DEFAULT `0`,
+  -- Active or banned
   `status` int(1) NOT NULL DEFAULT `0`,
+  -- If the user should see developer contents.
   `developer` int(1) NOT NULL,
   `create_at` int(11) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lastvisit_at` int(11) NOT NULL DEFAULT CURRENT_TIMESTAMP,

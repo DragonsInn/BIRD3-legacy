@@ -36,6 +36,8 @@
     </head>
     <body class="panel-pusher">
         <div id="TopSection">
+            <!-- Banner -->
+            <div id="banner"></div>
             <!-- Panels -->
             <div id="Ptop" class="panel-default panel-top">
             </div>

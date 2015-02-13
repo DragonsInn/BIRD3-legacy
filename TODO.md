@@ -4,6 +4,8 @@
     * [X] Profile page
     * [X] Associate User to permissions and settings
     * [ ] Registration
+        * User must agree to ToS, provide valid email and acrivate.
+        * Consider using OpenID?
     * [ ] Settings panel
     * [ ] List user by superuser status
     * [ ] Using/Updating `last_visited` and `joined`
@@ -11,11 +13,15 @@
     * [X] Cacheable avatars
     * [X] Correct User DB relationships
     * [ ] Private Messaging
-        * [ ] Add model
+        * [X] Add model
         * [ ] Implement PM logic
     * [ ] E-Mail notifications
         * [ ] NodeJS scheduler for notifications
         * [ ] Plant notifications via Yii.
+    * [ ] Previleges
+        * [ ] User groups (Admin, Moderator, VIP, User, Banned)
+        * [ ] Handle special previleges via DB (Blog to front-page, ...)
+        * [ ] Developer mode should show extra stuff and error messages are detailed.
 - [X] Front-end cache
     * [X] Caching CSS/JS
     * [X] Adding OJ support
@@ -28,6 +34,7 @@
 - [X] API support
     * [X] API structure
     * [X] Make them work.
+    * [ ] Make API available through RPC/RMI
 - [ ] Interaction
     * [X] Connecting to Socket.IO to talk to backend
     * [ ] Use Deliver.js to transmit files
@@ -37,6 +44,8 @@
         * [ ] Map the URL
     * [ ] Hotel>Story and Hotel>Places need docs too.
     * [ ] Write a proper credits page.
+    * [ ] Terms of Service
+    * [ ] Roleplaying book/guide (Mostly done by Rayth)
 - [ ] Chat
     * [ ] Authentification through `BIRD3User`
     * [ ] Move message passing to NodeJS/Socket.IO
@@ -140,6 +149,3 @@ Preferences
 -- Staff meeting
 - user previleges database to maintain previleges
 - Adult pictures on profiles are always collapsed by default to promote sfw
-- within the tos, create a link to a proper RP guidelines page to hopefuly improve sidewide RPing.
-
-- Implement oj middleware

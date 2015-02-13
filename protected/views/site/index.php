@@ -57,3 +57,6 @@ function p_test() {
         Danger
     </button>
 </p>
+<p>
+    Layout: <?=$this->layout?>
+</p>

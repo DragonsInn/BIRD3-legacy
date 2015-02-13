@@ -3,7 +3,6 @@ CREATE TABLE IF NOT EXISTS `tbl_charabase` (
   `uID` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `edited_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `last_updated` timestamp NOT NULL,
   `last_played` timestamp NOT NULL,
   -- Main, Casual
   `importance` int(2) NOT NULL,
@@ -12,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `tbl_charabase` (
   -- Private, Community, Public
   `visibility` int(1) NOT NULL,
   -- Style for the profile. Basically the old scenario, really.
-  `style` int(2) NOT NULL,
+  -- `style` int(2) NOT NULL,
   -- Is it adult? bool
   `adult` int(1) NOT NULL,
 
@@ -38,14 +37,14 @@ CREATE TABLE IF NOT EXISTS `tbl_charabase` (
   `appearance` text NOT NULL,
 
   -- Spiritual
-  `spirit_status` tinyint(4) NOT NULL,
-  `spirit_condition` tinyint(4) NOT NULL,
-  `spirit_alignment` tinyint(4) NOT NULL,
-  `spirit_sub_alignment` tinyint(4) NOT NULL,
-  `spirit_type` tinyint(4) NOT NULL,
-  `spirit_death_date` varchar(20) NOT NULL,
-  `spirit_death_place` varchar(255) COLLATE utf8_bin NOT NULL,
-  `spirit_death_cause` varchar(255) COLLATE utf8_bin NOT NULL,
+  -- `spirit_status` tinyint(4) NOT NULL,
+  -- `spirit_condition` tinyint(4) NOT NULL,
+  -- `spirit_alignment` tinyint(4) NOT NULL,
+  -- `spirit_sub_alignment` tinyint(4) NOT NULL,
+  -- `spirit_type` tinyint(4) NOT NULL,
+  -- `spirit_death_date` varchar(20) NOT NULL,
+  -- `spirit_death_place` varchar(255) COLLATE utf8_bin NOT NULL,
+  -- `spirit_death_cause` varchar(255) COLLATE utf8_bin NOT NULL,
 
   -- Literature
   `history` text COLLATE utf8_bin NOT NULL,
@@ -103,8 +102,8 @@ CREATE TABLE IF NOT EXISTS `tbl_charabaseRelationship` (
   `s_id` int(11) NOT NULL,
   -- Target
   `t_id` int(11) NOT NULL,
-  -- Type of relationship
-  `type` int(5) NOT NULL,
+  -- Type of relationship. FK for tbl_characterRelationship_type.id
+  `type` int(11) NOT NULL,
   -- Confirmed?
   `confirmed` int(1) NOT NULL,
   PRIMARY KEY (`id`)
@@ -181,7 +180,12 @@ CREATE TABLE IF NOT EXISTS `tbl_charabaseFaves` (
     `faved_at` int NOT NULL
 );
 
-/* Characters linked to Media */
+/* Characters linked to Media
+   One character can be linked to many medias.
+   One media can have many characters linked to it.
+
+   I 'love' N2N relations...
+*/
 CREATE TABLE IF NOT EXISTS `tbl_charabase_MediaRel` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `mID` int(11) NOT NULL,

@@ -3,8 +3,8 @@
 */
 
 /* navbar */
-.navbar-soft {
-    background-color: rgba(0,0,0,0.1);
+.navbar-soft, .navbar-nav {
+    background-color: rgba(0,0,0,0.2);
     border-color: transparent;
     margin-bottom: 0;
 }

@@ -1,17 +1,18 @@
 <?php
 /* @var $this SiteController */
 /* @var $error array */
-
+$this->layout = '//layouts/xynu';
 $this->pageTitle='Error';
 $this->breadcrumbs=array(
 	'Error',
 );
 ?>
 
-<div style="text-align: center;">
-	<h1 style="font-size: 70px;">O.-.O</h1>
-	<h2>Error <?php echo $code; ?></h2>
+<div id="speechbubble">
+	<h1>Sorry my dear. I can't help you with this...</h1>
 	<div class="error">
-		<?php echo CHtml::encode($message); ?>
+		<p>Code: <?=$code?></p>
+		<p><?=CHtml::encode($type).": ".CHtml::encode($message)?></p>
+		<!-- If the user is a dev, display dev infos. -->
 	</div>
 </div>

@@ -73,17 +73,17 @@ include_once "panels.ws";
 $menu_height=40;
 
 WS("body")
-    ->background->url($base."/images/min.bg.jpg") // $config['components']['cdn']['baseUrl']
+    ->background("url(\"$base/images/bg.jpg\") no-repeat center center fixed")
     # Fallback for image loading
     ->background->color(black)
     ->color(white)
     ->height("100%")
     ->width("100%")
-    # Not implemented, yet.
-    ->backgroundRepeat("no-repeat")
-    #->backgroundPosition("0 0")
-    ->backgroundSize("cover")
-    #->backgroundAttachment("fixed")
+->end;
+
+WS("#banner")
+    ->height(100)
+    ->background->url($base."/images/BannerTest.png")
 ->end;
 
 WS("#menu")
@@ -173,7 +173,6 @@ WS("#footer")
     ->padding(5,2.5,5,2.5)
     ->width("100%")
     ->margin->top("2%")
-    ->margin->bottom(10)
 ->end;
 
 WS("#leftSide", "#rightSide")

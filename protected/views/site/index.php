@@ -31,7 +31,7 @@ $this->pageTitle="Home";
                 <div class="row">
                     <div class="col-sm-6 col-md-4">
                         <div class="thumbnail">
-                            <img src="/user/profile/avvie/id/1">
+                            <img src="/cdn/content/avatars/1.jpg">
                             <div class="caption">
                                 <div><p class="text-center">Xynu</p></div>
                                 <div><p class="text-center">Blindwatchman</p></div>
@@ -52,7 +52,7 @@ $this->pageTitle="Home";
                             <div class="media">
                                 <div class="media-left">
                                     <a href="#">
-                                        <img class="media-object" height=100 src="/user/profile/avvie/id/1">
+                                        <img class="media-object" height=100 src="/cdn/content/avatars/1.jpg">
                                     </a>
                                 </div>
                                 <div class="media-body">

@@ -17,6 +17,7 @@
             $this->_username=$model->username;
         }
         // NO idea why its negated...?
+        // 21th februrary of 2015. And I still have no answer to this. Use ::$errorCode.
         return !$this->errorCode;
     }
 

@@ -1,5 +1,7 @@
 /* Character Jobs, in the hotel.
    A character can be associated to one of the hotel's jobs.
+
+   ONE character has ONE job.
 */
 CREATE TABLE IF NOT EXISTS `tbl_hotel_jobs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -19,12 +21,12 @@ CREATE TABLE IF NOT EXISTS `tbl_hotel_places` (
   PRIMARY KEY (`id`)
 );
 
-/* character Job association */
-CREATE TABLE IF NOT EXISTS `tbl_hotel_JobRel` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `cID` int(11) NOT NULL,
-  `jID` int(11) NOT NULL,
-  -- Bool. If false, this job is not yet active.
-  `active` int(1) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id`)
+-- Sweet little things that Xynu can say.
+CREATE TABLE IF NOT EXISTS `tbl_system_xynu` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    -- Who made it?
+    `uID` int(11) NOT NULL,
+    -- Say.
+    `sentence` varchar(150) NOT NULL,
+    PRIMARY KEY (`id`)
 );

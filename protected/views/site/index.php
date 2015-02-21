@@ -8,55 +8,117 @@ $this->pageTitle="Home";
 #$this->rightSide="o3o";
 ?>
 
-<h3>This is a demo!</h3>
-<p>
-    This demo does nothing but looking pretty. Keep this in mind.
-</p>
-<p>
-    To get more information, see the <code>TODO.md</code> file at the
-    <a href="http://git.ingwie.me/ingwie/bird3" target="_blank">source repository</a>.
-</p>
+<h4>Friendly reminder: <small>This is a demo page.</small></h4>
 
-<h4>Try out some small things.</h4>
-<script type="text/javascript">
-function p_test() {
-    app.prompt({
-        text: "This is cool",
-        placeholder: "And this is shady."
-    }, function(data){
-        app.alert("Got: "+data);
-    });
-};
-</script>
-<p>
-    Click this, to show the new dialogs.
-    <button onclick="p_test();" id="dlgt" class="btn btn-info">Trigger dialog</button>
-</p>
-<p>
-    Click for an alert.
-    <button onclick="alert('Yo.')" class="btn btn-success">Alert</button>
-</p>
-<p>
-    A row of alerts.
-    <button onclick="alert('Default', app.getTitle(), 'type-default')" class="btn btn-default">
-        Default
-    </button>
-    <button onclick="alert('Info', app.getTitle(), 'type-info')" class="btn btn-info">
-        Info
-    </button>
-    <button onclick="alert('Primary', app.getTitle(), 'type-primary')" class="btn btn-primary">
-        Primary
-    </button>
-    <button onclick="alert('Success', app.getTitle(), 'type-success')" class="btn btn-success">
-        Success
-    </button>
-    <button onclick="alert('Warning', app.getTitle(), 'type-warning')" class="btn btn-warning">
-        Warn
-    </button>
-    <button onclick="alert('Eep!', 'Error', 'type-danger')" class="btn btn-danger">
-        Danger
-    </button>
-</p>
-<p>
-    Layout: <?=$this->layout?>
-</p>
+<div class="row">
+    <div class="col-md-12">
+        <div class="well well-lg">
+            <div><h4>Pseudo news</h4></div>
+            <div><i>By <font color="lime">Ingwie Phoenix</font></i></div>
+            <p>
+                This is a pseudo news entry that you can imagine containing some super special contest
+                announcement, for instance!
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="well well-sm">Recent art</div>
+                <div class="row">
+                    <div class="col-sm-6 col-md-4">
+                        <div class="thumbnail">
+                            <img src="/user/profile/avvie/id/1">
+                            <div class="caption">
+                                <div><p class="text-center">Xynu</p></div>
+                                <div><p class="text-center">Blindwatchman</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="well well-sm">Recent Characters</div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="well well-sm">
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img class="media-object" height=100 src="/user/profile/avvie/id/1">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">Xynu Shinizuki</h4>
+                                    <div><small>By: <font color="lime">Ingwie Phoenix</font></small></div>
+                                    <div><small>Female, Dragoness</small></div>
+                                    <p>Here follows a short summary of Xynu.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="well well-sm">Recent stories</div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="well well-sm">
+                            <div class="media">
+                                <div class="media-left">
+                                    <div><font color="orange">Khellendros</font></div>
+                                    <div>N pages</div>
+                                    <div>N words</div>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">Shi'rans world</h4>
+                                    <p>A bit of a summary.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="well well-sm">This fourth area...</div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="well well-lg">
+                            <p>Actually, I have no idea what to put here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="well well-lg">
+            <div><h4>Pseudo news 2</h4></div>
+            <div><i>By <font color="lime">Ingwie Phoenix</font></i></div>
+            <p>
+                You would probably see other important blog posts here. ...but yeah, demo.
+            </p>
+        </div>
+    </div>
+</div>

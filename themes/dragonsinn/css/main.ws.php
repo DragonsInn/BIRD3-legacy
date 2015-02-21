@@ -83,7 +83,10 @@ WS("body")
 
 WS("#banner")
     ->height(100)
-    ->background->url($base."/images/BannerTest.png")
+    ->background->url($base."/images/banner.jpg")
+    ->backgroundPosition("center center")
+    ->backgroundRepeat("no-repeat")
+    ->backgroundPosition(fixed)
 ->end;
 
 WS("#menu")

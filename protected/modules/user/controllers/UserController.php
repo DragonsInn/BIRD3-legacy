@@ -4,22 +4,19 @@
         if(isset($_POST['User'])) {
             $user->attributes=$_POST['User'];
             if($user->validate()) {
-                if($user->scenario == "login") {
-                    if($user->login()) {
-                        $this->redirect(Yii::app()->user->returnUrl);
-                    } else echo "Login noped.";
-                } else echo "Scenario noped";
-            } /*else {
-                echo "<pre>";
-                print_r($user);
-                echo "</pre>";
-                die();
-            }*/
+                if($user->login()) {
+                    $this->redirect(Yii::app()->user->returnUrl);
+                } else echo "Login noped.";
+            }
         }
         $this->render("loginForm",array("model"=>$user));
     }
 
     public function actionLogout() {
+        // We don't need the user's data neither on the client or server.
+        Yii::app()->request->cookies->clear();
+        Yii::app()->session->clear();
+        Yii::app()->session->destroy();
         Yii::app()->user->logout();
         $this->redirect(Yii::app()->user->returnUrl);
     }

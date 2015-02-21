@@ -97,7 +97,7 @@ return array(
 				'compress_vertical' => !isset($_GET["dev"]), // Compress vertically
 				'compress_scripts' => true, // Compress inline scripts using basic algorithm
 				'line_break' => PHP_EOL, // The type of rowbreak you use in your document
-				'preserved_tags' => array('textarea', 'pre', 'script', 'style', 'code'),
+				'preserved_tags' => array('textarea', 'pre', 'script', 'style', 'code', "p"),
 				'preserved_boundry' => '@@PRESERVEDTAG@@',
 				'conditional_boundries' => array('@@IECOND-OPEN@@', '@@IECOND-CLOSE@@'),
 				'script_compression_callback' => false,

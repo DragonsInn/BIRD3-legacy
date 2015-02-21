@@ -68,7 +68,7 @@
             array('password, repeat_password', 'required', 'on'=>'register'),
             # These buddies will only be needed a few times.
             array('password, repeat_password', 'length', 'min'=>6, 'max'=>40),
-            array('password', 'compare', 'compareAttribute'=>'repeat_password'),
+            array('password', 'compare', 'compareAttribute'=>'repeat_password', "on"=>"register, update"),
             /*
             array('username',
                 'ext.yii-antispam.CleanTalkValidator',
@@ -118,9 +118,13 @@
             'sent_pms'=>array(self::HAS_MANY, "PrivateConversation", "sID"),
             'rec_pms'=>array(self::HAS_MANY, "PrivateConversation", "tID"),
             // External
+            // All the users' characters.
             #'characters'=>array(self::HAS_MANY, "Character", "uID"),
+            // All of their posted media.
             #'gallery'=>array(self::HAS_ONE, "Gallery", "u_id"),
+            // Their blog
             #'blogPosts'=>array(self::HAS_MANY, "BlogPost", "u_id"),
+            // Forum
             #'forumTopics'=>array(self::HAS_MANY, "ForumTopic", "u_id"),
             #'forumPosts'=>array(self::HAS_MANY, "ForumPost", 'u_id'),
         );
@@ -151,8 +155,9 @@
     public function checkValidPassword($attr,$params) {
         if(!$this->hasErrors()) {
             $this->_idendity = new BIRD3UserIdendity($this->username, $this->password);
-            if($this->_idendity->authenticate() == BIRD3UserIdendity::ERROR_PASSWORD_INVALID) {
-                $this->addError("password", "Password invalid!");
+            $this->_idendity->authenticate();
+            if($this->_idendity->errorCode == BIRD3UserIdendity::ERROR_PASSWORD_INVALID) {
+                    $this->addError("password", "Password invalid!");
             }
         }
     }
@@ -163,11 +168,21 @@
             $this->_idendity->authenticate();
         }
         if($this->_idendity->errorCode==BIRD3UserIdendity::ERROR_NONE) {
-            if($this->_idendity->id == NULL) throw new CException("WTF, no user id??");
+            if($this->_idendity->id == NULL) {
+                throw new CException("An error occured while retriving your ID. The login failed.");
+            }
             $rememberMe=3600*24*30;
             Yii::app()->user->login($this->_idendity, $rememberMe);
             return true;
-        } else return false;
+        } else {
+            switch($this->_idendity->errorCode) {
+                case BIRD3UserIdendity::ERROR_USERNAME_INVALID:
+                    throw new CException("Fatal error: Username invalid in 2nd step.");
+                case BIRD3UserIdendity::ERROR_PASSWORD_INVALID:
+                    throw new CException("Fatal error: Password invalid in 2nd step.");
+            }
+            return false;
+        }
     }
 
 }

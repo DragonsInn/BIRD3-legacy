@@ -11,6 +11,7 @@
     "cloudflare": "0.0.6",
     "compression": "^1.3.0",
     "connect-form2": "^0.1.2",
+    "connect-jsx": "^0.4.1",
     "connect-oj": "^1.0.4",
     "connect-redis": "^2.1.0",
     "connect-rest": "^1.5.1",

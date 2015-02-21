@@ -11,7 +11,8 @@
 	public $leftSide;
 	public $rightSide;
 
-	// Set to true to get ALL the page.
+	// Set to true to get ALL the page. At least anything between menubar and bottom.
+	// Disables banner and footer.
 	public $allPage=false;
 
 	// Used to load the various scripts in
@@ -27,8 +28,6 @@
 				array("Rules & TOS", "icon"=>"fa fa-legal", "url"=>array("/docs/Rules_and_TOS")),
 				array("Roleplaying etiquette", "icon"=>"fa fa-info-circle", "url"=>array("/docs/Roleplaying_Etiquette")),
 				array("Staff", "icon"=>"glyphicon glyphicon-certificate", "url"=>array("/home/staff")),
-				array("Infos and credits", "icon"=>"fa fa-exclamation", "url"=>array("/docs/Infos_and_credits")),
-				array("Manage", "icon"=>"fa fa-cogs","url"=>array("/home/manage"))
 			)
 		),
 		"Chat <font color=lime>NN</font>"=>array(
@@ -51,7 +50,6 @@
 				array("Latest", "icon"=>"fa fa-list","url"=>array("/chars/latest")),
 				array("All", "icon"=>"fa fa-database","url"=>array("/chars/all")),
 				array("Families &amp; Clans", "icon"=>"fa fa-child","url"=>array("/chars/associations")),
-				array("Jobs", "icon"=>"fa fa-building","url"=>array("/chars/jobs"))
 			),
 		),
 		"Media"=>array(
@@ -83,6 +81,13 @@
 	}
 
 	public function registerScripts() {
+		if(Yii::app()->user->isVIP()) {
+			$this->navEntries["Dragon's Inn"]["entries"][] = array(
+				"Manage",
+				"icon"=>"fa fa-cogs",
+				"url"=>array("/home/manage")
+			);
+		}
 		// Kinda redundant, but easier to read.
 		if(Ban::isBanned($_SERVER['REMOTE_ADDR'], Ban::BY_IP)) {
 			return $this->redirect("/banned");
@@ -182,7 +187,7 @@
 			->js("jquery.stickyfooter.min.js")
 			->css("jquery.stickyfooter.css");
 		$cs->registerScript("stickyFooter",
-			'$("#footer").stickyFooter({content:"#outerContent"});',
+			'$("#footer").stickyFooter({content:"#MainPage"});',
 		CClientScript::POS_READY);
 
 		// Aditions

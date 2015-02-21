@@ -5,7 +5,10 @@
             <span class="badge"><?=$user->username?></span>
             <p>You</p>
             <div class="btn-group btn-group-xs">
-                <button type="button" class="btn btn-default">Profile</button>
+                <?=CHtml::link(
+                    "Profile", ["user/profile/view", "id"=>Yii::app()->user->id],
+                    ["class"=>"btn btn-default"]
+                )?>
                 <button type="button" class="btn btn-default">Settings</button>
                 <?=CHtml::link(
                     "Logout", ["/user/logout"],
@@ -14,11 +17,30 @@
             </div>
         </li>
         <li class="list-group-item">
-            <span class="badge alert-warning">On</span>
-            Developer Mode
+            <span class="badge"><?php
+                switch(Yii::app()->user->loadUser()->superuser) {
+                    case User::R_USER:
+                        echo "User";
+                        break;
+                    case User::R_VIP:
+                        echo "VIP";
+                        break;
+                    case User::R_MOD:
+                        echo "Moderator";
+                        break;
+                    case User::R_ADMIN:
+                        echo "Admin";
+                        break;
+                }
+            ?></span>
+            You are
         </li>
         <li class="list-group-item">
-            <span class="badge alert-info">14</span>
+            <span class="badge alert-warning"><?=($user->developer ? "Yes":"No")?></span>
+            Developer
+        </li>
+        <li class="list-group-item">
+            <span class="badge alert-info">0</span>
             <p>Private Messages</p>
             <div class="btn-group btn-group-xs">
                 <button type="button" class="btn btn-info">Compose</button>
@@ -27,19 +49,19 @@
             </div>
         </li>
         <li class="list-group-item">
-            <span class="badge alert-success">14</span>
+            <span class="badge alert-success">0</span>
             Characters
         </li>
         <li class="list-group-item">
-            <span class="badge alert-success">14</span>
+            <span class="badge alert-success">0</span>
             Art
         </li>
         <li class="list-group-item">
-            <span class="badge alert-success">14</span>
+            <span class="badge alert-success">0</span>
             Music
         </li>
         <li class="list-group-item">
-            <span class="badge alert-success">14</span>
+            <span class="badge alert-success">0</span>
             Essays
         </li>
     </ul>

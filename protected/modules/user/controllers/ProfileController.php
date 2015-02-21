@@ -10,22 +10,13 @@
     }
 
     public function actionAvvie($id) {
-        $avvie = "";
-        $key = "user-avvie-$id";
-        $cache = Yii::app()->cache;
-        if($cache->offsetExists($key)) {
-            $avvie = $cache->get($key);
-        } else {
-            $profile = UserProfile::model()->findByPk($id);
-            $avvie = $profile->avatar;
-            $cache->set($key, $avvie);
-        }
+        $avvie = Yii::app()->cdn->avvie($id);
         $finfo = new finfo(FILEINFO_MIME);
-        $mt = $finfo->buffer($avvie);
+        $mt = $finfo->file($avvie);
         header("Content-type: $mt");
-        header("Content-length: ".strlen($avvie));
-        Yii::app()->clientCache->makeHeaders($avvie);
-        echo $avvie;
+        header("Content-length: ".filesize($avvie));
+        Yii::app()->clientCache->makeHeaders($avvie, ClientCache::FILE);
+        readfile($avvie);
         Yii::app()->end();
     }
 }

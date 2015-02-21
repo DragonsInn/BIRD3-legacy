@@ -13,6 +13,12 @@ $this->breadcrumbs=array(
 	<div class="error">
 		<p>Code: <?=$code?></p>
 		<p><?=CHtml::encode($type).": ".CHtml::encode($message)?></p>
-		<!-- If the user is a dev, display dev infos. -->
+		<p>In: <?=$file?><b>(</b><?=$line?><b>)</b></p>
+		<h2>Stacktrace</h2>
+		<ul><?php
+			foreach(explode("\n", $trace) as $file=>$mtd) {
+				echo "<li>$mtd</li>";
+			}
+		?></ul>
 	</div>
 </div>

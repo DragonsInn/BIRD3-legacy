@@ -18,6 +18,9 @@
 	// Used to load the various scripts in
 	public $rqSwitch=false;
 	public $rqMarkdown=false;
+	public $rqUpload=false;
+	public $rqColorPicker=false;
+	public $rqCaret=false;
 
 	// Menu
 	public $navEntries = array(
@@ -77,7 +80,25 @@
 	public function init() {
 		// Amma CHEEEETAH. a CHEEEEETAH- *cough.* >v>
 		include_once "Helpers.php";
-		return parent::init();
+		parent::init();
+		if(isset($_GET['ajax']) && $_GET['via']=="bird3") {
+			// There is an action that we, and no other service, wants.
+			$msg=["status"=>"ok","error"=>"none"];
+			switch($_GET['action']) {
+				case "user:update_visit":
+					if(!Yii::app()->user->isGuest) {
+						// Long statement made easy thanks to Duder.
+						User::me()->lastvisit_at = time();
+						if(!User::me()->update()) {
+							$msg["status"] = "failed";
+							$msg["error"] = "Failed to update DB record.";
+						}
+					}
+				break;
+			}
+			echo json_encode($msg);
+			Yii::app()->end();
+		}
 	}
 
 	public function registerScripts() {
@@ -111,10 +132,10 @@
 		Yii::app()->cdn->js("jquery-1.11.1.js");
 
 		# Bootstrap
-		$vers = "-3.3.1";
+		$vers = "3.3.4";
 		Yii::app()->cdn
-			->alt("css", "/bootstrap/css/bootstrap-cyborg{$vers}.css")
-			->alt("js", "/bootstrap/js/bootstrap.min{$vers}.js")
+			->alt("css", "/bootstrap/css/bootstrap-cyborg-{$vers}.min.css")
+			->alt("js", "/bootstrap/js/bootstrap.min.js")
 			->alt("js", "/bootstrap-accessibility/js/bootstrap-accessibility.js");
 
 		# Socket.IO
@@ -128,8 +149,9 @@
 
 		// Font Awesome
 		Yii::app()->cdn
-			->alt("css", "/font-awesome/css/font-awesome.css");
+			->alt("css", "font-awesome/css/font-awesome.css");
 
+		// Metro UI Kit
 		Yii::app()->cdn
 			->css("m-buttons.css")
 			->css("m-forms.css")
@@ -137,11 +159,12 @@
 			->js("m-dropdown.js")
 			->js("m-radio.js");
 
+		// Bootstrap dialog
 		Yii::app()->cdn
-			#->js("bootbox.min.js")
 			->css("bootstrap-dialog.css")
 			->js("bootstrap-dialog.min.js");
 
+		// OJ runtime
 		Yii::app()->cdn->js("oj-runtime.js");
 
 		#Yii::app()->booster->getBooster()->init();
@@ -189,17 +212,26 @@
 		$cs->registerScript("stickyFooter",
 			'$("#footer").stickyFooter({content:"#MainPage"});',
 		CClientScript::POS_READY);
+		$cs->registerScript("bootstrap-tooltip",
+			"$('[data-toggle=\"tooltip\"]').tooltip();",
+		CClientScript::POS_READY);
+		$cs->registerScript("bootstrap-popover",
+			"$('[data-toggle=\"popover\"]').popover();",
+		CClientScript::POS_READY);
 
 		// Aditions
 		if($this->rqSwitch) $this->requireSwitch();
 		if($this->rqMarkdown) $this->requireMarkdown();
+		if($this->rqUpload) $this->requireUpload();
+		if($this->rqColorPicker) $this->requireColorPicker();
+		if($this->rqCaret) $this->requireCaret();
 	}
 
 	public function requireColorPicker() {
 		$cdn = Yii::app()->cdn
-			->alt("js", "/pick-a-color/js/tinycolor-0.9.15.min.js")
-			->alt("js", "/pick-a-color/js/pick-a-color-1.2.3.min.js")
-			->alt("css", "/pick-a-color/css/pick-a-color-1.2.3.min.css");
+			->alt("js", "pick-a-color/js/tinycolor-0.9.15.min.js")
+			->alt("js", "pick-a-color/js/pick-a-color-1.2.3.min.js")
+			->alt("css", "pick-a-color/css/pick-a-color-1.2.3.min.css");
 	}
 	public function requireSwitch() {
 		Yii::app()->cdn
@@ -208,8 +240,6 @@
 	}
 	public function requireMarkdown() {
 		Yii::app()->cdn
-			->css("bootstrap-markdown.min.css")
-			->js("bootstrap-markdown.js")
 			->css("jshl/hybrid.css")
 			->js("highlight.pack.js");
 		Yii::app()->clientScript->registerScript("jshl_init",'// JSHL init
@@ -226,6 +256,43 @@
 	public function requireLiveSearch() {
 		Yii::app()->cdn
 			->js("typeahead.bundle.js");
+	}
+	public function requireUpload() {
+		// JavaScript Load Image
+		Yii::app()->cdn
+			->alt("js", "js-load-image/js/load-image.all.min.js");
+
+		// Canvas To Blob
+		Yii::app()->cdn
+			->alt("js", "canvas-to-blob/js/canvas-to-blob.min.js");
+
+		// Internet Explorer Canvas
+		Yii::app()->cdn
+			->alt("js", "excanvas/excanvas.js");
+
+		// Blueimp/jQuery File Upload
+		$jqs="jquery-file-upload/js";
+		Yii::app()->cdn
+			->alt("js", "$jqs/vendor/jquery.ui.widget.js")
+			->alt("js", "$jqs/jquery.iframe-transport.js")
+			->alt("js", "$jqs/jquery.fileupload.js")
+			->alt("js", "$jqs/jquery.fileupload-process.js")
+			->alt("js", "$jqs/jquery.fileupload-image.js")
+			->alt("js", "$jqs/jquery.fileupload-video.js")
+			->alt("js", "$jqs/jquery.fileupload-audio.js");
+
+		// jQuery Knob
+		Yii::app()->cdn
+			->alt("js", "jquery-knob/dist/jquery.knob.min.js");
+	}
+	public function requireCaret() {
+		Yii::app()->cdn
+			->js("rangyinputs-jquery.js")
+			->js("autogrow.min.js");
+
+		Yii::app()->clientScript->registerScript("autogrow",
+			"$('textarea[data-autogrow=\"true\"]').autogrow({onInitialize: true});",
+		CClientScript::POS_READY);
 	}
 
 	public function render($view, $data = null, $return = false, $options = null) {

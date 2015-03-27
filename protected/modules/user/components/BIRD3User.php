@@ -2,7 +2,7 @@
 
     private $_model=null;
 
-    public function loadUser() {
+    private function loadUser() {
         if($this->_model == null){
             $this->_model = User::model()->findByPk(Yii::app()->user->id);
         }
@@ -49,4 +49,7 @@
     public function getEmail()     { return $this->loadUser()->email;     }
     public function getProfile()   { return $model->loadUser()->profile;  }
     public function getDeveloper() { return $this->loadUser()->developer; }
+
+    // Dangerous. But...suicide is a bad idea, just keep it in mind.
+    public function getModel()     { return $this->loadUser(); }
 }

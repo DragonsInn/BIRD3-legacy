@@ -1,28 +1,61 @@
 [BIRD3]
-
 ; The host the server runs on
 host = 127.0.0.1
 
 ; The HTTP port to expose to
 http_port = 8080
 
-; The port the actual Yii app runs on. HTTP port of the underlying HTTP server.
-app_port = 8200
+; The hostname to access the site
+url = localhost
+
+; The base url under which BIRD3 is served
+baseUrl = /
 
 ; The user/group that the server should run under
-userName = www-data
-groupName = www-data
+userName = myuser
+groupName = myusergroup
 
 [Yii]
-
 ; Enable, when Yii should use path-style URLs.
-; Reminder: Not every webserver supports it!
-use_path_urls = 1
+; Reminder: Not every webserver supports it! But the BIRD3 internal one does.
+use_path_urls = 0
 
 [DB]
-user = My User
-pass = My Password
-mydb = My BIRD3 DB
+user = your_username
+pass = your_password
+mydb = your_database
+
+[CDN]
+; Enable?
+enable = no
+
+; Which hostname?
+url = cdn.yourdomain.com
+
+; If disabled, this path will be used on the other hostname instead.
+baseUrl = /cdn
+
+; The port.
+port = 8200
+
+; EMail notification configuration.
+; Given to nodemailer.createTransport().
+; Service can be of: https://github.com/andris9/nodemailer-wellknown#supported-services
+[EMail]
+service = gmail
+auth.user = you@example.com
+auth.pass = yoursecretpassword
 
 [API]
+; Twitter
 twitter.key = UNKNOWN
+
+; CloudFlare
+cloudflare.enable = no
+cloudflare.email = you@example.com
+cloudflare.token = xxx
+
+; Facebook
+
+; Cleantalk
+cleantalk.key = 2agy8a4asuzy

@@ -14,9 +14,9 @@ CREATE TABLE IF NOT EXISTS `tbl_users` (
   `developer` int(1) NOT NULL DEFAULT 0,
   -- This user is a supporter - meaning, he can receive feedback / complaint messages.
   `supporter` int(1) NOT NULL DEFAULT 0,
-  `create_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `create_at` int NOT NULL,
   -- This value is to be set by the server.
-  `lastvisit_at` TIMESTAMP,
+  `lastvisit_at` int,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_username` (`username`),
   UNIQUE KEY `user_email` (`email`)
@@ -26,16 +26,18 @@ CREATE TABLE IF NOT EXISTS `tbl_users` (
 CREATE TABLE IF NOT EXISTS `tbl_user_profile` (
   `uID` int(11) NOT NULL,
   -- IM, Social Networks
-  `skype` varchar(255) NOT NULL,
-  `steam` varchar(255) NOT NULL,
-  `psn` varchar(255) NOT NULL,
-  `xboxlife` varchar(255) NOT NULL,
-  `facebook` varchar(255) NOT NULL,
-  `twitter` varchar(255) NOT NULL,
-  `furaffinity` varchar(255) NOT NULL,
-  `sofurry` varchar(255) NOT NULL,
+  `skype` varchar(255),
+  `steam` varchar(255),
+  `psn` varchar(255),
+  `xboxlife` varchar(255),
+  `facebook` varchar(255),
+  `twitter` varchar(255),
+  `furaffinity` varchar(255),
+  `sofurry` varchar(255),
   -- Bio. About the user.
-  `about` text NOT NULL,
+  `about` text,
+  -- Used to tell the file extension
+  `avvie_ext` varchar(5),
   PRIMARY KEY (`uID`)
 );
 
@@ -99,23 +101,23 @@ CREATE TABLE IF NOT EXISTS `tbl_user_settings` (
 CREATE TABLE IF NOT EXISTS `tbl_user_permissions` (
     `id` int(11) NOT NULL,
     -- Entries from that user's blog are also on the front page.
-    `publicBlog` tinyint(1) NOT NULL,
+    `publicBlog` tinyint(1) NOT NULL DEFAULT 0,
     -- This user - only admins - may add, remove and assign jobs.
-    `manageJobs` tinyint(1) NOT NULL,
+    `manageJobs` tinyint(1) NOT NULL DEFAULT 0,
     -- This user may edit the Place descriptions. (aka. You guys can fix my typos!)
-    `editPlaces` tinyint(1) NOT NULL,
+    `editPlaces` tinyint(1) NOT NULL DEFAULT 0,
     -- This user has the previlege to edit other's characters. Wont be used, probably, but eh...
-    `editChars` tinyint(1) NOT NULL,
+    `editChars` tinyint(1) NOT NULL DEFAULT 0,
     -- Same for media.
-    `editMedia` tinyint(1) NOT NULL,
+    `editMedia` tinyint(1) NOT NULL DEFAULT 0,
     -- And forum.
-    `editFPosts` tinyint(1) NOT NULL,
-    `editFTopics` tinyint(1) NOT NULL,
-    `editFBoards` tinyint(1) NOT NULL,
-    `editFSections` tinyint(1) NOT NULL,
+    `editFPosts` tinyint(1) NOT NULL DEFAULT 0,
+    `editFTopics` tinyint(1) NOT NULL DEFAULT 0,
+    `editFBoards` tinyint(1) NOT NULL DEFAULT 0,
+    `editFSections` tinyint(1) NOT NULL DEFAULT 0,
     -- This user may activate or de-activate another user's Developer status. Good for error handling. Not for every mod.
-    `editDev` tinyint(1) NOT NULL,
+    `editDev` tinyint(1) NOT NULL DEFAULT 0,
     -- This user can broadcast. /wall
-    `canBroadcast` tinyint(1) NOT NULL,
+    `canBroadcast` tinyint(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`)
 );

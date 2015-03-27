@@ -32,10 +32,13 @@
 <hr>
 <div>
     <div class="btn-group-vertical" role="group" aria-label="Register and password reset" style="width:100%">
-        <button class="btn btn-info" style="width:100%">
-            <p>Not registered yet?</p>
-            <p>Create a new account now!</p>
-        </button>
+        <?php
+            $txt = '<p>Not registered yet?</p>'."\n";
+            $txt.= '<p>Create a new account now!</p>';
+        ?>
+        <?=CHtml::link($txt, ["/user/register"], [
+            "class"=>"btn btn-info"
+        ])?>
         <button class="btn btn-default" style="width:100%">
             Forgot your password?
         </button>

@@ -19,3 +19,18 @@
 [submodule "protected/extensions/YiiRedis"]
 	path = protected/extensions/YiiRedis
 	url = https://github.com/phpnode/YiiRedis.git
+[submodule "protected/extensions/easyimage"]
+	path = protected/extensions/easyimage
+	url = https://github.com/zhdanovartur/yii-easyimage.git
+[submodule "cdn/jquery-file-upload"]
+	path = cdn/jquery-file-upload
+	url = https://github.com/blueimp/jQuery-File-Upload.git
+[submodule "cdn/jquery-knob"]
+	path = cdn/jquery-knob
+	url = https://github.com/aterrien/jQuery-Knob.git
+[submodule "cdn/js-load-image"]
+	path = cdn/js-load-image
+	url = https://github.com/blueimp/JavaScript-Load-Image.git
+[submodule "cdn/canvas-to-blob"]
+	path = cdn/canvas-to-blob
+	url = https://github.com/blueimp/JavaScript-Canvas-to-Blob.git

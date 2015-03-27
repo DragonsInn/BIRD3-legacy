@@ -12,7 +12,8 @@ INSERT INTO `tbl_users` (
     `activkey`,
     `superuser`,
     `status`,
-    `developer`
+    `developer`,
+    `create_at`
 ) VALUES (
     1,
     'IngwiePhoenix',
@@ -21,7 +22,8 @@ INSERT INTO `tbl_users` (
     'This is a test.',
     3, -- Admin
     1, -- Active
-    1  -- True
+    1, -- True
+    1426215020 -- Friday, 13th March, 3.50 AM
 );
 
 INSERT INTO `tbl_user_profile` (

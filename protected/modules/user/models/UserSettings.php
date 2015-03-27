@@ -23,5 +23,10 @@
      */
 
     // Stuff
+    public function rules() {
+        return array(
+            ["adult, newsletter, public, showEmail", "safe", "on"=>"update"]
+        );
+    }
 
 }

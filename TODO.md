@@ -3,38 +3,49 @@
 - [ ] User module
     * [X] Profile page
     * [X] Associate User to permissions and settings
-    * [ ] Registration
+    * [X] Registration
         * User must agree to ToS, provide valid email and acrivate.
         * Consider using OpenID?
+            - Nope. Thats a thing for later.
     * [ ] Settings panel
-    * [ ] List user by superuser status
-    * [ ] Using/Updating `last_visited` and `joined`
+        * [ ] Let user upload an avatar.
+        * [X] Edit User, UserProfile and Usersettings.
+    * [X] Using/Updating `last_visited` and `create_at`
+        - Damn, a typo im not gonna get rid of. Should be `created_at`...
     * [X] Avatar support
     * [X] Cacheable avatars
     * [X] Correct User DB relationships
     * [ ] Private Messaging
-        * [X] Add model
+        * [X] Add models
         * [ ] Implement PM logic
-    * [ ] E-Mail notifications
-        * [ ] NodeJS scheduler for notifications
-        * [ ] Plant notifications via Yii.
-    * [ ] Previleges
-        * [ ] User groups (Admin, Moderator, VIP, User, Banned)
-        * [ ] Handle special previleges via DB (Blog to front-page, ...)
-        * [ ] Developer mode should show extra stuff and error messages are detailed.
+    * [X] E-Mail notifications
+        * [X] NodeJS scheduler for notifications
+        * [X] Plant notifications via Yii.
+        * [X] Markdown support (Done via PHP.)
+    * [X] Previleges
+        * [X] User groups (Admin, Moderator, VIP, User, Banned)
+        * [X] Handle special previleges via DB (Blog to front-page, ...)
+        * [X] Developer mode should show extra stuff and error messages are detailed.
+    * [X] Fill the User section in the Community menu.
+    * [ ] Generate HTML to
+        - Send PM
+        - View profile
+        - See blog
+        - See gallery
 - [X] Front-end cache
     * [X] Caching CSS/JS
     * [X] Adding OJ support
     * [X] Optimizing images
         * [X] Caching optimized images
-    * [ ] Minify JS/CSS
+    * [X] Minify JS/CSS
     * [X] Minify output HTML
     * [X] WingStyle caches itself
     * [X] Assets all have a cache header.
 - [X] API support
     * [X] API structure
     * [X] Make them work.
-    * [ ] Make API available through RPC/RMI
+    * [X] Make API available through RPC/RMI
+        - Via Redis. Mapping API into PHP to wrap calls now.
 - [ ] Interaction
     * [X] Connecting to Socket.IO to talk to backend
     * [ ] Use Deliver.js to transmit files
@@ -45,7 +56,7 @@
     * [ ] Hotel>Story and Hotel>Places need docs too.
     * [ ] Write a proper credits page.
     * [ ] Terms of Service
-    * [ ] Roleplaying book/guide (Mostly done by Rayth)
+    * [X] Roleplaying book/guide (Mostly done by Rayth)
 - [ ] Chat
     * [ ] Authentification through `BIRD3User`
     * [ ] Move message passing to NodeJS/Socket.IO

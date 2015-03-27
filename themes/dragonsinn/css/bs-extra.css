@@ -80,4 +80,12 @@
     color: white;
 }
 
-/* Markdown editor */
+/* Thumbnail elements */
+.thumbnail.thumbnail-soft {
+    background: rgba(40,40,40, 0.5);
+}
+
+/* Tooltip */
+div.tooltip-inner {
+    background: #282828;
+}

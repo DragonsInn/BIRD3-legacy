@@ -2,23 +2,29 @@
     <?php $user = Yii::app()->user; ?>
     <ul class="list-group">
         <li class="list-group-item">
-            <span class="badge"><?=$user->username?></span>
-            <p>You</p>
+            <span class="pull-right"><?=CHtml::link(
+                "Logout", ["/user/logout"],
+                ["class"=>"btn btn-danger btn-xs"]
+            )?></span>
+            <p>Yourself</p>
             <div class="btn-group btn-group-xs">
                 <?=CHtml::link(
-                    "Profile", ["user/profile/view", "id"=>Yii::app()->user->id],
+                    "Settings", ["/user/settings"],
                     ["class"=>"btn btn-default"]
                 )?>
-                <button type="button" class="btn btn-default">Settings</button>
                 <?=CHtml::link(
-                    "Logout", ["/user/logout"],
-                    ["class"=>"btn btn-danger"]
+                    "Profile", ["/user/profile/view", "name"=>Yii::app()->user->username],
+                    ["class"=>"btn btn-default"]
+                )?>
+                <?=CHtml::link(
+                    "Profile Picture", ["/user/changeAvatar"],
+                    ["class"=>"btn btn-default"]
                 )?>
             </div>
         </li>
         <li class="list-group-item">
             <span class="badge"><?php
-                switch(Yii::app()->user->loadUser()->superuser) {
+                switch(Yii::app()->user->getModel()->superuser) {
                     case User::R_USER:
                         echo "User";
                         break;
@@ -35,10 +41,12 @@
             ?></span>
             You are
         </li>
+        <?php if($user->developer): ?>
         <li class="list-group-item">
             <span class="badge alert-warning"><?=($user->developer ? "Yes":"No")?></span>
             Developer
         </li>
+        <?php endif; ?>
         <li class="list-group-item">
             <span class="badge alert-info">0</span>
             <p>Private Messages</p>

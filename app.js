@@ -10,7 +10,8 @@ var http = require('http'),
     app = connect(),
     responseTime = require("response-time"),
     io = require('socket.io')(),
-    concat = require("buffer-concat");
+    concat = require("buffer-concat"),
+    AsciiBanner = require('ascii-banner');
 
 // Misc
 var fs = require('fs'),
@@ -24,6 +25,17 @@ process.on("uncaughtException", function(e){
     fs.writeFileSync("error.dump", e.stack);
     process.exit(-1);
 });
+
+// Initialize the config object.
+global.config = ini.getSync("./config/BIRD3.ini");
+config.base = __dirname;
+config.version = fs.readFileSync("./config/version.txt").toString().replace("\n","");
+// Intro!
+AsciiBanner
+.write('BIRD3')
+.after("Version: "+config.version)
+.before(">By Ingwie Phoenix<")
+.out();
 
 // Logging and configuring it
 global.log = new (winston.Logger)({
@@ -43,13 +55,6 @@ global.log = new (winston.Logger)({
 // Global eventing
 global.BIRD3 = require("./lib/communicator.js")(io, redis);
 
-// Initialize the config object.
-global.config = ini.getSync("./config/BIRD3.ini");
-config.base = __dirname;
-config.version = fs.readFileSync("./config/version.txt").toString().replace("\n","");
-// Intro!
-log.info("BIRD3@"+config.version+" starting up!");
-
 // Configure connect...
 app.use(function(req,res,next){
     req._rawBodyParts = [];
@@ -66,7 +71,7 @@ app.use(function(req,res,next){
 });
 app.get(responseTime());
 app.use(function(req, res, next){
-    req.on("end", function(){
+    res.on("finish", function(){
         log.info(req.method+" "+res.statusCode+": "+req.url);
     });
     return next();
@@ -82,5 +87,6 @@ httpServer.on("listening", function(){
     require("./lib/error_handler.js")();
     require("./lib/request_handler.js")(app, httpServer);
     require("./lib/update_worker.js")();
+    require("./lib/live_handler.js")(io, redis);
     // Performance...
 });

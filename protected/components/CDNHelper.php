@@ -34,11 +34,7 @@
             break;
             default: return $this;
         }
-        $cs->$mt($this->getBaseUrl().$path);
+        $cs->$mt($this->getBaseUrl()."/".$path);
         return $this;
-    }
-
-    public function avvie($id) {
-        return join(DIRECTORY_SEPARATOR, [$this->basePath, "content", "avatars", $id]);
     }
 }

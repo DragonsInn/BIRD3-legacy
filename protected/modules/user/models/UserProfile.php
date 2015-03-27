@@ -42,4 +42,13 @@
             "sofurry"=>'SoFurry'
         ];
     }
+
+    public function rules() {
+        return array(
+            [
+                "skype, steam, psn, xbloxlife, facebook, twitter, furaffinity, sofurry, about",
+                "safe", "on"=>"update"
+            ]
+        );
+    }
 }

@@ -1,18 +1,18 @@
+$(function(){
+
 // Tiny jQuery plugin
 // http://stackoverflow.com/questions/6524288/jquery-event-for-user-pressing-enter-in-a-textbox
-$(function(){
-    $.fn.pressEnter = function(fn) {
+$.fn.pressEnter = function(fn) {
+    return this.each(function() {
+        $(this).bind('enterPress', fn);
+        $(this).keyup(function(e){
+            if(e.keyCode == 13){
+                $(this).trigger("enterPress");
+            }
+        })
+    });
+};
 
-        return this.each(function() {
-            $(this).bind('enterPress', fn);
-            $(this).keyup(function(e){
-                if(e.keyCode == 13)
-                {
-                    $(this).trigger("enterPress");
-                }
-            })
-        });
-    };
 @implementation BIRD3App {
     var sio;
     var ptitle;
@@ -23,8 +23,18 @@ $(function(){
         console.log("Init...");
         sio = io();
         sio.on("connect", function(sock){
-            console.log("Connected using:", sio.io.engine.transport.name);
             sio.emit("foo", "bar");
+        });
+
+        // Do an AJAX request to Yii to update the user. Easy.
+        $.ajax(window.location.origin, {
+            async: true,
+            cache: false,
+            data: {
+                ajax: true,
+                action: "user:update_visit",
+                via: "bird3"
+            }
         });
     }
     return self;
@@ -58,7 +68,7 @@ $(function(){
 }
 -(bootstrapDialog)alert:(string)msg withTitle:(string)title {
     return [self alert:msg
-                 withTitle:self.ptitle
+                 withTitle:title
                  type:BootstrapDialog.TYPE_DEFAULT
            ];
 }
@@ -136,7 +146,7 @@ app.alert = function(msg, title, _type) {
     } else if(typeof title != "undefined" && typeof _type == "undefined") {
         return [app alert:msg withTitle:title];
     } else {
-        return [app alert:msg withTitle:title type:_type];
+        return;
     }
 }
 app.prompt = function(what, cb) { return [app prompt:what thenDo:cb]; }

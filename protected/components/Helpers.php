@@ -13,3 +13,16 @@ function joinPaths() {
     $paths = array_filter($paths);
     return join(DIRECTORY_SEPARATOR, $paths);
 }
+
+class Markdown {
+    public static function parse($input) {
+        $p = new Parsedown();
+        $md = $p->text($input);
+        $hp = new CHtmlPurifier();
+        $hp->options = array('URI.AllowedSchemes'=>array(
+            'http' => true,
+            'https' => true,
+        ));
+        return $hp->purify($md);
+    }
+}

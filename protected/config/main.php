@@ -33,7 +33,7 @@ return array(
 		# Caching
 		'ext.redis.*',
 		# Misc
-		'ext.iwi.*',
+		'ext.easyimage.*',
 		'ext.BIRD3.components.*',
 		'ext.ExtendedClientScript.cssmin.*',
 		'ext.ExtendedClientScript.jsmin.*',
@@ -95,7 +95,7 @@ return array(
 				'keep_conditional_comments' => !isset($_GET["dev"]), // Remove conditional comments
 				'compress_horizontal' => !isset($_GET["dev"]), // Compress horizontally
 				'compress_vertical' => !isset($_GET["dev"]), // Compress vertically
-				'compress_scripts' => true, // Compress inline scripts using basic algorithm
+				'compress_scripts' => !isset($_GET["dev"]), // Compress inline scripts using basic algorithm
 				'line_break' => PHP_EOL, // The type of rowbreak you use in your document
 				'preserved_tags' => array('textarea', 'pre', 'script', 'style', 'code', "p"),
 				'preserved_boundry' => '@@PRESERVEDTAG@@',
@@ -124,6 +124,7 @@ return array(
 			'showScriptName'=>false,
 			'rules'=>array(
 				# Non-default
+				'/u/<name>'=>'/user/profile/view',
 				'/user/<action:\w+>'=>'/user/user/<action>',
 				'/docs/<name:\w+>'=>'/docs/show/name/<name>',
 				# Default
@@ -142,12 +143,13 @@ return array(
 		'cache'=>array(
 			'class'=>'ext.redis.ARedisCache',
 		),
-		'iwi' => array(
-    		'class' => 'application.extensions.iwi.IwiComponent',
-    		// GD or ImageMagick
-    		'driver' => 'GD',
-    		// ImageMagick setup path
-    		//'params'=>array('directory'=>'C:/ImageMagick'),
+		'easyImage' => array(
+			'class' => 'application.extensions.easyimage.EasyImage',
+			//'driver' => 'GD',
+			//'quality' => 100,
+			'cachePath' => "$base/cdn/content/images/"
+			//'cacheTime' => 2592000,
+			//'retinaSupport' => false,
 		),
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors

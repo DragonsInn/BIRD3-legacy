@@ -14,11 +14,13 @@ $this->breadcrumbs=array(
 		<p>Code: <?=$code?></p>
 		<p><?=CHtml::encode($type).": ".CHtml::encode($message)?></p>
 		<p>In: <?=$file?><b>(</b><?=$line?><b>)</b></p>
+		<?php if(!Yii::app()->user->isGuest && Yii::app()->user->getDeveloper()): ?>
 		<h2>Stacktrace</h2>
 		<ul><?php
 			foreach(explode("\n", $trace) as $file=>$mtd) {
 				echo "<li>$mtd</li>";
 			}
 		?></ul>
+		<?php endif; ?>
 	</div>
 </div>

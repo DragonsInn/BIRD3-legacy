@@ -81,6 +81,15 @@ WS("body")
     ->width("100%")
 ->end;
 
+WS("html", "body")
+    ->height("100%")
+    ->overflow("hidden")
+->end;
+
+WS("#app")
+    ->overflow(auto)
+->end;
+
 WS("#banner")
     ->height(100)
     ->background->url($base."/images/banner.jpg")
@@ -326,6 +335,11 @@ WS(".bootstrap-dialog.type-warning .modal-header")
 ->end;
 WS(".bootstrap-dialog.type-danger .modal-header")
     ->background("#cc0000")
+->end;
+
+# Avatar
+WS(".thumbnail.avatar")
+    ->height(100)
 ->end;
 ?>
 

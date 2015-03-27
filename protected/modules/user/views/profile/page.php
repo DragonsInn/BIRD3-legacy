@@ -3,7 +3,7 @@
 <div class="well">
     <div class="row">
         <div class="col-md-2">
-            <img class="img-thumbnail" src="<?=$this->createUrl("/user/profile/avvie", ["id"=>Yii::app()->user->id])?>">
+            <?=CHtml::image(User::avatarUrl($user->id), "Image", ["class"=>"img-thumbnail"])?>
         </div>
         <div class="col-md-5 ">
             <dl class="dl-horizontal">
@@ -30,7 +30,7 @@
             <div class="row">
                 <div class="col-xs-4 col-sm-6">
                     <a href="#">
-                        <img class="img-thumbnail" src="/user/profile/avvie/id/1" alt="Xynu" title="Xynu">
+                        <?=CHtml::image(User::avatarUrl($user->id), "Image", ["class"=>"img-thumbnail"])?>
                     </a>
                 </div>
                 <div class="col-xs-8 col-sm-6">
@@ -49,7 +49,7 @@
             <div class="row">
                 <div class="col-xs-4 col-sm-6">
                     <a href="#">
-                        <img class="img-thumbnail" src="/user/profile/avvie/id/1" alt="Xynu" title="Xynu">
+                        <?=CHtml::image(User::avatarUrl($user->id), "Image", ["class"=>"img-thumbnail"])?>
                     </a>
                 </div>
                 <div class="col-xs-8 col-sm-6">
@@ -68,7 +68,7 @@
             <div class="row">
                 <div class="col-xs-4 col-sm-6">
                     <a href="#">
-                        <img class="img-thumbnail" src="/user/profile/avvie/id/1" alt="Xynu" title="Xynu">
+                        <?=CHtml::image(User::avatarUrl($user->id), "Image", ["class"=>"img-thumbnail"])?>
                     </a>
                 </div>
                 <div class="col-xs-8 col-sm-6">
@@ -87,7 +87,7 @@
             <div class="row">
                 <div class="col-xs-4 col-sm-6">
                     <a href="#">
-                        <img class="img-thumbnail" src="/user/profile/avvie/id/1" alt="Xynu" title="Xynu">
+                        <?=CHtml::image(User::avatarUrl($user->id), "Image", ["class"=>"img-thumbnail"])?>
                     </a>
                 </div>
                 <div class="col-xs-8 col-sm-6">
@@ -106,7 +106,7 @@
             <div class="row">
                 <div class="col-xs-4 col-sm-6">
                     <a href="#">
-                        <img class="img-thumbnail" src="/user/profile/avvie/id/1" alt="Xynu" title="Xynu">
+                        <?=CHtml::image(User::avatarUrl($user->id), "Image", ["class"=>"img-thumbnail"])?>
                     </a>
                 </div>
                 <div class="col-xs-8 col-sm-6">
@@ -125,7 +125,7 @@
             <div class="row">
                 <div class="col-xs-4 col-sm-6">
                     <a href="#">
-                        <img class="img-thumbnail" src="/user/profile/avvie/id/1" alt="Xynu" title="Xynu">
+                        <?=CHtml::image(User::avatarUrl($user->id), "Image", ["class"=>"img-thumbnail"])?>
                     </a>
                 </div>
                 <div class="col-xs-8 col-sm-6">
@@ -144,7 +144,7 @@
             <div class="row">
                 <div class="col-xs-4 col-sm-6">
                     <a href="#">
-                        <img class="img-thumbnail" src="/user/profile/avvie/id/1" alt="Xynu" title="Xynu">
+                        <?=CHtml::image(User::avatarUrl($user->id), "Image", ["class"=>"img-thumbnail"])?>
                     </a>
                 </div>
                 <div class="col-xs-8 col-sm-6">
@@ -163,7 +163,7 @@
             <div class="row">
                 <div class="col-xs-4 col-sm-6">
                     <a href="#">
-                        <img class="img-thumbnail" src="/user/profile/avvie/id/1" alt="Xynu" title="Xynu">
+                        <?=CHtml::image(User::avatarUrl($user->id), "Image", ["class"=>"img-thumbnail"])?>
                     </a>
                 </div>
                 <div class="col-xs-8 col-sm-6">
@@ -182,7 +182,7 @@
             <div class="row">
                 <div class="col-xs-4 col-sm-6">
                     <a href="#">
-                        <img class="img-thumbnail" src="/user/profile/avvie/id/1" alt="Xynu" title="Xynu">
+                        <?=CHtml::image(User::avatarUrl($user->id), "Image", ["class"=>"img-thumbnail"])?>
                     </a>
                 </div>
                 <div class="col-xs-8 col-sm-6">
@@ -201,7 +201,7 @@
             <div class="row">
                 <div class="col-xs-4 col-sm-6">
                     <a href="#">
-                        <img class="img-thumbnail" src="/user/profile/avvie/id/1" alt="Xynu" title="Xynu">
+                        <?=CHtml::image(User::avatarUrl($user->id), "Image", ["class"=>"img-thumbnail"])?>
                     </a>
                 </div>
                 <div class="col-xs-8 col-sm-6">

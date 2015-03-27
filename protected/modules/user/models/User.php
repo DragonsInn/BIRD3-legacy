@@ -1,5 +1,9 @@
 <?php class User extends CActiveRecord {
 
+    // That enables workaround functions.
+    // Not quite how traits work, but a good way to do it.
+    use Duder;
+
     /**
      * Database Structure
      * @int id PK               | ID
@@ -68,7 +72,7 @@
             array('password, repeat_password', 'required', 'on'=>'register'),
             # These buddies will only be needed a few times.
             array('password, repeat_password', 'length', 'min'=>6, 'max'=>40),
-            array('password', 'compare', 'compareAttribute'=>'repeat_password', "on"=>"register, update"),
+            array('password', 'compare', 'compareAttribute'=>'repeat_password', "on"=>"register"),
             /*
             array('username',
                 'ext.yii-antispam.CleanTalkValidator',
@@ -114,7 +118,7 @@
             'profile'=>array(self::HAS_ONE, 'UserProfile', 'uID'),
             'updates'=>array(self::HAS_MANY, "UserUpdate", "tID"),
             'permissions'=>array(self::HAS_MANY, "UserPermissions", "uID"),
-            'settings'=>array(self::HAS_ONE, "UserSettings", "uID"),
+            'settings'=>array(self::HAS_ONE, "UserSettings", "id"),
             'sent_pms'=>array(self::HAS_MANY, "PrivateConversation", "sID"),
             'rec_pms'=>array(self::HAS_MANY, "PrivateConversation", "tID"),
             // External
@@ -131,13 +135,30 @@
     }
 
     // Needs editing for user updates etc.
+    private $totallyNew=false;
     public function beforeSave() {
         if(parent::beforeSave() != false) {
             if($this->isNewRecord || ($this->scenario=="update"||$this->scenario=="register")) {
                 $this->password = md5($this->password);
+                $this->create_at = time();
+            }
+            if($this->isNewRecord) {
+                $this->totallyNew = true;
+                $this->lastvisit_at = time();
             }
             return true;
         } else return false;
+    }
+    public function afterSave() {
+        if($this->totallyNew) {
+            // Create relations
+            $profile = new UserProfile;
+            $profile->uID = $this->id;
+            $profile->save();
+            $settings = new UserSettings;
+            $settings->id = $this->id;
+            $settings->save();
+        }
     }
 
     public function attributeLabels() {

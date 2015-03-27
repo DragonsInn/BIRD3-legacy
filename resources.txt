@@ -1,24 +1,59 @@
-http://www.berriart.com/sidr/#usage
+// Good things to look at
+http://labs.mintchaos.com/flippant.js/
+http://www.yiiframework.com/extension/rediscache/
+http://www.jasonbutz.info/bootstrap-lightbox/
+http://brianreavis.github.io/selectize.js/
+http://blueimp.github.io/Bootstrap-Image-Gallery/
+parse audio file time http://de1.php.net/sscanf
+
+// Want to add
+http://codepen.io/xixao/pen/jvxFc
+
+// In source tree
+https://octicons.github.com/
+http://noizwaves.github.io/bootstrap-social-buttons/
+https://www.npmjs.org/package/daemonize.redux
+https://github.com/zhdanovartur/yii-easyimage
+http://mimo84.github.io/bootstrap-maxlength/
+http://www.bootstrap-switch.org/
+
+// Important docs
 http://www.iacquire.com/blog/18-meta-tags-every-webpage-should-have-in-2013
 http://fortawesome.github.io/Font-Awesome/examples/
-http://noizwaves.github.io/bootstrap-social-buttons/
-https://developer.mozilla.org/en-US/docs/Web/Accessibility/An_overview_of_accessible_web_applications_and_widgets
+
+// WAI-ARIA, accessibility
 http://zomigi.com/blog/videos-of-screen-readers-using-aria-updated/
 http://rawgit.com/w3c/aria-in-html/master/index.html#first-rule-of-aria-use
 https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Test_Cases
 http://www-03.ibm.com/able/guidelines/web/accessweb.html
 http://www.w3.org/WAI/GL/wiki/Using_aria-label_to_provide_an_invisible_label
-https://www.npmjs.org/package/daemonize.redux
-http://www.yiiframework.com/extension/rediscache/
-http://www.yiiframework.com/extension/iwi/
-http://www.jasonbutz.info/bootstrap-lightbox/
-http://brianreavis.github.io/selectize.js/
-http://blueimp.github.io/Bootstrap-Image-Gallery/
-http://www.bootstrap-switch.org/
-http://mimo84.github.io/bootstrap-maxlength/
-http://labs.mintchaos.com/flippant.js/
-http://clu3.github.io/bootstro.js/#
-https://github.com/twitter/typeahead.js/blob/master/doc/jquery_typeahead.md
-parse audio file time http://de1.php.net/sscanf
 http://www.w3.org/TR/wai-aria/
-https://octicons.github.com/
+https://developer.mozilla.org/en-US/docs/Web/Accessibility/An_overview_of_accessible_web_applications_and_widgets
+
+// For feature
+Search box
+    - https://github.com/twitter/typeahead.js/blob/master/doc/jquery_typeahead.md
+Intro to the page
+    - http://clu3.github.io/bootstro.js/#
+Sidebar menus
+    - http://www.berriart.com/sidr/#usage
+Progress bar
+    - http://www.alessioatzeni.com/blog/css3-loading-animation/
+Circular progress bar
+    - http://codepen.io/jo-asakura/details/stFHi/
+BIRD3 Markdown Editor
+    - https://github.com/timdown/rangyinputs
+BIRD3 clustering (on multiple instances or maschines)
+    - http://blog.keithcirkel.co.uk/load-balancing-node-js/
+
+// Possible to add
+Grid system | http://salvattore.com/
+
+// UI stuff
+Metro UI kit
+    - http://ace-subido.github.io/css3-microsoft-metro-buttons/buttons.html
+
+// Specials
+Taala:
+    - $5 for 5 16x16 pixel icons
+    - $2 to $4 for animated pixel icons

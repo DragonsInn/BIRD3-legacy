@@ -24,10 +24,10 @@ header("Etag: $etagFile");
 header("Content-type: text/css");
 
 //check if page has changed. If not, send 304 and exit
-if($etagHeader && $etagHeader == $etagFile) {
+/*if($etagHeader && $etagHeader == $etagFile) {
     header("HTTP/1.1 304 Not Modified");
     exit;
-}
+}*/
 
 // Internal cache
 $key = "ws-$etagFile";

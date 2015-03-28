@@ -76,7 +76,9 @@ $blurStr = "url(\"$base/images/blur.png\") no-repeat center center";
 
 
 WS("body")
-    ->background($bgStr)
+    ->background->url("$base/images/bg.jpg")
+    ->backgroundPosition("center center")
+    ->backgroundRepeat("no-repeat")
     ->backgroundAttachment(fixed)
     # Fallback for image loading
     ->background->color(black)

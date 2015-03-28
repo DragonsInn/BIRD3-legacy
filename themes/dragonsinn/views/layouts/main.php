@@ -66,9 +66,7 @@
                 <nav class="navbar navbar-soft">
                     <div class="container-fluid">
                         <div class="navbar-header">
-                            <button class="navbar-toggle collapsed"
-                                data-toggle="collapse" data-target="#BIRD3mainBar"
-                            >
+                            <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#BIRD3mainBar">
                                 <span class="sr-only">Toggle navigation</span>
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
@@ -78,9 +76,11 @@
                                 <i class="fa fa-search"></i>&nbsp;
                             </a>
                             <a class="navbar-brand" href="/">
-                                <img title="Dragon's Inn icon" alt="Dragon's Inn icon"
-                                    src="/cdn/images/di_icon.png"
-                                    height="50" style="margin-top:-15px;"/>
+                                <?=CHtml::image(
+                                    "$cdn/images/di_icon.png",
+                                    "Dragon's Inn icon",
+                                    ["height"=>50, "style"=>"margin-top:-15px;"]
+                                )?>
                             </a>
                         </div>
 
@@ -276,7 +276,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="report_type">What would you like to report?</label>
-                                <select name="report_type" class="form-control">
+                                <select name="report_type" class="form-control" id="report_type">
                                     <option>A (staff-)member misbehaved.</option>
                                     <option>My art/character/material was posted here without permission.</option>
                                     <option>I have a technical problem with this site.</option>

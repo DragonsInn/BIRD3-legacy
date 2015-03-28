@@ -36,7 +36,7 @@
 				array("Staff", "icon"=>"glyphicon glyphicon-certificate", "url"=>array("/home/staff")),
 			)
 		),
-		"Chat <font color=lime>NN</font>"=>array(
+		"Chat <font color=\"lime\">NN</font>"=>array(
 			"href"=>array("/chat"),
 			"icon"=>"fa fa-comments"
 		),

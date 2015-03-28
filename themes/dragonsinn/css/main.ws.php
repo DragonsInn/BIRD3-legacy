@@ -88,7 +88,6 @@ WS("body")
 WS("html", "body")
     ->height("100%")
     ->width("100%")
-    ->overflow("auto")
 ->end;
 
 WS("#TopSection")

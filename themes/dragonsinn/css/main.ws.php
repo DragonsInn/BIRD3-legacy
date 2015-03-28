@@ -85,11 +85,6 @@ WS("body")
     ->width("100%")
 ->end;
 
-WS("html", "body")
-    ->height("100%")
-    ->width("100%")
-->end;
-
 WS("#TopSection")
     ->zIndex(100)
 ->end;

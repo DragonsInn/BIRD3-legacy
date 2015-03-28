@@ -160,7 +160,7 @@
                             <?=CHtml::image(
                                 "$cdn/theme/images/sign.png",
                                 "The Dragon's Inn logo",
-                                ["class"=>"center-block"]
+                                ["class"=>"center-block", "style"=>"width:100%;"]
                             )?>
                         </div>
                         <div class="col-xs-12 col-md-6">

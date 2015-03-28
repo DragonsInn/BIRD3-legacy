@@ -156,13 +156,13 @@
             <?php if($this->isIndex && Yii::app()->user->isGuest): ?>
                 <div class="container-fluid" id="intro">
                     <div class="row">
-                        <div class="col-xs-12 col-md-6">
+                        <!--<div class="col-xs-12 col-md-6">
                             <?=CHtml::image(
                                 "$cdn/theme/images/sign.png",
                                 "The Dragon's Inn logo",
                                 ["class"=>"center-block", "style"=>"width:100%;"]
                             )?>
-                        </div>
+                        </div>-->
                         <div class="col-xs-12 col-md-6">
                             <p class="lead">The Dragon's Inn</p>
                         </div>

@@ -84,10 +84,7 @@ WS("body")
     ->background->color(black)
     ->color(white)
     ->height("100%")
-->end;
-
-WS("#TopSection")
-    ->zIndex(100)
+    ->width("100%")
 ->end;
 
 WS("#banner")
@@ -95,7 +92,8 @@ WS("#banner")
     ->background->url($base."/images/banner.jpg")
     ->backgroundPosition("center center")
     ->backgroundRepeat("no-repeat")
-    ->backgroundPosition(fixed)
+    #->backgroundAttachment(fixed)
+    ->width("100%")
 ->end;
 
 WS("#menu")
@@ -116,6 +114,8 @@ WS("#intro")
     ->padding->top(50)
     ->padding->bottom(50)
     ->background->rgba(0,0,0, 0.25)
+    ->width("100%")
+    #->background(orange)
 ->end;
 
 // This fixes some odd padding behavior and adresses flaoting divs.
@@ -159,10 +159,10 @@ WS("#tabbar")
 
 WS("#content")
     # Responsible design implementation: http://stackoverflow.com/a/25634192/2423150
-    ->padding->left("1%")
-    ->padding->right("1%")
-    ->padding->top(5)
-    ->padding->bottom(5)
+    #->padding->left("1%")
+    #->padding->right("1%")
+    #->padding->top(5)
+    #->padding->bottom(5)
     ->float(left)
     ->position(relative)
     ->background->rgba(0,0,0, 0.6)
@@ -204,6 +204,7 @@ WS("#footer")
     ->background->rgba(0,0,0,0.4)
     ->padding(5,2.5,5,2.5)
     ->width("100%")
+    #->background(purple)
 ->end;
 
 WS("#leftSide", "#rightSide")
@@ -399,9 +400,6 @@ WS(".blurred .contents")
     - Tabbar
 */
 @media only screen and (max-device-width: 760px) { <?php
-    WS("#outerContent")
-        ->width("98%")
-    ->end;
     WS("#tabbar")
         ->width("90%")
         ->margin->top(10)

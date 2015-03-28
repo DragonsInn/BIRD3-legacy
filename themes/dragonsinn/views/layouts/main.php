@@ -152,24 +152,6 @@
                 </nav>
             </div>
 
-            <!-- Intro -->
-            <?php if($this->isIndex && Yii::app()->user->isGuest): ?>
-                <div class="container-fluid" id="intro">
-                    <div class="row">
-                        <!--<div class="col-xs-12 col-md-6">
-                            <?=CHtml::image(
-                                "$cdn/theme/images/sign.png",
-                                "The Dragon's Inn logo",
-                                ["class"=>"center-block", "style"=>"width:100%;"]
-                            )?>
-                        </div>-->
-                        <div class="col-xs-12 col-md-6">
-                            <p class="lead">The Dragon's Inn</p>
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
-
             <!-- Content -->
             <?php # Decide the #content class.
                 if(empty($this->leftSide) && empty($this->rightSide)) {
@@ -200,6 +182,24 @@
             ?>
             <!-- <?=$acClass?> <?=$tClass?> : Should redo tabbar and sidebars. -->
             <div id="outerContent">
+                <!-- Intro -->
+                <?php if($this->isIndex && Yii::app()->user->isGuest): ?>
+                    <div class="container" id="intro">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <?=CHtml::image(
+                                    "$cdn/theme/images/sign.png",
+                                    "The Dragon's Inn logo",
+                                    ["class"=>"center-block", "style"=>"width:100%;"]
+                                )?>
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <p class="lead">The Dragon's Inn</p>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
                 <!-- Tab menu -->
                 <?php if(!empty($this->tabbar)) { ?>
                     <div id="tabbar">
@@ -211,7 +211,7 @@
                     <?=$this->leftSide?>
                 </div>
                 <?php } ?>
-                <div id="content" class="<?=$cClass?> container-fluid <?=$acClass?>">
+                <div id="content" class="container-fluid <?=$acClass?>">
                     <?=$content?>
                 </div>
                 <?php if(!empty($this->rightSide)) { ?>
@@ -224,6 +224,7 @@
         </div>
         <?php if(!$this->allPage): ?>
         <!-- Copyright and the like. -->
+        <div class="clearfix"></div>
         <footer id="footer" class="container-fluid">
             <div class="col-md-5">
                 <div>Dragon's Inn was created using BIRD3. Both by Ingwie Phoenix</div>

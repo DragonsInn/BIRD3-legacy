@@ -87,11 +87,8 @@ WS("body")
 
 WS("html", "body")
     ->height("100%")
-    ->overflow("hidden")
-->end;
-
-WS("#app")
-    ->overflow(auto)
+    ->width("100%")
+    ->overflow("auto")
 ->end;
 
 WS("#TopSection")

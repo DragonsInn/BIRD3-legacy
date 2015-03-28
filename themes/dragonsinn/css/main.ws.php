@@ -87,6 +87,11 @@ WS(body)
     ->width("100%")
 ->end;
 
+WS("#app")
+    ->height("100%")
+    ->width("100%")
+->end;
+
 WS("#banner")
     ->height(100)
     ->background->url($base."/images/banner.jpg")

@@ -75,11 +75,11 @@ $bgStr = "url(\"$base/images/bg.jpg\") no-repeat center center";
 $blurStr = "url(\"$base/images/blur.png\") no-repeat center center";
 
 
-WS("body")
+WS(body)
     ->background->url("$base/images/bg.jpg")
     ->backgroundPosition("center center")
     ->backgroundRepeat("no-repeat")
-    ->backgroundAttachment(fixed)
+    ->backgroundAttachment("fixed")
     # Fallback for image loading
     ->background->color(black)
     ->color(white)
@@ -92,7 +92,6 @@ WS("#banner")
     ->background->url($base."/images/banner.jpg")
     ->backgroundPosition("center center")
     ->backgroundRepeat("no-repeat")
-    #->backgroundAttachment(fixed)
     ->width("100%")
 ->end;
 
@@ -405,14 +404,6 @@ WS(".blurred .contents")
         ->margin->top(10)
         ->margin->bottom(0)
     ->end;
-    /*
-    WS(".extraMargin")
-        ->margin->top(45)
-    ->end;
-    WS(".no-extraMargin")
-        ->margin->top(25)
-    ->end;
-    */
     WS(".tabs-multi > .nav-tabs > li > a")
         ->padding(2,2)
     ->end;

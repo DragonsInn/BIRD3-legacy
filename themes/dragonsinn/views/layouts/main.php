@@ -153,6 +153,24 @@
                     </nav>
                 </div>
 
+                <!-- Intro -->
+                <?php if($this->isIndex && Yii::app()->user->isGuest): ?>
+                    <div class="container-fluid" id="intro">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <?=CHtml::image(
+                                    "$cdn/theme/images/sign.png",
+                                    "The Dragon's Inn logo",
+                                    ["class"=>"center-block"]
+                                )?>
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <p class="lead">The Dragon's Inn</p>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
                 <!-- Content -->
                 <?php # Decide the #content class.
                     if(empty($this->leftSide) && empty($this->rightSide)) {
@@ -172,14 +190,17 @@
                         $acClass = "AllYourPageAreBelongToUs";
                         $tClass = "";
                     } else {
+                        $acClass = "";
+                    }/*else {
                         if(empty($this->tabbar)) {
                             $acClass = "normalPage";
                         } else {
                             $acClass = "normalPage-tabbed";
                         }
-                    }
+                    }*/
                 ?>
-                <div id="outerContent" class="<?=$acClass?> <?=$tClass?>">
+                <!-- <?=$acClass?> <?=$tClass?> : Should redo tabbar and sidebars. -->
+                <div id="outerContent">
                     <!-- Tab menu -->
                     <?php if(!empty($this->tabbar)) { ?>
                         <div id="tabbar">
@@ -191,7 +212,7 @@
                         <?=$this->leftSide?>
                     </div>
                     <?php } ?>
-                    <div id="content" class="<?=$cClass?> white-box container-fluid">
+                    <div id="content" class="<?=$cClass?> container-fluid <?=$acClass?>">
                         <?=$content?>
                     </div>
                     <?php if(!empty($this->rightSide)) { ?>

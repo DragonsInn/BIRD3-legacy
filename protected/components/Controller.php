@@ -15,6 +15,9 @@
 	// Disables banner and footer.
 	public $allPage=false;
 
+	// This shows the introduction section.
+	public $isIndex=false;
+
 	// Used to load the various scripts in
 	public $rqSwitch=false;
 	public $rqMarkdown=false;

@@ -71,9 +71,13 @@ include_once "panels.ws";
  * This covers the Menu, Content and Footer.
  */
 $menu_height=40;
+$bgStr = "url(\"$base/images/bg.jpg\") no-repeat center center";
+$blurStr = "url(\"$base/images/blur.png\") no-repeat center center";
+
 
 WS("body")
-    ->background("url(\"$base/images/bg.jpg\") no-repeat center center fixed")
+    ->background($bgStr)
+    ->backgroundAttachment(fixed)
     # Fallback for image loading
     ->background->color(black)
     ->color(white)
@@ -88,6 +92,10 @@ WS("html", "body")
 
 WS("#app")
     ->overflow(auto)
+->end;
+
+WS("#TopSection")
+    ->zIndex(100)
 ->end;
 
 WS("#banner")
@@ -112,6 +120,12 @@ WS("#menu div div.text-right", "#menu div div.text-left")
     ->margin->top($marg)
 ->end;
 
+WS("#intro")
+    ->padding->top(50)
+    ->padding->bottom(50)
+    ->background->rgba(0,0,0, 0.25)
+->end;
+
 // This fixes some odd padding behavior and adresses flaoting divs.
 WS("#outerContent")
     ->margin->left(auto)
@@ -121,8 +135,7 @@ WS("#outerContent")
     #->background(lime)
 ->end;
 WS(".AllYourPageAreBelongToUs")
-    ->width("100%")
-    ->margin->top(0)
+    ->background("none !important")
 ->end;
 WS(".normalPage")
     ->margin->top("4%")
@@ -131,7 +144,7 @@ WS(".normalPage-tabbed")
     ->margin->top("2%")
 ->end;
 WS(".oType1")
-# Type 1: Full width
+    # Type 1: Full width
     ->width("85%")
 ->end;
 WS(".oType2")
@@ -153,7 +166,6 @@ WS("#tabbar")
 ->end;
 
 WS("#content")
-    ->background->rgba(0,0,0, 0.5)
     # Responsible design implementation: http://stackoverflow.com/a/25634192/2423150
     ->padding->left("1%")
     ->padding->right("1%")
@@ -161,7 +173,21 @@ WS("#content")
     ->padding->bottom(5)
     ->float(left)
     ->position(relative)
-    ->border(1, solid, white)
+    ->background->rgba(0,0,0, 0.6)
+    ->width("100%")
+->end;
+/*
+WS("#content:before")
+    ->content("''")
+    ->background($bgStr)
+    ->backgroundAttachment(fixed)
+    ->position(absolute)
+    ->left(0)->right(0)
+    ->top(0)
+    ->zIndex(-1)
+    ->blur(5)
+    ->height("100%")
+    ->display(block)
 ->end;
 WS(".cType1")
     # Type 1: Full width
@@ -175,16 +201,17 @@ WS(".cType3")
     # Type 3: Both sidebars shown
     ->width("60%")
 ->end;
+*/
+
 WS("#footer")
     # Fix and clear the mess from above.
     ->display(block)
     ->position(relative)
     # Now the style.
     ->text->align(center)
-    ->background->rgba(0,0,0,0.8)
+    ->background->rgba(0,0,0,0.4)
     ->padding(5,2.5,5,2.5)
     ->width("100%")
-    ->margin->top("2%")
 ->end;
 
 WS("#leftSide", "#rightSide")
@@ -219,7 +246,7 @@ WS("#Ptop > div")
 ->end;
 
 // Helper classes
-WS(reactToAll(".white-box"))
+WS(array_merge(reactToAll(".white-box"), [".just-white-box"]))
     ->boxShadow(0, 0, 20, 2, white)
     ->borderRadius(10)
     ->background->color(black)
@@ -341,6 +368,27 @@ WS(".bootstrap-dialog.type-danger .modal-header")
 WS(".thumbnail.avatar")
     ->height(100)
 ->end;
+
+# Component: blurry divs
+/*
+WS(".blurred .bg")
+    ->position(absolute)
+    ->top(0)
+    ->left(0)
+    ->background($bgStr)
+    ->backgroundAttachment(fixed)
+    ->zIndex(10)
+    ->blur(5)
+    ->height("100%")
+    ->width("100%")
+->end;
+WS(".blurred .contents")
+    ->position(relative)
+    ->height("100%")
+    ->width("100%")
+    ->zIndex(20)
+->end;
+*/
 ?>
 
 /* Media Queries */

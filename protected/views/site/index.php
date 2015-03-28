@@ -4,8 +4,7 @@
 $this->pageTitle="Home";
 #$this->allPage=true;
 #$this->tabbar="WHADAFU1";
-#$this->leftSide="some app links";
-#$this->rightSide="o3o";
+$this->isIndex=true;
 ?>
 
 <h5>Friendly reminder: <small>This is a demo page.</small></h5>

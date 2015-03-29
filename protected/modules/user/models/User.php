@@ -115,10 +115,12 @@
     public function relations() {
         return array(
             // Module local
+            # Static relations
             'profile'=>array(self::HAS_ONE, 'UserProfile', 'uID'),
             'updates'=>array(self::HAS_MANY, "UserUpdate", "tID"),
             'permissions'=>array(self::HAS_MANY, "UserPermissions", "uID"),
             'settings'=>array(self::HAS_ONE, "UserSettings", "id"),
+            # Dynamic relations
             'sent_pms'=>array(self::HAS_MANY, "PrivateConversation", "sID"),
             'rec_pms'=>array(self::HAS_MANY, "PrivateConversation", "tID"),
             // External
@@ -134,7 +136,6 @@
         );
     }
 
-    // Needs editing for user updates etc.
     private $totallyNew=false;
     public function beforeSave() {
         if(parent::beforeSave() != false) {
@@ -161,6 +162,9 @@
             $settings = new UserSettings;
             $settings->id = $this->id;
             $settings->save();
+            $perms = new UserPermissions;
+            $perms->id = $this->id;
+            $perms->save();
         }
     }
 

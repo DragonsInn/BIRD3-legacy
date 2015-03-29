@@ -258,6 +258,11 @@
                     </div>
                 </div>
             </footer>
+            <?php endif; ?>
+        </div>
+
+        <!-- Modals -->
+        <?php if(!$this->allPage): ?>
             <div class="modal bootstrap-dialog type-danger fade"
                  id="report" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -303,7 +308,6 @@
                     </div>
                 </div>
             </div>
-            <?php endif; ?>
-        </div>
+        <?php endif; ?>
     </body>
 </html>

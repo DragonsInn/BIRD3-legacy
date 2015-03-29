@@ -20,6 +20,9 @@
                 // Versions earlier than 8 not tested.
                 return true;
             }
+        } elseif($b->isMobile()) {
+            // ALL phones will have issues with the re-sampling! Kill the effect.
+            return false;
         } else {
             // No other browsers tested.
             // Chrome works.

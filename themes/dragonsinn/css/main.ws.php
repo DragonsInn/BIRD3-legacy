@@ -102,6 +102,9 @@ WS("#blurr-bg.onIndex")
 WS("#blurr-bg.onAll")
     ->opacity(1)
 ->end;
+WS("#blurr-bg.fallback")
+    ->opacity(0)
+->end;
 
 // To fix some bg related issues and such...
 WS(body)
@@ -120,6 +123,13 @@ WS("#banner")
     ->backgroundPosition("center center")
     ->backgroundRepeat("no-repeat")
     ->width("100%")
+->end;
+
+WS("#browser_error")
+    ->background->rgba(204,0,0, 0.8)
+    ->color(white)
+    ->padding->left("2%")
+    ->padding->right("2%")
 ->end;
 
 WS("#menu")
@@ -141,7 +151,6 @@ WS("#intro")
     ->padding->bottom(50)
     ->background->rgba(0,0,0, 0.25)
     ->width("100%")
-    #->background(orange)
 ->end;
 
 // This fixes some odd padding behavior and adresses flaoting divs.

@@ -91,10 +91,10 @@ class Browser extends CApplicationComponent
     const BROWSER_PHOENIX = 'Phoenix'; // http://en.wikipedia.org/wiki/History_of_Mozilla_Firefox (DEPRECATED)
 
     const PLATFORM_UNKNOWN = 'unknown';
-    const PLATFORM_WINDOWS = 'Windows';
-    const PLATFORM_WINDOWS_CE = 'Windows CE';
-    const PLATFORM_APPLE = 'Apple';
-    const PLATFORM_LINUX = 'Linux';
+    const PLATFORM_WINDOWS = 'Microsoft Windows';
+    const PLATFORM_WINDOWS_CE = 'Microsoft Windows CE';
+    const PLATFORM_APPLE = 'Apple Mac OS X';
+    const PLATFORM_LINUX = 'GNU/Linux';
     const PLATFORM_OS2 = 'OS/2';
     const PLATFORM_BEOS = 'BeOS';
     const PLATFORM_IPHONE = 'iPhone';
@@ -107,7 +107,7 @@ class Browser extends CApplicationComponent
     const PLATFORM_NETBSD = 'NetBSD';
     const PLATFORM_SUNOS = 'SunOS';
     const PLATFORM_OPENSOLARIS = 'OpenSolaris';
-    const PLATFORM_ANDROID = 'Android';
+    const PLATFORM_ANDROID = 'Google Android';
 
     const OPERATING_SYSTEM_UNKNOWN = 'unknown';
 

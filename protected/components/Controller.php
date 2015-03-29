@@ -18,6 +18,9 @@
 	// This shows the introduction section.
 	public $isIndex=false;
 
+	// Used in the design
+	public $bg_class="onAll";
+
 	// Used to load the various scripts in
 	public $rqSwitch=false;
 	public $rqMarkdown=false;
@@ -222,18 +225,44 @@
 			"$('[data-toggle=\"popover\"]').popover();",
 		CClientScript::POS_READY);
 
-		// Special script for index
-		if($this->isIndex) {
+		// Special script for index.
+		$fbAlpha = 0.3;
+		if($this->isIndex && Yii::app()->user->isGuest) {
 			Yii::app()->cdn
 				->js("jquery.fracs.min.js");
-			$cs->registerScript("fracs+intro",
-				"$('#intro').fracs(function(fracs, prevFracs){
-					$('#blurr-bg').css({opacity: (1-fracs.visible)});
-				});
+
+			if(Compatibility::check("blur_bg")) {
+				// Do the blur! hur hur hur.
+				// FIXME: Did I spell "blur" right? o.o
+				$cs->registerScript("fracs+intro",
+					"$('#intro').fracs(function(fracs, prevFracs){
+							$('#blurr-bg').css({opacity: (1-fracs.visible)});
+					});",
+				CClientScript::POS_READY);
+			} else {
+				// Since the blur effect would cause issues, let's just darken the BG more.
+				$cs->registerScript("fracs+intro",
+					"$('#intro').fracs(function(fracs, prevFracs){
+							$('#outerContent').css({background: 'rgba(0,0,0, '+($fbAlpha-($fbAlpha*fracs.visible))+')'});
+					});",
+				CClientScript::POS_READY);
+			}
+
+			// The app is locked in the #app container. So it gets the scroll event.
+			$cs->registerScript("app-scroll","
 				$('#app').scroll(function(){
 					$('#intro').fracs('check');
 				});",
 			CClientScript::POS_READY);
+		}
+
+		// For browsers that are NOT compatible with the blurr effect
+		if(!Compatibility::check("blur_bg")) {
+			// This will cause an rgba() overlay, keeping the blurr hidden.
+			$this->bg_class = "fallback";
+			$cs->registerCss("blur-fallback","#outerContent {
+				background: rgba(0,0,0, $fbAlpha);
+			}");
 		}
 
 		// Aditions

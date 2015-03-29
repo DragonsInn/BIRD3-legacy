@@ -35,12 +35,15 @@
         </script>
     </head>
     <body>
-        <div id="blurr-bg" class="<?=($this->isIndex ? "onIndex" : "onAll")?>"></div>
+        <div id="blurr-bg" class="<?=($this->isIndex && Yii::app()->user->isGuest ? "onIndex" : $this->bg_class)?>"></div>
         <div id="app" class="panel-pusher">
             <div id="MainPage">
                 <div id="TopSection">
                     <!-- Banner -->
-                    <?php if(!$this->allPage && !$this->isIndex): ?>
+                    <?php if(
+                        !$this->allPage
+                        && (!$this->isIndex || ($this->isIndex && !Yii::app()->user->isGuest))
+                    ): ?>
                     <div id="banner"></div>
                     <?php endif; ?>
                     <!-- Panels -->
@@ -152,6 +155,36 @@
                             </div>
                         </div>
                     </nav>
+
+                    <!-- Emergency errors, Usually browsers. -->
+                    <div id="browser_error">
+                        <div>
+                            This is a test message. You may see this popping up on emergencies -
+                            like browser incompatibility. This is only here due to the demo.
+                        </div>
+                        <div>
+                            <?php $browser = Yii::app()->browser; ?>
+                            You're using <?=$browser->getBrowser()?> (<?=$browser->getVersion()?>) on: <?=$browser->getPlatform()?>
+                        </div>
+                    </div>
+
+                    <!-- Intro -->
+                    <?php if($this->isIndex && Yii::app()->user->isGuest): ?>
+                        <div class="container-fluid" id="intro">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-6">
+                                    <?=CHtml::image(
+                                        "$cdn/theme/images/sign.png",
+                                        "The Dragon's Inn logo",
+                                        ["class"=>"center-block", "style"=>"width:100%;"]
+                                    )?>
+                                </div>
+                                <div class="col-xs-12 col-md-6">
+                                    <p class="lead">The Dragon's Inn</p>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Content -->
@@ -184,23 +217,6 @@
                 ?>
                 <!-- <?=$acClass?> <?=$tClass?> : Should redo tabbar and sidebars. -->
                 <div id="outerContent">
-                    <!-- Intro -->
-                    <?php if($this->isIndex && Yii::app()->user->isGuest): ?>
-                        <div class="container" id="intro">
-                            <div class="row">
-                                <div class="col-xs-12 col-md-6">
-                                    <?=CHtml::image(
-                                        "$cdn/theme/images/sign.png",
-                                        "The Dragon's Inn logo",
-                                        ["class"=>"center-block", "style"=>"width:100%;"]
-                                    )?>
-                                </div>
-                                <div class="col-xs-12 col-md-6">
-                                    <p class="lead">The Dragon's Inn</p>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endif; ?>
 
                     <!-- Tab menu -->
                     <?php if(!empty($this->tabbar)) { ?>

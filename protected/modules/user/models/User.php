@@ -138,9 +138,12 @@
     private $totallyNew=false;
     public function beforeSave() {
         if(parent::beforeSave() != false) {
-            if($this->isNewRecord || ($this->scenario=="update"||$this->scenario=="register")) {
+            if($this->isNewRecord && $this->scenario=="register") {
                 $this->password = md5($this->password);
                 $this->create_at = time();
+            }
+            if($this->scenario=="update") {
+                $this->lastvisit_at = time();
             }
             if($this->isNewRecord) {
                 $this->totallyNew = true;

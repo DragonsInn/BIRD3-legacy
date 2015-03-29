@@ -222,6 +222,20 @@
 			"$('[data-toggle=\"popover\"]').popover();",
 		CClientScript::POS_READY);
 
+		// Special script for index
+		if($this->isIndex) {
+			Yii::app()->cdn
+				->js("jquery.fracs.min.js");
+			$cs->registerScript("fracs+intro",
+				"$('#intro').fracs(function(fracs, prevFracs){
+					$('#blurr-bg').css({opacity: (1-fracs.visible)});
+				});
+				$('#app').scroll(function(){
+					$('#intro').fracs('check');
+				});",
+			CClientScript::POS_READY);
+		}
+
 		// Aditions
 		if($this->rqSwitch) $this->requireSwitch();
 		if($this->rqMarkdown) $this->requireMarkdown();

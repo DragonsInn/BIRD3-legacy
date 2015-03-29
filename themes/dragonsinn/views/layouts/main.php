@@ -35,11 +35,12 @@
         </script>
     </head>
     <body>
+        <div id="blurr-bg" class="<?=($this->isIndex ? "onIndex" : "onAll")?>"></div>
         <div id="app" class="panel-pusher">
             <div id="MainPage">
                 <div id="TopSection">
                     <!-- Banner -->
-                    <?php if(!$this->allPage): ?>
+                    <?php if(!$this->allPage && !$this->isIndex): ?>
                     <div id="banner"></div>
                     <?php endif; ?>
                     <!-- Panels -->
@@ -213,7 +214,8 @@
                     </div>
                     <?php } ?>
                     <div id="content" class="container-fluid <?=$acClass?>">
-                        <?=$content?>
+                        <div style="position:absolute;top:0;left:0;height:100%;width:100%;z-index:-1;" id="fogger"></div>
+                        <div style="position:relative;height:100%;width:100%;"><?=$content?></div>
                     </div>
                     <?php if(!empty($this->rightSide)) { ?>
                     <div id="rightSide">

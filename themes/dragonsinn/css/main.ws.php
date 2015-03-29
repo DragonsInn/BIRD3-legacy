@@ -75,7 +75,7 @@ $bgStr = "url(\"$base/images/bg.jpg\") no-repeat center center";
 $blurStr = "url(\"$base/images/blur.png\") no-repeat center center";
 
 
-WS(body)
+WS(body, "#blurr-bg")
     ->background->url("$base/images/bg.jpg")
     ->backgroundPosition("center center")
     ->backgroundRepeat("no-repeat")
@@ -85,11 +85,33 @@ WS(body)
     ->color(white)
     ->height("100%")
     ->width("100%")
+    ->zIndex(2)
+->end;
+WS("#blurr-bg")
+    ->position(absolute)
+    ->top(0)
+    ->left(0)
+    ->bottom(0)
+    ->right(0)
+    ->zIndex(-1)
+    ->blur(5)
+->end;
+WS("#blurr-bg.onIndex")
+    ->opacity(0)
+->end;
+WS("#blurr-bg.onAll")
+    ->opacity(1)
 ->end;
 
+// To fix some bg related issues and such...
+WS(body)
+    ->overflow(hidden)
+->end;
 WS("#app")
     ->height("100%")
     ->width("100%")
+    ->overflow(auto)
+    ->addTxt("-webkit-overflow-scrolling: touch;")
 ->end;
 
 WS("#banner")

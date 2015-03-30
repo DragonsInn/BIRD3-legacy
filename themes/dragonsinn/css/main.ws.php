@@ -85,19 +85,12 @@ WS(body, "#blurr-bg")
     ->color(white)
     ->height("100%")
     ->width("100%")
-    ->zIndex(2)
     ->position(fixed)
     ->top(0)
     ->left(0)
-    ->right(0)
     ->bottom(0)
 ->end;
 WS("#blurr-bg")
-    #->position(absolute)
-    ->top(0)
-    ->left(0)
-    ->bottom(0)
-    ->right(0)
     ->zIndex(-1)
     ->blur(5)
 ->end;
@@ -209,18 +202,6 @@ WS("#content")
     ->width("100%")
 ->end;
 /*
-WS("#content:before")
-    ->content("''")
-    ->background($bgStr)
-    ->backgroundAttachment(fixed)
-    ->position(absolute)
-    ->left(0)->right(0)
-    ->top(0)
-    ->zIndex(-1)
-    ->blur(5)
-    ->height("100%")
-    ->display(block)
-->end;
 WS(".cType1")
     # Type 1: Full width
     ->width("100%")
@@ -242,7 +223,10 @@ WS("#footer")
     # Now the style.
     ->text->align(center)
     ->background->rgba(0,0,0,0.4)
-    ->padding(5,2.5,5,2.5)
+    ->padding->top(7)
+    ->padding->left(2)
+    ->padding->right(2)
+    ->padding->bottom(10)
     ->width("100%")
     #->background(purple)
 ->end;
@@ -401,27 +385,6 @@ WS(".bootstrap-dialog.type-danger .modal-header")
 WS(".thumbnail.avatar")
     ->height(100)
 ->end;
-
-# Component: blurry divs
-/*
-WS(".blurred .bg")
-    ->position(absolute)
-    ->top(0)
-    ->left(0)
-    ->background($bgStr)
-    ->backgroundAttachment(fixed)
-    ->zIndex(10)
-    ->blur(5)
-    ->height("100%")
-    ->width("100%")
-->end;
-WS(".blurred .contents")
-    ->position(relative)
-    ->height("100%")
-    ->width("100%")
-    ->zIndex(20)
-->end;
-*/
 ?>
 
 /* Media Queries */

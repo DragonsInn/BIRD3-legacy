@@ -128,6 +128,10 @@
     public function actionChangeAvatar() {
         $this->pageTitle = "Change profile picture";
         $this->rqUpload=true;
-        $this->render("change_avatar");
+        if($_SERVER['REQUEST_METHOD'] == "POST") {
+            header("Content-type: application/json");
+            #header("Connection: close");
+            echo json_encode(["_POST"=>$_POST, "_FILES"=>$_FILES, "stdin"=>file_get_contents('php://input')]);
+        } else $this->render("change_avatar");
     }
 }

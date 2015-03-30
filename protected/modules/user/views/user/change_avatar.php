@@ -27,7 +27,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <input type="text" value="0" id="progress_bar" data-skin="tron">
+                    <input type="text" value="0" id="progress_bar" data-skin="tron" style="display:none;">
                 </div>
             </div>
         </div>
@@ -37,7 +37,7 @@
 
 <script>
     jQuery(function($){
-        $("#progress_bar").knob({
+        var knobOpts = {
             min: 0, max: 100,
             readOnly: true,
             thickness: .15,
@@ -85,7 +85,8 @@
                     return false;
                 }
             }
-        });
+        };
+        $("#progress_bar").show().knob(knobOpts);
 
         $("#upl_trigger").click(function(e){
             $("#image_field").click();
@@ -95,6 +96,35 @@
             url: "<?=Yii::app()->request->url?>",
             dataType: "json",
             fileInput: $("#image_field"),
+            singleFileUploads: false,
+            multipart: true,
+            send: function(e, data) {
+                //$("#progress_bar").show();
+                return true;
+            },
+            done: function(e, data) {
+                $("#progress_bar").val(0).trigger("change");
+                BootstrapDialog.alert({
+                    type: BootstrapDialog.TYPE_INFO,
+                    title: app.getTitle()+": Avatar Upload",
+                    message: "<pre><code>"+JSON.stringify(data.result)+"</code></pre>",
+                    cancelable: false,
+                    buttonLabel: "OK"
+                });
+            },
+            fail: function(e, data) {
+                BootstrapDialog.alert({
+                    type: BootstrapDialog.TYPE_DANGER,
+                    title: app.getTitle()+": Avatar Upload",
+                    message: "<p>An error occured while uploading:</p><pre>"+data.textStatus+"</pre>",
+                    cancelable: false,
+                    buttonLabel: "OK"
+                });
+            },
+            progress: function(e, data) {
+                var p = parseInt(data.loaded / data.total * 100, 10);
+                $("#progress_bar").val(p).trigger("change");
+            }
         });
     });
 </script>

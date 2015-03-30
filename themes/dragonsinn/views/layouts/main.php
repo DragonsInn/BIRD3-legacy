@@ -84,7 +84,7 @@
                                     <?=CHtml::image(
                                         "$cdn/images/di_icon.png",
                                         "Dragon's Inn icon",
-                                        ["height"=>50, "style"=>"margin-top:-15px;"]
+                                        ["height"=>50, "style"=>"margin-top:-15px;margin-right:-10px;"]
                                     )?>
                                 </a>
                             </div>
@@ -241,6 +241,7 @@
                     <div class="clearfix"></div>
                 </div>
             </div>
+
             <?php if(!$this->allPage): ?>
             <!-- Copyright and the like. -->
             <div class="clearfix"></div>

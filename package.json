@@ -16,7 +16,7 @@
     "connect-jsx": "^0.6.0",
     "connect-oj": "^1.0.4",
     "connect-redis": "^2.2.0",
-    "connect-yii": "0.0.9",
+    "connect-yii": "0.0.11",
     "cookie-parser": "^1.3.4",
     "daemonize.redux": "0.0.1",
     "decree": "0.0.6",

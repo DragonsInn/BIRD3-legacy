@@ -10,7 +10,6 @@ var http = require('http'),
     app = connect(),
     responseTime = require("response-time"),
     io = require('socket.io')(),
-    concat = require("buffer-concat"),
     AsciiBanner = require('ascii-banner');
 
 // Misc
@@ -57,20 +56,23 @@ global.BIRD3 = require("./lib/communicator.js")(io, redis);
 
 // Configure connect...
 app.use(function(req,res,next){
-    req._rawBodyParts = [];
-    req._rawBodyPartsLength = 0;
-    req.rawBody = "";
-    req.on("data", function(ch){
-        req._rawBodyPartsLength += ch.length;
-        req._rawBodyParts.push(ch);
-    });
-    req.on("end", function(){
-        req.rawBody = Buffer.concat(req._rawBodyParts, req._rawBodyPartsLength);
-    });
-    next();
+    if(req.method == "POST") {
+        req._rawBodyParts = [];
+        req._rawBodyPartsLength = 0;
+        req.rawBody = new Buffer(0);
+        req.on("data", function(ch){
+            req._rawBodyPartsLength++;
+            req._rawBodyParts.push(ch);
+        });
+        req.on("end", function(){
+            req.rawBody = Buffer.concat(req._rawBodyParts);
+            next();
+        });
+    } else return next();
 });
 app.get(responseTime());
 app.use(function(req, res, next){
+    log.info("Starting: "+req.method+" | "+req.url);
     res.on("finish", function(){
         log.info(req.method+" "+res.statusCode+": "+req.url);
     });

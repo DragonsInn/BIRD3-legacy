@@ -45,6 +45,8 @@ BIRD3 Markdown Editor
     - https://github.com/timdown/rangyinputs
 BIRD3 clustering (on multiple instances or maschines)
     - http://blog.keithcirkel.co.uk/load-balancing-node-js/
+BIRD3 RPC
+    - https://www.npmjs.com/package/avs-rpc
 
 // Possible to add
 Grid system | http://salvattore.com/

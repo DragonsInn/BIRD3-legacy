@@ -75,20 +75,32 @@ $bgStr = "url(\"$base/images/bg.jpg\") no-repeat center center";
 $blurStr = "url(\"$base/images/blur.png\") no-repeat center center";
 
 
-WS(body, "#blurr-bg")
-    ->background->url("$base/images/bg.jpg")
-    ->backgroundPosition("center center")
-    ->backgroundRepeat("no-repeat")
-    ->backgroundAttachment("fixed")
+WS(body)
     # Fallback for image loading
     ->background->color(black)
     ->color(white)
     ->height("100%")
     ->width("100%")
+    ->zIndex(0)
+    ->position(relative)
+    #->top(0)
+    #->left(0)
+    #->bottom(0)
+->end;
+WS("#blurr-bg", "#bg")
+    ->background->url("$base/images/bg.jpg")
+    ->backgroundPosition("center center")
+    ->backgroundRepeat("no-repeat")
+    ->backgroundAttachment("fixed")
+    #->backgroundSize("100%")
     ->position(fixed)
     ->top(0)
     ->left(0)
+    ->right(0)
     ->bottom(0)
+->end;
+WS("#bg")
+    ->zIndex(-2)
 ->end;
 WS("#blurr-bg")
     ->zIndex(-1)
@@ -105,6 +117,7 @@ WS("#blurr-bg.fallback")
 ->end;
 
 // To fix some bg related issues and such...
+/*
 WS(body)
     ->overflow(hidden)
 ->end;
@@ -113,7 +126,10 @@ WS("#app")
     ->width("100%")
     ->overflow(auto)
     ->addTxt("-webkit-overflow-scrolling: touch;")
+    ->margin(0)
+    ->padding(0)
 ->end;
+*/
 
 WS("#banner")
     ->height(100)
@@ -153,11 +169,7 @@ WS("#intro")
 
 // This fixes some odd padding behavior and adresses flaoting divs.
 WS("#outerContent")
-    ->margin->left(auto)
-    ->margin->right(auto)
-    ->whiteSpace(nowrap)
-    ->display(block)
-    #->background(lime)
+    ->zIndex(3)
 ->end;
 WS(".AllYourPageAreBelongToUs")
     ->background("none !important")
@@ -168,6 +180,7 @@ WS(".normalPage")
 WS(".normalPage-tabbed")
     ->margin->top("2%")
 ->end;
+/*
 WS(".oType1")
     # Type 1: Full width
     ->width("85%")
@@ -180,6 +193,7 @@ WS(".oType3")
     # Type 3: Both sidebars shown
     ->width("95%")
 ->end;
+*/
 
 WS("#tabbar")
     ->margin->bottom(50)
@@ -192,10 +206,10 @@ WS("#tabbar")
 
 WS("#content")
     # Responsible design implementation: http://stackoverflow.com/a/25634192/2423150
-    #->padding->left("1%")
-    #->padding->right("1%")
-    #->padding->top(5)
-    #->padding->bottom(5)
+    ->padding->left("2%")
+    ->padding->right("2%")
+    ->padding->top(5)
+    ->padding->bottom(5)
     ->float(left)
     ->position(relative)
     ->background->rgba(0,0,0, 0.6)
@@ -254,7 +268,7 @@ WS("#leftSide", "#rightSide", "#content")
 ->end;
 
 WS("#Pright", "#Pleft", "#Pbottom")
-    ->padding(10, 10, 10, 10)
+    ->padding(5, 5, 5, 5)
 ->end;
 
 // Few customs
@@ -446,3 +460,10 @@ WS(".thumbnail.avatar")
 $cache->set($key, ob_get_contents());
 ob_end_flush();
 ?>
+
+/* Browser specific fixes */
+<?php if(Yii::app()->browser->getBrowser() == Browser::BROWSER_IPHONE): ?>
+#blurr-bg, #bg {
+    background-attachment: scroll;
+}
+<?php endif; ?>

@@ -147,7 +147,8 @@
 		# Socket.IO
 		Yii::app()->cdn
 			->js('delivery.js')
-			->js('socket.io.js');
+			->js('socket.io.js')
+			->js('avs-rpc.min.js');
 
 			# Plugins
 			#->js("circle-progress.js");

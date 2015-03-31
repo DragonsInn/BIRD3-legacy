@@ -14,16 +14,24 @@ $.fn.pressEnter = function(fn) {
 };
 
 @implementation BIRD3App {
-    var sio;
+    var io;
     var ptitle;
+    var rpc;
+    var rpcr;
 }
 -(id)init {
     if(self = [super init]) {
         self.ptitle = "Dragon's Inn";
         console.log("Init...");
-        sio = io();
-        sio.on("connect", function(sock){
-            sio.emit("foo", "bar");
+        io = window.io();
+        rpc = new avs.ioRpc(io);
+        io.on("connect", function(){
+            console.log("o.o");
+            io.on("rpc_init_data", function(methods){
+                console.log("methods:"+JSON.stringify(methods));
+                rpcr = rpc.remote.call(rpc, methods);
+            });
+            io.emit("rpc_init");
         });
 
         // Do an AJAX request to Yii to update the user. Easy.
@@ -40,7 +48,11 @@ $.fn.pressEnter = function(fn) {
     return self;
 }
 -(SocketIO)getSocketIO {
-    return sio;
+    return io;
+}
+-(RPC)getRPC {
+    // We return the remote methods
+    return rpcr;
 }
 -(string)getTitle {
     return self.ptitle;
@@ -126,20 +138,21 @@ $.fn.pressEnter = function(fn) {
     });
 }
 -(BIRD3App)emit:(string)name data:(id)obj {
-    sio.emit(name, obj);
+    io.emit(name, obj);
     return self;
 }
 -(BIRD3App)on:(string)name callback:(callable)cb {
-    sio.on(name, cb);
+    io.on(name, cb);
     return self;
 }
 @end
 
 // The global object, that other scripts will understand.
 window.app = [[BIRD3App alloc] init];
-app.socket = function() {
-    return [app socket];
-}
+app.getIO = function() { return [app getSocketIO]; }
+app.getRPC = function() { return [app getRPC]; }
+
+// Nice stuff
 app.alert = function(msg, title, _type) {
     if(typeof title == "undefined" && typeof _type == "undefined") {
         return [app alert:msg];

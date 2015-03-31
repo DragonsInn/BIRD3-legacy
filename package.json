@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "ascii-banner": "0.0.2",
+    "avs-rpc": "^0.1.20",
     "body-parser": "^1.12.2",
     "bootstrap-accessibility-plugin": "^1.0.2",
     "buffer-concat": "0.0.1",

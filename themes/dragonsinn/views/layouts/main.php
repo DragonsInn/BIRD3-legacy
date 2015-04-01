@@ -8,10 +8,11 @@
             $pageTitle = Yii::app()->name.": ".$this->pageTitle;
             $this->registerScripts();
             $cdn = Yii::app()->cdn->baseUrl;
+            $b = Yii::app()->browser;
         ?>
 
         <title><?=$pageTitle?></title>
-        <meta charset="utf-8">
+        <meta charset="utf-8"/>
 
         <!-- casual -->
         <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1"/>
@@ -162,12 +163,8 @@
                     <!-- Emergency errors, Usually browsers. -->
                     <div id="browser_error">
                         <div>
-                            This is a test message. You may see this popping up on emergencies -
-                            like browser incompatibility. This is only here due to the demo.
-                        </div>
-                        <div>
-                            <?php $browser = Yii::app()->browser; ?>
-                            You're using <?=$browser->getBrowser()?> (<?=$browser->getVersion()?>) on: <?=$browser->getPlatform()?>
+
+
                         </div>
                     </div>
 
@@ -179,7 +176,10 @@
                                     <?=CHtml::image(
                                         "$cdn/theme/images/sign.png",
                                         "The Dragon's Inn logo",
-                                        ["class"=>"center-block", "style"=>"width:100%;"]
+                                        [
+                                            "class"=>"center-block",
+                                            "style"=>"height:350px;"
+                                        ]
                                     )?>
                                 </div>
                                 <div class="col-xs-12 col-md-6">
@@ -250,9 +250,9 @@
             <div class="clearfix"></div>
             <footer id="footer" class="container-fluid">
                 <div class="col-md-5">
-                    <div>Dragon's Inn was created using BIRD3. Both by Ingwie Phoenix</div>
-                    <div>Background by <a href="#" style="background:black;">Max Killion</a></div>
-                    <div>Design "Exciting Night" by Ingwie Phoenix</div>
+                    <div>Dragon's Inn, BIRD3 and design "Exciting Night" by <a href="http://ingwie.me">Ingwie Phoenix</a></div>
+                    <div>Background artwork "Sa'Eti by night" by <a href="#">Max Killion</a></div>
+                    <div>Contributed content is &copy; to their respective owners. See <?=CHtml::link("Credits","/docs/Infos_and_credits")?></div>
                 </div>
                 <div class="col-md-2">
                     <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
@@ -266,6 +266,9 @@
                 </div>
                 <div class="col-md-5">
                     <div>Version: <i>BIRD@<?=Yii::app()->params['version']?></i></div>
+                    <div>
+                        On: <i><?=$b->getBrowser()?>@<?=$b->getVersion()?> (<?=$b->getPlatform()?>)</i>
+                    </div>
                     <div>
                         <ul class="list-inline">
                             <li><?=CHtml::link("Staff","/home/staff")?></li>
@@ -285,7 +288,7 @@
         <?php if(!$this->allPage): ?>
             <div class="modal bootstrap-dialog type-danger fade"
                  id="report" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <form name="report_issue">
                             <div class="modal-header">
@@ -313,7 +316,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="report_content">Describe the issue.</label>
-                                    <textarea class="form-control" rows=10></textarea>
+                                    <textarea id="report_content" name="report_content" class="form-control" rows=10></textarea>
                                     <p class="help-block">
                                         Please provide any reference concerning the issue.
                                     </p>

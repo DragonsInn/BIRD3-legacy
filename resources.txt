@@ -63,3 +63,6 @@ Taala:
 // Neat stuff
 Emmet.IO
     - http://docs.emmet.io/cheat-sheet/
+
+// Notes
+- `xdebug_disable()` turns off stack tracing in file. should be used by WingStyle.

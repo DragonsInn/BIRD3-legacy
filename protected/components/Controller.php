@@ -5,7 +5,7 @@
 
 	// Style stuff...
 	public $og_type="website";
-	public $og_image="";
+	public $og_image;
 	public $panelBottom=false;
 	public $tabbar;
 	public $leftSide;
@@ -86,6 +86,7 @@
 	public function init() {
 		// Amma CHEEEETAH. a CHEEEEETAH- *cough.* >v>
 		include_once "Helpers.php";
+		$this->og_image = Yii::app()->cdn->baseUrl."/theme/images/sign.png";
 		parent::init();
 		if(isset($_GET['ajax']) && $_GET['via']=="bird3") {
 			// There is an action that we, and no other service, wants.

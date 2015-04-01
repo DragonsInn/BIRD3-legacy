@@ -1,5 +1,6 @@
 <?php
 error_reporting(E_ALL);
+date_default_timezone_set("UTC");
 $main = dirname(__FILE__)."/../../..";
 
 // Yii
@@ -29,16 +30,11 @@ if($etagHeader && $etagHeader == $etagFile) {
     exit;
 }
 
-// Internal cache
+// Internal cache. Hacking Yii to do things...ahh...poor thing. :)
 $key = "ws-$etagFile";
-$cache = Yii::app()->cache;
-if($cache->offsetExists($key)) {
-    echo $cache->get($key);
-    Yii::app()->end();
-    exit();
-}
+$c=Yii::app()->controller = new Controller("WingStyle");
+if($c->beginCache($key)) {
 // This is pretty much the else condition.
-ob_start();
 
 // WingStyle
 include_once("$main/php_modules/WingStyle/WingStyle.php");
@@ -140,7 +136,7 @@ WS("#banner")
 ->end;
 
 WS("#browser_error")
-    ->background->rgba(204,0,0, 0.8)
+    ->background->rgba(204,0,0, 0.6)
     ->color(white)
     ->padding->left("2%")
     ->padding->right("2%")
@@ -160,9 +156,10 @@ WS("#menu div div.text-right", "#menu div div.text-left")
     ->margin->top($marg)
 ->end;
 
+$in_marg = 80;
 WS("#intro")
-    ->padding->top(50)
-    ->padding->bottom(50)
+    ->padding->top($in_marg)
+    ->padding->bottom($in_marg)
     ->background->rgba(0,0,0, 0.25)
     ->width("100%")
 ->end;
@@ -456,14 +453,18 @@ WS(".thumbnail.avatar")
 }
 
 <?php
-// Here we are again!
-$cache->set($key, ob_get_contents());
-ob_end_flush();
+} // End of $c->beginCache($key)
 ?>
 
 /* Browser specific fixes */
-<?php if(Yii::app()->browser->getBrowser() == Browser::BROWSER_IPHONE): ?>
+<?php $browser = Yii::app()->browser; ?>
+<?php if(
+    $browser->getBrowser() == Browser::BROWSER_IPHONE
+    || $browser->getBrowser() == Browser::BROWSER_IPAD
+    || $browser->getBrowser() == Browser::BROWSER_ANDROID
+): ?>
 #blurr-bg, #bg {
+    /* Makes the backround fixed on mobile devices... wut? Logic? >.> */
     background-attachment: scroll;
 }
 <?php endif; ?>

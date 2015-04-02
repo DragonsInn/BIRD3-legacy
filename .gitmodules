@@ -34,3 +34,9 @@
 [submodule "cdn/canvas-to-blob"]
 	path = cdn/canvas-to-blob
 	url = https://github.com/blueimp/JavaScript-Canvas-to-Blob.git
+[submodule "php_modules/ParsedownExtra"]
+	path = php_modules/ParsedownExtra
+	url = https://github.com/erusev/parsedown-extra.git
+[submodule "php_modules/Parsedown"]
+	path = php_modules/Parsedown
+	url = https://github.com/erusev/parsedown.git

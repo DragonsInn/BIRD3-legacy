@@ -39,7 +39,7 @@ $this->isIndex=true;
                 <div class="row">
                     <div class="col-sm-4 col-md-4">
                         <div class="thumbnail thumbnail-soft">
-                            <?=CHtml::image(User::avatarUrl(4), "Xynu")?>
+                            <?php #CHtml::image(User::avatarUrl(4), "Xynu")?>
                             <div class="caption">
                                 <div class="text-center"><a href="#" style="color:white">Xynu</a></div>
                                 <div class="text-center">Blindwatchman</div>
@@ -60,10 +60,10 @@ $this->isIndex=true;
                             <div class="media">
                                 <div class="media-left">
                                     <a href="#">
-                                        <?=CHtml::image(User::avatarUrl(4), "Xynu", [
+                                        <?php /*CHtml::image(User::avatarUrl(4), "Xynu", [
                                             "class"=>"media-object",
                                             "height"=>100
-                                        ])?>
+                                        ])*/ ?>
                                     </a>
                                 </div>
                                 <div class="media-body">
@@ -117,10 +117,10 @@ $this->isIndex=true;
                                 <div class="media">
                                     <div class="media-left">
                                         <a href="#">
-                                            <?=CHtml::image(User::avatarUrl(4), "Xynu", [
+                                            <?php /*CHtml::image(User::avatarUrl(4), "Xynu", [
                                                 "class"=>"media-object",
                                                 "height"=>100
-                                            ])?>
+                                            ])*/ ?>
                                         </a>
                                     </div>
                                     <div class="media-body">

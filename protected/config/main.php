@@ -26,10 +26,9 @@ return array(
 		# User
 		'application.modules.user.components.*',
 		'application.modules.user.models.*',
+		# Characters
 		'application.modules.characters.components.*',
 		'application.modules.characters.models.*',
-		# Booster
-		'ext.EScriptBoost.*',
 		# Caching
 		'ext.redis.*',
 		# Misc

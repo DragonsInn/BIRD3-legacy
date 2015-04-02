@@ -162,10 +162,6 @@
 
                     <!-- Emergency errors, Usually browsers. -->
                     <div id="browser_error">
-                        <div>
-
-
-                        </div>
                     </div>
 
                     <!-- Intro -->

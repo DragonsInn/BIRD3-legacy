@@ -73,6 +73,15 @@
         color: #333;
     }
 }
+@media only screen
+and (max-width : 768px)
+and (orientation : portrait) {
+    /* BIRD3's menu is too big for an iPad. Sadface. */
+    .nav > li > a {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+}
 
 /* Form controlz */
 .form-control {

@@ -71,6 +71,7 @@ app.use(function(req,res,next){
     } else return next();
 });
 app.get(responseTime());
+app.use(require("compression")());
 app.use(function(req, res, next){
     log.info("Starting: "+req.method+" | "+req.url);
     res.on("finish", function(){
@@ -91,4 +92,5 @@ httpServer.on("listening", function(){
     require("./lib/update_worker.js")();
     require("./lib/live_handler.js")(io, redis);
     // Performance...
+    console.log("Beware the app handler!", app);
 });

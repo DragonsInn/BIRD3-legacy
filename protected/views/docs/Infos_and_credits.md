@@ -14,7 +14,7 @@ Original `LICENSE` files were remained in-place where possible.
 ## Contribute
 You are free to contribute by either donating using the button in the enter of the footer, or with anything else that can help the site. This includes (but does not just consist of): Artwork, Code, Bug reports. Keep in mind that the site is being developed by a single person alone.
 
-## Open source
+## Open source {#open-source}
 BIRD3 has been open sourced - so anyone can help improve it. To obtain yourself a copy, navigate to your favorite folder wthin your terminal and type:
 
     git clone git@git.ingwie.me:ingwie/bird3.git

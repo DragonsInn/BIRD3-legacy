@@ -79,16 +79,13 @@ WS(body)
     ->width("100%")
     ->zIndex(0)
     ->position(relative)
-    #->top(0)
-    #->left(0)
-    #->bottom(0)
 ->end;
 WS("#blurr-bg", "#bg")
     ->background->url("$base/images/bg.jpg")
     ->backgroundPosition("center center")
     ->backgroundRepeat("no-repeat")
     ->backgroundAttachment("fixed")
-    #->backgroundSize("100%")
+    #->height("100%")
     ->position(fixed)
     ->top(0)
     ->left(0)
@@ -177,20 +174,6 @@ WS(".normalPage")
 WS(".normalPage-tabbed")
     ->margin->top("2%")
 ->end;
-/*
-WS(".oType1")
-    # Type 1: Full width
-    ->width("85%")
-->end;
-WS(".oType2")
-    # Type 2: One sidebar shown
-    ->width("90%")
-->end;
-WS(".oType3")
-    # Type 3: Both sidebars shown
-    ->width("95%")
-->end;
-*/
 
 WS("#tabbar")
     ->margin->bottom(50)
@@ -212,20 +195,6 @@ WS("#content")
     ->background->rgba(0,0,0, 0.6)
     ->width("100%")
 ->end;
-/*
-WS(".cType1")
-    # Type 1: Full width
-    ->width("100%")
-->end;
-WS(".cType2")
-    # Type 2: One sidebar shown
-    ->width("80%")
-->end;
-WS(".cType3")
-    # Type 3: Both sidebars shown
-    ->width("60%")
-->end;
-*/
 
 WS("#footer")
     # Fix and clear the mess from above.
@@ -239,7 +208,6 @@ WS("#footer")
     ->padding->right(2)
     ->padding->bottom(10)
     ->width("100%")
-    #->background(purple)
 ->end;
 
 WS("#leftSide", "#rightSide")

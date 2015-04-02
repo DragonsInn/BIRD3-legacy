@@ -9,7 +9,7 @@ if(file_exists($md)) {
     if($cache->offsetExists($key)) {
         $text = $cache->get($key);
     } else {
-        $p = new Parsedown();
+        $p = new ParsedownExtra();
         $text = $p->text(file_get_contents($md));
         $cache->set($key, $text);
     }

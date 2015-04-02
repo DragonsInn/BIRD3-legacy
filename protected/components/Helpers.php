@@ -16,7 +16,7 @@ function joinPaths() {
 
 class Markdown {
     public static function parse($input) {
-        $p = new Parsedown();
+        $p = new ParsedownExtra();
         $md = $p->text($input);
         $hp = new CHtmlPurifier();
         $hp->options = array('URI.AllowedSchemes'=>array(

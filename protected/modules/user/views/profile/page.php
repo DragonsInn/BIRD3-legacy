@@ -17,7 +17,7 @@
         </div>
         <div class="col-md-5">
             <h4>About</h4>
-            <?=$profile->about?>
+            <?=Markdown::parse($profile->about)?>
         </div>
     </div>
 </div>

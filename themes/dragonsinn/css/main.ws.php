@@ -292,34 +292,33 @@ WS(".mm-menu")
 
 // Icons
 WS(".iconblock")
-    ->textAlign(center)
     ->display("inline-block")
-    ->width(15)
-->end;
-WS(".psn")
-    ->background->url("$img/brands/playstation.png")
-    ->display("inline-block")
-    ->backgroundSize(15, 15)
+    ->backgroundSize(auto, 15)
+    ->backgroundPosition("center center")
     ->backgroundRepeat("no-repeat")
     ->height(15)
-    ->width(15)
+    ->width(21)
 ->end;
-WS(".xbl")
-    ->background->url("$img/brands/xbox_360.png")
-    ->display("inline-block")
-    ->backgroundSize(15, 15)
-    ->backgroundRepeat("no-repeat")
-    ->height(15)
-    ->width(15)
+WS(".iconblock.psn")
+    ->backgroundImage("url(\"$img/brands/playstation.png\")")
+->end;
+WS(".iconblock.xbl")
+    ->backgroundImage("url(\"$img/brands/xbox_360.png\")")
+->end;
+WS(".iconblock.sofurry")
+    ->backgroundImage("url(\"$img/brands/sofurry.png\")")
 ->end;
 
 // Bootstrap fixes
 WS("code", "pre")
-    ->background->rgba(0,0,0,0.5)
     ->color(white)
+    ->border(none)
+->end;
+WS("code", "pre", ".hljs")
+    ->background->rgba(31, 31, 31, 0.7)
 ->end;
 WS("pre")
-    ->border(1, solid, white)
+    ->padding("0.5em")
 ->end;
 WS("blockquote")
     ->background->rgba(0,0,0,0.7)
@@ -358,6 +357,18 @@ WS(".bootstrap-dialog.type-warning .modal-header")
 ->end;
 WS(".bootstrap-dialog.type-danger .modal-header")
     ->background("#cc0000")
+->end;
+
+// highlight.js compatible code blocks.
+WS(".hascode")
+    ->border("none !important")
+    ->margin("0 !important")
+->end;
+WS("pre.hascode")
+    ->padding("0 !important")
+->end;
+WS("pre.nocode")
+    ->border(1, solid, white)
 ->end;
 
 # Avatar

@@ -22,6 +22,10 @@ class Markdown {
         $hp->options = array('URI.AllowedSchemes'=>array(
             'http' => true,
             'https' => true,
+            'ftp' => true,
+            'spotify' => true,
+            'ssh' => true,
+            'git' => true
         ));
         return $hp->purify($md);
     }

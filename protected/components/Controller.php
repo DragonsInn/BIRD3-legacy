@@ -23,7 +23,7 @@
 
 	// Used to load the various scripts in
 	public $rqSwitch=false;
-	public $rqMarkdown=false;
+	public $rqMarkdown=true;
 	public $rqUpload=false;
 	public $rqColorPicker=false;
 	public $rqCaret=false;
@@ -292,10 +292,17 @@
 			->js("highlight.pack.js");
 		Yii::app()->clientScript->registerScript("jshl_init",'// JSHL init
 			hljs.configure({
-				tabReplace: "    "
+				tabReplace: Array(5).join(" ")
 			});
-			hljs.initHighlighting();
-		// end', CClientScript::POS_READY);
+			$("body").find("pre code").each(function(i,v){
+				if($(v).prop("class").match(/language-.+/ig) != null) {
+					// The current block has a language- class.
+					$(v).addClass("hascode");
+					$(v).parent().addClass("hascode");
+					hljs.highlightBlock(v);
+				}
+			});
+		// end', CClientScript::POS_LOAD);
 	}
 	public function requireMaxlength() {
 		Yii::app()->cdn

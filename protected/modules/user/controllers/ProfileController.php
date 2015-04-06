@@ -1,5 +1,6 @@
 <?php class ProfileController extends Controller {
     public function actionView($name) {
+        $this->rqMarkdown = true;
         if(is_numeric($name)) {
             $user = User::model()->findByPk($name);
         } else {

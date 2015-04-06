@@ -4,7 +4,7 @@
         return parent::model($className);
     }
     public function tableName() {
-        return "{{charabase}}";
+        return "{{characters}}";
     }
 
     /**
@@ -182,6 +182,8 @@
      const SEX_SHEMALE = 5;
      const SEX_SHIFTER = 6;
      const SEX_NONE = 7;
+     const SEX_UNKNOWN = 8;
+     public $sex=self::SEX_UNKNOWN; # Default
      public static function listSex() {
          return array(
              self::SEX_MALE => "Male",
@@ -205,6 +207,7 @@
      const OR_OMNI = 5;
      const OR_NOGO = 6;
      const OR_UNKNOWN = 7;
+     public $orientation=self::OR_UNKNOWN; # Default
      public static function listOrientation() {
          return array(
              self::OR_STRAIGHT => "Straight",

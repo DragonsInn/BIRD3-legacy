@@ -40,3 +40,9 @@
 [submodule "php_modules/Parsedown"]
 	path = php_modules/Parsedown
 	url = https://github.com/erusev/parsedown.git
+[submodule "php_modules/hprose"]
+	path = php_modules/hprose
+	url = https://github.com/hprose/hprose-php.git
+[submodule "php_modules/workerman"]
+	path = php_modules/workerman
+	url = https://github.com/walkor/workerman.git

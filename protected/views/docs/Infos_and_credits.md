@@ -17,10 +17,12 @@ You are free to contribute by either donating using the button in the enter of t
 ## Open source {#open-source}
 BIRD3 has been open sourced - so anyone can help improve it. To obtain yourself a copy, navigate to your favorite folder wthin your terminal and type:
 
-    git clone git@git.ingwie.me:ingwie/bird3.git
-    cd bird3
-    npm install
-    node app
+```
+git clone git@git.ingwie.me:ingwie/bird3.git
+cd bird3
+npm install
+node app
+```
 
 You now can access your local copy on `http://localhost:8080`.
 

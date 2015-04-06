@@ -1,40 +1,40 @@
-CREATE TABLE IF NOT EXISTS `tbl_charabase` (
+CREATE TABLE IF NOT EXISTS `tbl_characters` (
   `cID` int(11) NOT NULL AUTO_INCREMENT,
   `uID` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `edited_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `last_played` timestamp NOT NULL,
+  `last_played` timestamp,
   -- Main, Casual
   `importance` int(2) NOT NULL,
-  -- New, Unpalyed, Abandoned
-  `status` int(2) NOT NULL,
+  -- New 0, OK 1, Abandoned 2
+  `status` int(2) NOT NULL DEFAULT 0,
   -- Private, Community, Public
   `visibility` tinyint(1) NOT NULL,
   -- Is it adult? bool
-  `adult` tinyint(1) NOT NULL DEFAULT 1, -- true. Just be careful.
+  `adult` tinyint(1) NOT NULL,
 
   -- Basic but important details
-  `name` varchar(255) COLLATE utf8_bin NOT NULL,
-  `nickName` varchar(255) COLLATE utf8_bin NOT NULL,
-  `species` varchar(255) COLLATE utf8_bin NOT NULL,
+  `name` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `nickName` varchar(255) COLLATE utf8_general_ci,
+  `species` varchar(255) COLLATE utf8_general_ci NOT NULL,
   `sex` int(4) NOT NULL,
   `orientation` int(4) NOT NULL,
-  `personality` text COLLATE utf8_bin NOT NULL,
-  `birthday` varchar(20) NOT NULL,
-  `birthPlace` varchar(255) COLLATE utf8_bin NOT NULL,
+  `personality` text,
+  `birthday` varchar(20),
+  `birthPlace` varchar(255),
 
   -- Details
-  `height` varchar(255) COLLATE utf8_bin NOT NULL,
-  `weight` varchar(255) COLLATE utf8_bin NOT NULL,
-  `eye_c` varchar(255) COLLATE utf8_bin NOT NULL,
-  `eye_s` varchar(255) COLLATE utf8_bin NOT NULL,
-  `hair_c` varchar(255) COLLATE utf8_bin NOT NULL,
-  `hair_s` varchar(255) COLLATE utf8_bin NOT NULL,
-  `hair_l` varchar(255) COLLATE utf8_bin NOT NULL,
-  /* New */`bodyType` int(2) NOT NULL,
-  `appearance` text NOT NULL,
+  `height` varchar(255),
+  `weight` varchar(255),
+  `eye_c` varchar(255),
+  `eye_s` varchar(255),
+  `hair_c` varchar(255),
+  `hair_s` varchar(255),
+  `hair_l` varchar(255),
+  `bodyType` int(2), -- New.
+  `appearance` text,
 
-  -- Spiritual
+  -- Spiritual. Deprecated, but needs to be merged...
   -- `spirit_status` tinyint(4) NOT NULL,
   -- `spirit_condition` tinyint(4) NOT NULL,
   -- `spirit_alignment` tinyint(4) NOT NULL,
@@ -45,49 +45,53 @@ CREATE TABLE IF NOT EXISTS `tbl_charabase` (
   -- `spirit_death_cause` varchar(255) COLLATE utf8_bin NOT NULL,
 
   -- Literature
-  `history` text COLLATE utf8_bin NOT NULL,
-  `likes` text COLLATE utf8_bin NOT NULL,
-  `dislikes` text COLLATE utf8_bin NOT NULL,
-  `addit_desc` text COLLATE utf8_bin NOT NULL,
+  `history` text,
+  `likes` text,
+  `dislikes` text,
+  `addit_desc` text,
 
   -- Adult
-  `dom_sub` int(2) NOT NULL,
-  `preferences` text COLLATE utf8_bin NOT NULL,
+  `dom_sub` int(2),
+  `preferences` text,
 
   -- Displayed within the image tab
-  `artistNote` text NOT NULL,
+  `artistNote` text,
 
+  -- I call this useful.
+  `font_color` varchar(10),
   -- The big other (page). If empty, not displayed.
-  `other_title` varchar(50) NOT NULL,
+  `other_title` varchar(50),
   -- The contents of this page is Markdown.
-  `other` text NOT NULL,
+  `other` text,
   -- CSS code to be headed to the header
   -- Need a purifier here.
-  `css` text NOT NULL,
+  `css` text,
   -- YT link. Should auto-generate.
-  `theme_type` int(4) NOT NULL,
-  `theme` varchar(255) NOT NULL,
+  `theme_type` int(4),
+  `theme` varchar(255),
 
   -- Externals
   -- The job that this char is associated to.
-  `jID` int(11) NOT NULL,
+  -- if(jID==-1): No job.
+  `jID` int(11) NOT NULL DEFAULT -1,
   PRIMARY KEY (`cID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- One character/association has many of these.
-CREATE TABLE IF NOT EXISTS `tbl_charabasePictures` (
+CREATE TABLE IF NOT EXISTS `tbl_characterPictures` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `oID` int(11) NOT NULL, -- SK. "Object ID". Character, Association
   -- This is optional.
-  `name` varchar(255) COLLATE utf8_bin NOT NULL,
+  `name` varchar(255) COLLATE utf8_general_ci NOT NULL,
   -- This should be checked against due to tagging stuff.
-  `desc` text COLLATE utf8_bin NOT NULL,
+  `desc` text NOT NULL,
   -- Defines if this is for a character, form or association.
   `type` int(5) NOT NULL,
   -- 4GB. The fur that fills that gets a cake.
-  `data` longblob NOT NULL,
+  -- `data` longblob NOT NULL,
+  -- Data will be stored in cdn/content/character_pictures
   -- Last modified. Important for NodeJS cache.
-  `modified` timestamp NOT NULL,
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -102,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `tbl_charabasePictures` (
         Excel --> Rina = Mate
         Rina --> Excel = Mate
 */
-CREATE TABLE IF NOT EXISTS `tbl_charabaseRelationship` (
+CREATE TABLE IF NOT EXISTS `tbl_characterRelationship` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   -- Subject
   `s_id` int(11) NOT NULL,
@@ -140,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `tbl_charabaseRelationship` (
 CREATE TABLE IF NOT EXISTS `tbl_characterRelationship_Type` (
   -- SK for tbl_charabaseRelationship.type
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(20) NOT NULL,
+  `title` varchar(20) COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -149,10 +153,10 @@ CREATE TABLE IF NOT EXISTS `tbl_characterRelationship_Type` (
    ONE character HAS MANY forms.
    ONE form HAS ONE character.
 */
-CREATE TABLE IF NOT EXISTS `tbl_charabaseForm` (
+CREATE TABLE IF NOT EXISTS `tbl_characterForm` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cID` int(11) NOT NULL, -- SK
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) COLLATE utf8_general_ci NOT NULL,
   `desc` text NOT NULL,
   PRIMARY KEY (`id`)
 );
@@ -161,10 +165,10 @@ CREATE TABLE IF NOT EXISTS `tbl_charabaseForm` (
 /* Character Association
    A family, clan, or whatever.
 */
-CREATE TABLE IF NOT EXISTS `tbl_charabaseAssociation` (
+CREATE TABLE IF NOT EXISTS `tbl_characterAssociation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   -- To be displayed in the listing.
-  `name` varchar(50) NOT NULL,
+  `name` varchar(50) COLLATE utf8_general_ci NOT NULL,
   -- A rough summary of what it holds.
   `summary` varchar(500) NOT NULL,
   -- The full details.
@@ -177,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `tbl_charabaseAssociation` (
         ONE character HAS MANY associations
         ONE association HAS MANY characters
 */
-CREATE TABLE IF NOT EXISTS `tbl_charabase_AssocRel` (
+CREATE TABLE IF NOT EXISTS `tbl_characterAssociation_Rel` (
     -- This is the character
     `cID` int(11) NOT NULL,
     -- that is related to this association.
@@ -189,14 +193,14 @@ CREATE TABLE IF NOT EXISTS `tbl_charabase_AssocRel` (
 
     ONE user (shares with) MANY users
 */
-CREATE TABLE IF NOT EXISTS `tbl_charabase_ShareRel` (
+CREATE TABLE IF NOT EXISTS `tbl_characterShare_Rel` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   -- The sharing user and their char
   `cID` int(11) NOT NULL,
   -- Target user
   `tID` int(11) NOT NULL,
   -- When was this inserted? Important for nodejs worker.
-  `inserted` timestamp NOT NULL,
+  `inserted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   -- Active or not?
   `active` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
@@ -208,7 +212,7 @@ CREATE TABLE IF NOT EXISTS `tbl_charabase_ShareRel` (
         ONE character HAS MANY faves
         ONE fave has HAS MANY characters
 */
-CREATE TABLE IF NOT EXISTS `tbl_charabaseFaves` (
+CREATE TABLE IF NOT EXISTS `tbl_characterFaves` (
     -- This has an ID for the listing
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `uID` int(11) NOT NULL,
@@ -223,7 +227,7 @@ CREATE TABLE IF NOT EXISTS `tbl_charabaseFaves` (
 
    I 'love' N2N relations...
 */
-CREATE TABLE IF NOT EXISTS `tbl_charabase_MediaRel` (
+CREATE TABLE IF NOT EXISTS `tbl_characterMedia_Rel` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     -- The media.
     `mID` int(11) NOT NULL,

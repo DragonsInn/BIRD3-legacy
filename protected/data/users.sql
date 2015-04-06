@@ -41,48 +41,6 @@ CREATE TABLE IF NOT EXISTS `tbl_user_profile` (
   PRIMARY KEY (`uID`)
 );
 
-/* Private messages */
-CREATE TABLE IF NOT EXISTS `tbl_user_pm` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `subject` varchar(255) NOT NULL,
-  `message` text NOT NULL,
-  PRIMARY KEY (`id`)
-);
-
-/* Conversations */
-CREATE TABLE IF NOT EXISTS `tbl_user_pm_conv` (
-  `sID` int(11) NOT NULL, -- Sender
-  `rID` int(11) NOT NULL, -- Reciever
-  `mID` int(11) NOT NULL, -- MSG
-  -- Response to mID if gt -1
-  `response` int(11) NOT NULL DEFAULT 0,
-  -- Timestap = a long int! :D So, make it a PK
-  -- YII must set this!
-  `composed` int NOT NULL,
-  PRIMARY KEY (`composed`)
-);
-
-/* User Subscription
-   Users can subscribe to other users.
-   When a user does something its nodejs` task to pick it up and write an entry.
-*/
-CREATE TABLE IF NOT EXISTS `tbl_user_sub` (
-  `sID` int(11) NOT NULL, -- subscriber
-  `tID` int(11) NOT NULL -- target
-);
-
-CREATE TABLE IF NOT EXISTS `tbl_user_update` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  -- The user ment to receive this.
-  `tID` int(11) NOT NULL,
-  -- What kind of an update it is.
-  `type` int(1) NOT NULL,
-  -- Universal PK. It can reffer to a char, media or forum.
-  `contentID` int(11) NOT NULL,
-  `inserted` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-);
-
 CREATE TABLE IF NOT EXISTS `tbl_user_settings` (
     `id` int(11) NOT NULL,
     -- User can see content marked as Adult.
@@ -120,4 +78,46 @@ CREATE TABLE IF NOT EXISTS `tbl_user_permissions` (
     -- This user can broadcast. /wall
     `canBroadcast` tinyint(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`)
+);
+
+
+/* Private messages */
+CREATE TABLE IF NOT EXISTS `tbl_user_pm` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `from_ID` int(11) NOT NULL, -- Sender
+  `to_ID` int(11) NOT NULL, -- Reciever
+  `subject` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+/* Conversations */
+CREATE TABLE IF NOT EXISTS `tbl_user_pm_conv` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mID` int(11) NOT NULL, -- MSG
+  -- Response to mID if gt -1
+  `response` int(11) NOT NULL DEFAULT -1,
+  `composed` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+);
+
+/* User Subscription
+   Users can subscribe to other users.
+   When a user does something its nodejs` task to pick it up and write an entry.
+*/
+CREATE TABLE IF NOT EXISTS `tbl_user_sub` (
+  `sID` int(11) NOT NULL, -- subscriber
+  `tID` int(11) NOT NULL -- target
+);
+
+CREATE TABLE IF NOT EXISTS `tbl_user_update` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  -- The user ment to receive this.
+  `tID` int(11) NOT NULL,
+  -- What kind of an update it is.
+  `type` int(1) NOT NULL,
+  -- Universal PK. It can reffer to a char, media or forum.
+  `contentID` int(11) NOT NULL,
+  `inserted` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 );

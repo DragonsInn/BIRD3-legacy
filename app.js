@@ -52,9 +52,11 @@ global.log = new (winston.Logger)({
 });
 
 // Global eventing
-global.BIRD3 = require("./lib/communicator.js")(io, redis);
+global.BIRD3 = require("./node-lib/communicator.js")(io, redis);
 
 // Configure connect...
+app.get(responseTime());
+app.use(require("compression")());
 app.use(function(req,res,next){
     if(req.method == "POST") {
         req._rawBodyParts = [];
@@ -70,10 +72,8 @@ app.use(function(req,res,next){
         });
     } else return next();
 });
-app.get(responseTime());
-app.use(require("compression")());
 app.use(function(req, res, next){
-    log.info("Starting: "+req.method+" | "+req.url);
+    //log.info("Starting: "+req.method+" | "+req.url);
     res.on("finish", function(){
         log.info(req.method+" "+res.statusCode+": "+req.url);
     });
@@ -86,11 +86,10 @@ io.listen(httpServer);
 httpServer.on("listening", function(){
     log.info("BIRD3 Listening now: "+config.BIRD3.host+":"+config.BIRD3.http_port);
     // Set up the web stuff.
-    require("./lib/security_handler.js");
-    require("./lib/error_handler.js")();
-    require("./lib/request_handler.js")(app, httpServer);
-    require("./lib/update_worker.js")();
-    require("./lib/live_handler.js")(io, redis);
+    require("./node-lib/security_handler.js");
+    require("./node-lib/error_handler.js")();
+    require("./node-lib/request_handler.js")(app, httpServer);
+    require("./node-lib/update_worker.js")();
+    require("./node-lib/live_handler.js")(io, redis);
     // Performance...
-    console.log("Beware the app handler!", app);
 });

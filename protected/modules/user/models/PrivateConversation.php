@@ -9,8 +9,6 @@
 
     /**
      *  @int PK id      | Conversation ID
-     *  @int sID        | Sender's uID
-     *  @int rID        | Acceptor's uID
      *  @int mID        | The message being sent
      *  @int response   | If this message was a response, this is a mID.
      *  @int composed   | When the message was composed
@@ -18,12 +16,32 @@
 
     public function relations() {
         return [
-            # Redundant, but should keep it the Yii way.
-            "owner"=>array(self::BELONGS_TO, "User", "sID"),
-            # Actual relations
-            "sender"=>array(self::HAS_ONE, "User", "sID"),
-            "acceptor"=>array(self::HAS_ONE, "User", "tID"),
             "message"=>array(self::HAS_ONE, "PrivateMessage", "mID"),
         ];
+    }
+
+    // This gets the response.
+    public function getResponse() {
+        if($this->response != -1) {
+            return self::model()->findByAttributes([
+                "mID"=>$this->response
+            ]);
+        } else {
+            return NULL;
+        }
+    }
+
+    // Gets all messages to this point and downwards.
+    public function getWhole() {
+        $msgs = [$this->message];
+        $curr = $this;
+        while(1) {
+            $curr = $curr->getResponse();
+            if(!is_null($curr)) {
+                $msgs[] = $curr->message;
+            } else break;
+        }
+        # Messages are now stored upside-down. (Newest first).
+        return $msgs;
     }
 }

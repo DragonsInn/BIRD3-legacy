@@ -34,12 +34,12 @@
         return [
             "skype"=>'<i class="fa fa-skype"></i> Skype',
             "steam"=>'<i class="fa fa-steam"></i> Steam',
-            "psn"=>'<span class="psn"></span> Playstation Network',
-            "xboxlife"=>'<span class="xbl"></span> XBox Live',
+            "psn"=>'<span class="iconblock psn"></span> Playstation Network',
+            "xboxlife"=>'<span class="iconblock xbl"></span> XBox Live',
             "facebook"=>'<i class="fa fa-facebook"></i> Facebook',
             "twitter"=>'<i class="fa fa-twitter"></i> Twitter',
-            "furaffinity"=>'FurAffinity',
-            "sofurry"=>'SoFurry'
+            "sofurry"=>'<span class="iconblock sofurry"></span> SoFurry',
+            "furaffinity"=>'FurAffinity'
         ];
     }
 

@@ -36,7 +36,7 @@ if(!sh.which("php")) {
             client.on("error", function(e){
                 console.log("Error in hprose client:", require("util").inspect(e));
                 client.invoke("yii_stop");
-                res.status(500).end("Internal error");
+                //res.status(500).end("Internal error");
             });
             // Serialize stuff for the client
             var j_req = JSON.stringifySafe(req);

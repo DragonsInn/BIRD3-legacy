@@ -25,3 +25,7 @@
 [submodule "protected/extensions/redis"]
 	path = protected/extensions/redis
 	url = https://github.com/phpnode/YiiRedis.git
+[submodule "php_modules_ext/hprose-workerman"]
+        path = php_modules_ext/hprose-workerman
+        url = https://github.com/hprose/hprose-workerman.git
+

@@ -1,17 +1,23 @@
 <?php
-// A totally polite GO AND FUCK YOURSELF.
+// A totally polite NOOOOOOPE..
 // Because it annoys me on CLI.
 runkit_function_redefine("headers_sent", '', 'return false;');
 // Header.
 runkit_function_redefine(
     "header", '$to,$replace=false,$status=200',
-    'HttpResponse::header("Location: $to");'
+    'return HttpResponse::header("Location: $to");'
 );
 // We have a custom handler.
 runkit_function_redefine(
     "setcookie",
     '$name,$value,$expire=0,$path="/",$domain=null,$secure=false,$httponly=false',
-    'HttpResponse::setcookie($name,$value,$expire,$domain,$secure,$httponly);'
+    'return HttpResponse::setcookie($name,$value,$expire,$domain,$secure,$httponly);'
+);
+// Because...
+runkit_function_redefine(
+    "session_regenerate_id",
+    '$deleteOld=false',
+    'return bird3_session_regenerate_id($deleteOld);'
 );
 
 // ...hacky.
@@ -64,6 +70,24 @@ function int2err($ec) {
         case E_ALL:                 return "E_ALL";
         default:                    return $ec;
     }
+}
+
+// Re-Creation
+function bird3_session_regenerate_id($delold=false) {
+    if(session_status() == PHP_SESSION_ACTIVE) {
+        // in session.c, I saw this:
+        // PS(id) = PS(mod)->s_create_sid(&PS(mod_data), NULL TSRMLS_CC);
+        // I dunno how to properly reproduce this...
+        if($delold || !isset($_COOKIE["PHPSSID"])) {
+            $id = openssl_random_pseudo_bytes(20);
+            session_id($id);
+            HttpResponse::setcookie("PHPSSID",$id,60*60*24*(30*6));
+            return true;
+        } else {
+            session_id($_COOKIE["PHPSSID"]);
+            return true;
+        }
+    } else return false;
 }
 
 // These classes are totally internal.

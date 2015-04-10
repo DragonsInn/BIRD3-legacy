@@ -39,7 +39,7 @@ return array(
 	),
 
 	'modules'=>array(
-		"user", "characters"
+		"redis", "session",	"user"
 	),
 
 	// application components
@@ -63,12 +63,6 @@ return array(
 			'basePath'=>$base."/themes",
 			"baseUrl"=>"/themes"
 		),
-		'booster'=>array(
-			'class'=>'ext.yiibooster.components.Booster',
-			'bootstrapCss'=>false,
-			'jqueryCss'=>false,
-			'disableZooming'=>false
-		),
 		'cdn'=>array(
 			'class'=>'CDNHelper',
 			'basePath'=>$base.'/cdn',
@@ -78,7 +72,6 @@ return array(
 			'class'=>'ClientCache'
 		),
 		'clientScript'=>array(
-			#'class'=>'ext.minScript.components.ExtMinScript',
 			'class'=>'ext.ExtendedClientScript.ExtendedClientScript',
 			'basePath'=>$base,
 			'combineCss'=>!isset($_GET["dev"]),

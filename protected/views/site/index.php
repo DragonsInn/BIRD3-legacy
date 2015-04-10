@@ -14,6 +14,7 @@ $this->isIndex=true;
         "subject"=>"Testing nodemailer",
         "text"=>"o.o"
     ]);*/
+    #if(!isset($_SESSION["_date"])) $_SESSION["_date"]=time();
 ?></pre></div>-->
 
 <div class="row">

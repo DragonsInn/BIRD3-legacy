@@ -1,4 +1,5 @@
 $(document).ready(function(win){
+    console.log("Setting up panels...");
     // Panel vars
     window.pLeft = $("#Pleft");
     window.pRight = $("#Pright");

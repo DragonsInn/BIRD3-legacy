@@ -17,8 +17,9 @@
             $user->attributes=$_POST['User'];
             if($user->validate()) {
                 if($user->login()) {
-                    $this->redirect(Yii::app()->user->returnUrl);
-                } else echo "Login noped.";
+                    $ru = Yii::app()->user->returnUrl;
+                    $this->redirect($ru);
+                } else throw new CException("Login noped.");
             }
         }
         $this->render("loginForm",array("model"=>$user));

@@ -1,1 +1,1 @@
-../../php_modules/Mimex/mimex.php
+../../php_modules_ext/Mimex/mimex.php

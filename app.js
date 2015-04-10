@@ -9,9 +9,7 @@ var http = require('http'),
     connect = require("express"),
     app = connect(),
     responseTime = require("response-time"),
-    io = require('socket.io')(),
-    AsciiBanner = require('ascii-banner');
-
+    io = require('socket.io')();
 // Misc
 var fs = require('fs'),
     winston = require("winston"),
@@ -30,11 +28,14 @@ global.config = ini.getSync("./config/BIRD3.ini");
 config.base = __dirname;
 config.version = fs.readFileSync("./config/version.txt").toString().replace("\n","");
 // Intro!
+/*
+var AsciiBanner = require('ascii-banner');
 AsciiBanner
 .write('BIRD3')
 .after("Version: "+config.version)
 .before(">By Ingwie Phoenix<")
 .out();
+*/
 
 // Logging and configuring it
 global.log = new (winston.Logger)({
@@ -57,7 +58,7 @@ global.BIRD3 = require("./node-lib/communicator.js")(io, redis);
 // Configure connect...
 app.get(responseTime());
 app.use(require("compression")());
-app.use(function(req,res,next){
+/*app.use(function(req,res,next){
     if(req.method == "POST") {
         req._rawBodyParts = [];
         req._rawBodyPartsLength = 0;
@@ -71,11 +72,11 @@ app.use(function(req,res,next){
             next();
         });
     } else return next();
-});
+});*/
 app.use(function(req, res, next){
     //log.info("Starting: "+req.method+" | "+req.url);
     res.on("finish", function(){
-        log.info(req.method+" "+res.statusCode+": "+req.url);
+        log.info(req.ip+"> "+req.method+" "+res.statusCode+": "+req.url);
     });
     return next();
 });

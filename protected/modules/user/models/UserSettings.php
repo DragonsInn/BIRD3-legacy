@@ -6,10 +6,10 @@
     public function tableName() {
         return "{{user_settings}}";
     }
-    public function primaryKey() { return "uID"; }
+    public function primaryKey() { return "id"; }
     public function relations() {
         return array(
-            "user"=>array(self::BELONGS_TO, "User", "uID")
+            "user"=>array(self::BELONGS_TO, "User", "id")
         );
     }
 

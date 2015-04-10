@@ -12,3 +12,5 @@ config/BIRD3.ini
 *.dump
 cdn/oj/*.js
 cache/*
+*.lock
+php_modules/*

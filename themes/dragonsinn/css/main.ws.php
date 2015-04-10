@@ -4,12 +4,13 @@ date_default_timezone_set("UTC");
 $main = dirname(__FILE__)."/../../..";
 
 // Yii
-include_once("$main/php_modules/yii/framework/yii.php");
-$config = include_once("$main/protected/config/main.php");
+require_once("$main/php_modules/autoload.php");
+$config = require_once("$main/protected/config/main.php");
 Yii::createWebApplication($config);
+require_once("$main/protected/components/Controller.php");
 
 // Cause...yii.
-header_remove("Pragma");
+#header_remove("Pragma");
 
 // Cache ourselves. Trick borrowed: http://css-tricks.com/snippets/php/intelligent-php-cache-control/
 $lastModified=filemtime(__FILE__);
@@ -18,32 +19,27 @@ $etagFile = md5_file(__FILE__);
 $ifModifiedSince=(isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : false);
 $etagHeader=(isset($_SERVER['HTTP_IF_NONE-MATCH']) ? $_SERVER['HTTP_IF_NONE-MATCH'] : false);
 // Send
-header("X-WingStyle: Alive");
-header("Cache-control: public, max-age=604800");
-header("Last-Modified: ".gmdate("D, d M Y H:i:s", $lastModified)." GMT");
-header("Etag: $etagFile");
-header("Content-type: text/css");
+HttpResponse::header("X-WingStyle: Alive");
+HttpResponse::header("Cache-control: public, max-age=604800");
+HttpResponse::header("Last-Modified: ".gmdate("D, d M Y H:i:s", $lastModified)." GMT");
+HttpResponse::header("Etag: $etagFile");
+HttpResponse::header("Content-type: text/css");
 
 //check if page has changed. If not, send 304 and exit
 if($etagHeader && $etagHeader == $etagFile) {
-    header("HTTP/1.1 304 Not Modified");
+    HttpResponse::status(304);
     exit;
 }
 
 // Internal cache. Hacking Yii to do things...ahh...poor thing. :)
 $key = "ws-$etagFile";
-$c=Yii::app()->controller = new Controller("WingStyle");
+$c = Yii::app()->controller = new Controller("WingStyle");
 if($c->beginCache($key)) {
 // This is pretty much the else condition.
 
 // WingStyle
-include_once("$main/php_modules/WingStyle/WingStyle.php");
-ws_copyright();
-#WS()->beauty = false;
-WS()->load(
-    "transition", "position", "float", "border",
-    "whiteSpace", "wordWrap", "display"
-);
+define("WS_NO_HEADER", 1);
+include_once("$main/php_modules_ext/WingStyle/WingStyle.php");
 
 // Helper function
 function reactToAll($elem) {
@@ -54,13 +50,19 @@ function reactToAll($elem) {
         $elem
     );
 }
+#WS()->beauty = false;
+WS()->load(
+    "transition", "position", "float", "border",
+    "whiteSpace", "wordWrap", "display"
+);
+
 
 // Variables
 $base = Yii::app()->cdn->baseUrl."/theme";
 $img = Yii::app()->cdn->baseUrl."/images";
 
 // Panel styles
-include_once "panels.ws";
+include "panels.ws";
 
 /**
  * Dragon's Inn: Main design.

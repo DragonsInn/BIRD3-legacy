@@ -1,0 +1,19 @@
+#!/usr/bin/env node --harmony_proxies
+var hprose = require("hprose"),
+    inspect = require("util").inspect,
+    opts = require("optimist").argv,
+    client = new HproseTcpClient(opts.addr),
+    proxy = client.useService();
+
+client.on("error", function(func, e) {
+    console.log("Error: "+e.message);
+});
+
+var cargs = [];
+var fargs = (typeof opts.args != "undefined" ? opts.args.split(";") : []);
+cargs.push(opts.method);
+cargs.push(fargs);
+cargs.push(function(res){
+    console.log(opts.method+" returned:", res);
+});
+client.invoke.apply(client, cargs);

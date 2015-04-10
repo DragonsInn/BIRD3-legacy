@@ -89,8 +89,9 @@
     </div>
     <?php if($this->editorPlacement != "top") echo $ta; ?>
 </div>
-<script>
+<script>$(document).ready(function(){
     $("#<?=$wid?>_preview").click(function(e){
+        console.log("To: <?=$this->controller->createUrl("/tools/render_markdown")?>");
         e.preventDefault();
         $.post("<?=$this->controller->createUrl("/tools/render_markdown")?>", {
             md: $("#<?=$wid?>").val(),
@@ -334,4 +335,4 @@
             }
         }
     });
-</script>
+});</script>

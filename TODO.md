@@ -10,6 +10,7 @@
     * [X] Settings panel
         * [-] Let user upload an avatar.
             - FIXME: `connect-yii`'s file uploading is NOT to be considered stable!!
+            - Almost fixed: the new service will handle it.
         * [X] Edit User, UserProfile and Usersettings.
     * [X] Using/Updating `last_visited` and `create_at`
         - Damn, a typo im not gonna get rid of. Should be `created_at`...
@@ -19,6 +20,7 @@
     * [ ] Private Messaging
         * [X] Add models
         * [ ] Implement PM logic
+            * Almost!
     * [X] E-Mail notifications
         * [X] NodeJS scheduler for notifications
         * [X] Plant notifications via Yii.
@@ -29,28 +31,31 @@
         * [X] Developer mode should show extra stuff and error messages are detailed.
     * [X] Fill the User section in the Community menu.
     * [ ] Generate HTML to
+        - Show avatar
+            * Shows a generic one if `avvie_ext==null`
         - Send PM
         - View profile
         - See blog
         - See gallery
-- [X] Front-end cache
-    * [X] Caching CSS/JS
-    * [X] Adding OJ support
-    * [X] Optimizing images
-        * [X] Caching optimized images
-    * [X] Minify JS/CSS
-    * [X] Minify output HTML
-    * [X] WingStyle caches itself
-    * [X] Assets all have a cache header.
-- [X] API support
-    * [X] API structure
-    * [X] Make them work.
-    * [X] Make API available through RPC/RMI
-        - Via Redis. Mapping API into PHP to wrap calls now.
+- [ ] Front-end caching, part 2
+    * [ ] Optimize sent cache headers
+        - Etag? Cache-control? Which one to use at what?
 - [ ] Interaction
     * [X] Connecting to Socket.IO to talk to backend
     * [ ] Use Deliver.js to transmit files
-    * [X] Verify that `connect-yii` does uploads
+        - Or...not? o.o
+    * [?] Verify that `connect-yii` does uploads
+        - [ ] Obselete. The BIRD3 Hprose service needs to learn it now!
+- [ ] `bird3-hprose`
+    * [X] Implement basic structure
+        - [X] Workerman
+        - [X] Hprose
+        - [X] Workerman + Hprose = `hprose-workerman`!
+    * [ ] Fine-tuned error handling
+    * [MAYBE] 2-way commication (proxy `res` and `req` functions?)
+        - That...is just plain insane, but not impossible.
+    * [ ] PHP logs to parent
+        - Probably gonna do it via Redis after all...
 - [ ] In-Site docs
     * [ ] Proxy the Wiki into a /docs module
         * [ ] Map the URL
@@ -159,5 +164,5 @@ Preferences
 
 
 -- Staff meeting
-- user previleges database to maintain previleges
+- user previleges database to maintain previleges [Done]
 - Adult pictures on profiles are always collapsed by default to promote sfw

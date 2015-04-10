@@ -1,0 +1,15 @@
+{
+    "name": "BIRD3",
+    "version": "3.0.0",
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii": "1.1.*",
+        "predis/predis": "0.8.*",
+        "okwinza/cloudflare-api": "dev-master",
+        "erusev/parsedown-extra": "0.7.*",
+        "evenement/evenement": "2.0.*"
+    },
+    "config": {
+        "vendor-dir": "php_modules/"
+    }
+}

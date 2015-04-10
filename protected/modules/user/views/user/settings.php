@@ -27,7 +27,6 @@
         </div>
     </div>
 <?php } ?>
-
 <div>
     <?=$form->errorSummary($model,
         "Errors with entries for account settings:"

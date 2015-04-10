@@ -132,8 +132,16 @@
 		$cdnUrl = Yii::app()->cdn->baseUrl;
 		$yiiUrl = Yii::app()->request->getBaseUrl(true);
 
+
 		// Gracefuly update jQuery :)
 		$cs->scriptMap["jquery.js"]=false;
+
+		// Just in case.
+		$cs->packages["jquery"] = [
+			"basePath"=>Yii::app()->cdn->basePath,
+			"baseUrl"=>$cdnUrl,
+			"js"=>["js/jquery-1.11.1.js"]
+		];
 
 		// jQuery
 		Yii::app()->cdn->js("jquery-1.11.1.js");
@@ -175,14 +183,11 @@
 		// OJ runtime
 		Yii::app()->cdn->js("oj-runtime.js");
 
-		#Yii::app()->booster->getBooster()->init();
-
 		// BIRD3 Theme. We use the URL here to avoid minification. Trickery, yo.
 		$cs->registerCssFile($yiiUrl.$tbase."/css/main.ws.php");
 		$cs->registerScriptFile($yiiUrl."/cdn/oj/BIRD3.oj");
 		$cs->registerCssFile($tbase."/css/bs-extra.css");
 		$cs->registerScriptFile($tbase."/js/panels.js");
-		#Yii::app()->cdn->css("bs-tabs-extended.css");
 
 		$faBase = $cdnUrl."/font-awesome";
 		$bsBase = $cdnUrl."/bootstrap";
@@ -214,6 +219,7 @@
 		");
 
 		// Make our footer sticky
+
 		Yii::app()->cdn
 			->js("jquery.stickyfooter.min.js")
 			->css("jquery.stickyfooter.css");
@@ -363,5 +369,22 @@
 			return $coutput;
 		else
 			echo $coutput;
+	}
+
+	public function redirect($url,$terminate=true,$statusCode=302) {
+		if(is_array($url)) {
+			$route=isset($url[0]) ? $url[0] : '';
+			$url=$this->createUrl($route,array_splice($url,1));
+		}
+		#Log::info("-- Redirect: $url");
+		$this->real_redirect($url, $terminate, $statusCode);
+	}
+
+	public function real_redirect($url,$terminate=true,$statusCode=302) {
+		if(strpos($url,'/')===0 && strpos($url,'//')!==0) {
+			$url=Yii::app()->request->getHostInfo().$url;
+		}
+		#Log::info("-- Real redirect: $url");
+		HttpResponse::header('Location: '.$url, true, $statusCode);
 	}
 }

@@ -9,10 +9,12 @@ This is the CMS behind the Dragon's Inn. I have open-sourced it for easier contr
     * npm
 - PHP >= 5.4
     * Composer
+    * Options:
     * Native extensions:
         - runkit (Use the VCS version, offical does not support newest)
         - redis (PECL)
         - pcntl (Install from php source)
+        - sockets
         - [hprose](https://github.com/hprose/hprose-pecl)
 
 ## it uses ES6.

@@ -6,7 +6,7 @@ $base = dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."..";
 Yii::setPathOfAlias('cdn',$base.'/cdn');
 
 $BIRD3 = parse_ini_file($base."/config/BIRD3.ini", true);
-$version = file_get_contents($base."/config/version.txt");
+$version = $_SERVER["SERVER_SOFTWARE"];
 
 $CDN = "http://".$BIRD3["CDN"]["url"];
 

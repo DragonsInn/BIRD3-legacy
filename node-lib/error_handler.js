@@ -1,6 +1,6 @@
 module.exports = function() {
     BIRD3.on("error", function(e){
-        log.error("BIRD3 going down. Cause: ", e);
+        BIRD3.error("BIRD3 going down. Cause: ", e);
         process.exit(1);
     });
     process.on("error", function(e){

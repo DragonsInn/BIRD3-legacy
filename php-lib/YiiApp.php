@@ -78,13 +78,13 @@ function bird3_session_regenerate_id($delold=false) {
         // in session.c, I saw this:
         // PS(id) = PS(mod)->s_create_sid(&PS(mod_data), NULL TSRMLS_CC);
         // I dunno how to properly reproduce this...
-        if($delold || !isset($_COOKIE["PHPSSID"])) {
+        if($delold || !isset($_COOKIE["PHPSESSID"])) {
             $id = openssl_random_pseudo_bytes(20);
             session_id($id);
-            HttpResponse::setcookie("PHPSSID",$id,60*60*24*(30*6));
+            HttpResponse::setcookie("PHPSESSID",$id,60*60*24*(30*6));
             return true;
         } else {
-            session_id($_COOKIE["PHPSSID"]);
+            session_id($_COOKIE["PHPSESSID"]);
             return true;
         }
     } else return false;
@@ -92,31 +92,7 @@ function bird3_session_regenerate_id($delold=false) {
 
 // These classes are totally internal.
 class HttpRequest {
-    public function __construct($msg, $opt=[]) {
-        foreach($msg->headers as $k=>$v) {
-            $k = str_replace("-","_", strtoupper($k));
-            $_SERVER["HTTP_".$k]=$v;
-        }
-        $_SERVER["REQUEST_METHOD"]=$msg->method;
-        $_SERVER["REQUEST_URI"]=$msg->url;
-        $_SERVER["SERVER_PROTOCOL"]="HTTP/".$msg->httpVersion;
-
-        // Add additional options
-        $_SERVER=array_merge($_SERVER, $opt);
-
-        // Coooooookies. Nomnomnom...
-        $_COOKIE = objectToArray($msg->cookies);
-
-        if(strtolower($msg->method) == "post") {
-            $_POST = objectToArray($msg->body);
-        }
-
-        $this->ctx = $msg;
-    }
-
-    private $ctx;
-    public function __get($name) {
-        return $this->ctx->{$name};
+    public function __construct() {
     }
 }
 
@@ -131,13 +107,11 @@ class HttpResponse {
         ],
         "status"=>200,
         // Internal API
-        "killme"=>false
+        "killme"=>true
     ];
 
-    public $ctx;
     private static $self;
-    public function __construct($res) {
-        $this->ctx = $res;
+    public function __construct() {
         self::$self = $this;
     }
 
@@ -198,35 +172,78 @@ class HttpResponse {
 
     public function end($body) {
         return array_merge($this->hr, [
-            "body"=>$body,
-            "res"=>$this->ctx
+            "body"=>$body
         ]);
     }
 }
 
 // This app is exported to NodeJS.
 class YiiApp {
-    static function run($_req, $_res, $opts) {
-        // I actually dont wanna. Hprose's serializer is much faster! D:
-        $req = json_decode($_req);
-        $res = json_decode($_res);
-
+    static function run($preq, $opt) {
         // Stuff that we got
-        $config = (object)$opts["config"];
+        $config = $opt["config"];
+        $_ENV["userData"]=$opt["userData"];
+
+        // Convert some arrays.
+        foreach($preq["request"] as $key=>$val) {
+            $GLOBALS[$key]=array_merge($GLOBALS[$key], $val);
+        }
 
         // Prepare to respond.
-        $req = new HttpRequest($req, $opts["_SERVER"]);
-        $res = new HttpResponse($res);
+        $req = new HttpRequest();
+        $res = new HttpResponse();
 
         $GLOBALS["req"]=$req;
         $GLOBALS["res"]=$res;
+
+        /*try {
+            $sb = new \PHPSandbox\PHPSandbox();
+            $manager = new \Pagon\ChildProcess();
+            $manager->listen();
+            $out = "";
+            $child = $manager->parallel(function($p){
+                try{
+                    $p->on("message", function($ch){
+                        echo "Got chunk...\n";
+                    });
+                    $p->on("exit", function(){
+                        echo "Child is exiting...\n";
+                    });
+                    $p->listen();
+                    echo "Meep!\n";
+                    ob_start();
+                    echo "o.o!\n";
+                    $res = ob_get_contents();
+                    ob_end_clean();
+                    $p->send($res);
+                } catch(\Exception $e) {
+                    echo "Child exception\n";
+                }
+                sleep(2);
+            }, false);
+            $child->on("message", function($ch) use($out){
+                echo "Got message; $ch\n";
+                $out .= $ch;
+            });
+            $child->on("exit", function(){
+                echo "Exiting...\n";
+            });
+            $child->on("listen", function(){
+                echo "\$child: listen\n";
+            });
+            #$child->listen();
+            $child->wait();
+            return $res->end($out);
+        } catch(\Exception $e) {
+            return $res->end("ERROR: ".$e->getMessage());
+        }*/
 
         try {
             // Run Yii
             ob_start();
             $res->header("Content-type: text/html");
 
-            $fname = $config->base.$req->url;
+            $fname = $_SERVER["SCRIPT_FILENAME"];
             if(file_exists($fname) && is_file($fname)) {
                 $fnp = explode(".", $fname);
                 $ext = array_pop($fnp);
@@ -236,18 +253,15 @@ class YiiApp {
                     echo file_get_contents($fname);
                 }
             } else {
-                // Yii stuff
+                # Hotfix
                 $_SERVER["SCRIPT_NAME"]="/app.php";
                 $_SERVER["DOCUMENT_URI"]="/app.php";
-                $_SERVER["SCRIPT_FILENAME"]=realpath($config->base."/app.php");
-
+                $_SERVER["SCRIPT_FILENAME"]=realpath($config["base"]."/app.php");
                 // change the following paths if necessary
-                $config=dirname(__FILE__).'/../protected/config/main.php';
-
+                $yii_config=$config["base"].'/protected/config/main.php';
                 // remove the following line when in production mode
                 defined('YII_DEBUG') or define('YII_DEBUG',true);
-
-                $c=include_once($config);
+                $c=require_once($yii_config);
                 Yii::createWebApplication($c);
                 set_error_handler("exception_error_handler");
                 Yii::app()->run();
@@ -265,12 +279,11 @@ class YiiApp {
             $o_res.= $e->getTraceAsString();
         }
 
-        $res->hr["killme"]=true;
         return $res->end($o_res);
     }
 
     static function stop() {
-        Log::info("Reloading");
+        echo "Baibai...\n";
         posix_kill(getmypid(), SIGUSR1);
     }
 }

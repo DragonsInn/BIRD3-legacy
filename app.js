@@ -38,7 +38,7 @@ AsciiBanner
 */
 
 // Logging and configuring it
-global.log = new (winston.Logger)({
+global.log = process.logger = new (winston.Logger)({
     transports: [
     new (winston.transports.Console)({
         colorize: true,

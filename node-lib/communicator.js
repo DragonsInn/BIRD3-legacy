@@ -4,13 +4,27 @@ var avs = require("avs-rpc");
 var extend = require("util")._extend;
 module.exports = function(io, redis) {
     var obj={};
-    obj.channel   = channel = "BIRD3";
+    obj.channel    = channel = "BIRD3";
     var subscriber = redis.createClient();
     var publisher  = redis.createClient();
     var evt        = new events.EventEmitter();
 
-    log.info("BIRD3 Events: Initializing...");
+    // Get the log in.
+    var logger = require("./logger.js")(config.base);
+    for(var level in logger.levels) {
+        obj[level]=logger[level];
+    }
 
+    obj.info("BIRD3 Events: Initializing...");
+
+    function onRedisError(e) {
+        obj.error("Redis error: "+e);
+    }
+
+    subscriber.on("subscribe", function(ch, c){
+        obj.info("BIRD3 has joined Redis channel: "+ch);
+    });
+    subscriber.on("error", onRedisError);
     subscriber.subscribe(channel);
 
     // Add event emitter
@@ -102,16 +116,21 @@ module.exports = function(io, redis) {
     io_router.on("*", function(sock, args, next){
         //console.log("*: ", arguments);
         var name = args[0], msg = args[1];
-        log.info("BIRD3 Events (Socket.IO): "+name+"("+msg+")");
+        obj.info("BIRD3 Events (Socket.IO): "+name+"("+msg+")");
         return next();
     });
     subscriber.on("message", function(ch, msg){
         var o = JSON.parse(msg);
-        log.info("BIRD3 Events (Redis: "+ch+"): "+o.name+'('+JSON.stringify(o.data)+')');
+        obj.info("BIRD3 Events (Redis: "+ch+"): "+o.name+'('+JSON.stringify(o.data)+')');
     });
 
     process.on('uncaughtException', function(err){
         obj.emit("error", err);
+    });
+
+    // One basic thing to look for. Servely useful.
+    obj.onRedis("rpc.log", function(obj){
+        log[obj.method].apply(log, obj.args);
     });
 
     return obj;

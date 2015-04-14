@@ -2,16 +2,33 @@
 $root=dirname(__FILE__)."/..";
 require_once "$root/php_modules/autoload.php";
 require_once "$root/php_modules_ext/ParseArgs.php";
-require_once "$root/php_modules_ext/workerman/Workerman/Autoloader.php";
+require_once "$root/php_modules/walkor/workerman/Workerman/Autoloader.php";
 require_once "$root/php_modules_ext/hprose-workerman/HproseWorkermanService.php";
 
-// NodeJS is aware of a good logger that prints JSON.
 class Log {
-    static function info($msg) {
-        file_put_contents(
-            'php://stderr',
-            "INFO: ".$msg."\n"
-        );
+    private static $redis = null;
+    public static function getRedis() {
+        if(self::$redis==null) {
+            self::$redis = new Redis;
+            $rt = self::$redis->popen("127.0.0.1");
+            if($rt!=true) {
+                echo "Error: Can not connect to Redis!!";
+                exit(1);
+            }
+            #self::$redis->select(0);
+        }
+        return self::$redis;
+    }
+    static function __callStatic($method, $args) {
+        $redis = self::getRedis();
+        $msg = json_encode([
+            "name"=>"rpc.log",
+            "data"=>[
+                "method"=>$method,
+                "args"=>$args
+            ]
+        ]);
+        return $redis->publish("BIRD3", $msg);
     }
 }
 
@@ -44,23 +61,26 @@ class AppServer {
         self::$_init = true;
 
         // Eventing, part 2.
-        self::$_worker->onWorkerStart = function($w) {
-            $ctx = new \stdClass;
-            $ctx->worker = $w;
-            $ctx->hprose = self::$_hprose;
-            self::emit("start", [$ctx]);
+        self::$_worker->onWorkerStart = function() {
+            self::emit("start", func_get_args());
         };
         self::$_worker->onWorkerStop = function($w) {
-            $ctx = new \stdClass;
-            $ctx->worker = $w;
-            $ctx->hprose = self::$_hprose;
-            self::emit("stop", [$ctx]);
+            self::emit("stop", func_get_args());
         };
         self::$_worker->onConnect = function($w) {
-            $ctx = new \stdClass;
-            $ctx->worker = $w;
-            $ctx->hprose = self::$_hprose;
-            self::emit("connect", [$ctx]);
+            self::emit("connect", func_get_args());
+        };
+        self::$_worker->onClose = function() {
+            self::emit("close", func_get_args());
+        };
+        self::$_worker->onError = function() {
+            self::emit("error", func_get_args());
+        };
+        self::$_worker->onBufferFull = function() {
+            self::emit("buffer_full", func_get_args());
+        };
+        self::$_worker->onBufferEmpty = function() {
+            self::emit("buffer_empty", func_get_args());
         };
     }
 

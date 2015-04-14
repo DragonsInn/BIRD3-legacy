@@ -10,7 +10,7 @@ function doDirs(uid, gid) {
     ];
     for(var i=0; dirs.length > i; i++) {
         var dir = dirs[i];
-        log.info("BIRD3 Security -> "+dir+"...");
+        BIRD3.info("BIRD3 Security -> "+dir+"...");
         if(!fs.existsSync(dir)) fs.mkdirSync(dir, 0777);
         if(!fs.writeFileSync(dir+"/.tmp", "o.o")) {
             wrench.chmodSyncRecursive(dir, 0777);
@@ -21,7 +21,7 @@ function doDirs(uid, gid) {
 }
 
 module.exports = function() {
-    log.info("BIRD3 Security: Setting up");
+    BIRD3.info("BIRD3 Security: Setting up");
 
     if(typeof config.BIRD3.userName != "undefined" && typeof config.BIRD3.groupName != "undefined") {
         if(process.setuid && process.setgid) {
@@ -32,7 +32,7 @@ module.exports = function() {
             var uid = userid.uid(uName);
             var gid = userid.gid(gName);
 
-            log.info("BIRD3 Security -> Preparing to change to "+uName+":"+gName+" ("+uid+":"+gid+")")
+            BIRD3.info("BIRD3 Security -> Preparing to change to "+uName+":"+gName+" ("+uid+":"+gid+")")
 
             doDirs(uid, gid);
 
@@ -40,7 +40,7 @@ module.exports = function() {
             process.setgid(gid);
             process.setuid(uid);
 
-            log.info("BIRD3 Security -> Changed.");
+            BIRD3.info("BIRD3 Security -> Changed.");
 
         } else {
             info.warn("BIRD3 Security -> Can not change UID/GID!");

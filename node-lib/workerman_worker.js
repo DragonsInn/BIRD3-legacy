@@ -2,13 +2,9 @@ var sh = require('shelljs');
 var spawn = require("child_process").spawn;
 var fs = require("fs");
 
-function Workerman(config) {
-    // Nothing to do, really...
-}
-
-Workerman.prototype.init = function() {
+module.exports.run = function(conf) {
     // Try to find PHP...
-    var phpBin;
+    var phpBin, config = conf.config;
     if(!sh.which("php") && !sh.which("php-cli")) {
         BIRD3.error("You need PHP installed!");
         BIRD3.emitRedis("bird3.exit");
@@ -40,5 +36,3 @@ Workerman.prototype.init = function() {
         });
     }
 }
-
-module.exports = Workerman;

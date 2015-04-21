@@ -8,11 +8,9 @@ var util = require("util");
 
 module.exports = function() {
     return function(req,res,next){
-        BIRD3.info("-- Port is: "+util.inspect(config.hprosePort));
         var client = new HproseTcpClient("tcp://127.0.0.1:"+config.hprosePort);
         client.on("error", function(e){
             BIRD3.error("Error in hprose client:", require("util").inspect(e));
-            client.invoke("yii_stop");
             //res.status(500).end("Internal error");
         });
         // Vars
@@ -27,11 +25,11 @@ module.exports = function() {
             request: {
                 _SERVER: {
                     QUERY_STRING: url.parse(req.url).query,
-                    PHP_SELF: rfile,
-                    SCRIPT_FILENAME: rfile,
+                    PHP_SELF: req.url,
+                    SCRIPT_FILENAME: file,
                     SCRIPT_NAME: file,
                     REQUEST_URI: req.url,
-                    DOCUMENT_URI: rfile,
+                    DOCUMENT_URI: file,
                     DOCUMENT_ROOT: config.base,
                     REMOTE_ADDR: req.ip,
                     REMOTE_PORT: req.connection.remotePort,
@@ -61,7 +59,6 @@ module.exports = function() {
         for(var k in req.query) arg.request._REQUEST[k]=req.query[k];
         for(var k in req.cookies) {
             var v = req.cookies[k];
-            console.log("---- "+k+" is "+v, v);
             arg.request._COOKIE[k]=(Buffer.isBuffer(v) ? v.toString("utf8") : v);
         }
         if(req.method=="POST") {
@@ -76,8 +73,6 @@ module.exports = function() {
         });
 
         client.invoke("yii_run", arg, opt, function(obj){
-            if(obj.killme) client.invoke("yii_stop");
-
             var status = obj.status || 200;
             res.status(status);
             for(var k in obj.headers) {

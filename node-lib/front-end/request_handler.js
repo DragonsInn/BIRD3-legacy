@@ -19,6 +19,7 @@ var st = require("st"),
     responseTime = require("response-time"),
     compression = require("compression");
 
+var debug = require("debug")("bird3:http");
 
 // Options
 var stOpts = {
@@ -46,35 +47,11 @@ var stOpts = {
 
 module.exports = function(app) {
     // We need to incororate with NGINX or any other webserver here.
-    BIRD3.info("BIRD3 WebService: Starting...");
+    debug("BIRD3 WebService: Starting...");
 
     // Some tiny middlewares...
     app.use(compression());
     app.use(responseTime());
-
-    /*app.use(function(req, res, next) {
-        console.log("-- Attempting minify.");
-        var write = res.write;
-        var end = res.end;
-        var data = null;
-        var minify = false;
-        res.write = function(chunk, encoding, cb) {
-            if(this.getHeader("Content-type") == "text/css") {
-                data += chunk.toString("utf8");
-                minify = true;
-            } else return write.call(this, chunk, encoding, cb);
-        }
-        res.end = function(chunk, encoding, cb) {
-            console.log("-- done");
-            if(minify) {
-                chunk = cssmin(data.toString("utf8"));
-                encoding = "utf8";
-                this.setHeader("Content-Length", chunk.length);
-            }
-            return end.call(this, chunk, encoding, cb);
-        }
-        next();
-    });*/
 
     // Expires: header
     app.use(config.CDN.baseUrl, function(req,res,next){
@@ -150,7 +127,7 @@ module.exports = function(app) {
                 typeof req.headers["if-none-match"] != "undefined"
                 && req.headers["if-none-match"]==md5_file(infile)
             ) {
-                //BIRD3.info("Its cached.");
+                //debug("Its cached.");
                 res.statusCode = 304;
                 return res.end();
             }
@@ -174,7 +151,7 @@ module.exports = function(app) {
                     res.setHeader("Cache-control", "public, max-age="+age);
                     res.setHeader("Expires", d.toUTCString());
                     if(!exists) {
-                        //BIRD3.info("BIRD3 CDN -> Generating: ",outfile);
+                        //debug("BIRD3 CDN -> Generating: ",outfile);
                         var imagemin = new Imagemin()
                             .src(infile)
                             .use(Imagemin.jpegtran({ progressive: true }))
@@ -199,7 +176,7 @@ module.exports = function(app) {
                             });
                         });
                     } else {
-                        //BIRD3.info("BIRD3 CDN -> Sending generated: "+outfile);
+                        //debug("BIRD3 CDN -> Sending generated: "+outfile);
                         fs.readFile(outfile, function(err, output){
                             if(err) {
                                 //BIRD3.error(err);
@@ -229,5 +206,5 @@ module.exports = function(app) {
     });
     app.use("/", php());
 
-    BIRD3.info("BIRD3 WebService: Running.");
+    debug("BIRD3 WebService: Running.");
 }

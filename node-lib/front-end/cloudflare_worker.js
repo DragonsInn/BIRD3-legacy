@@ -3,13 +3,14 @@ var ccf = (config.API.cloudflare.enable == "yes"
     : null
 );
 var ncf = require("node_cloudflare");
+var debug = require("debug")("bird3:cloudflare");
 
 module.exports = function(app) {
     // This is the local app instance, invoked before vhost.
-    BIRD3.info("BIRD3 CloudFlare Worker: Starting...");
+    debug("BIRD3 CloudFlare Worker: Starting...");
 
     if(ccf!=null) {
-        BIRD3.info("BIRD3 CloudFlare Worker: CF client enabled!");
+        debug("BIRD3 CloudFlare Worker: CF client enabled!");
     }
 
     ncf.load(function(error, fs_error){
@@ -23,7 +24,7 @@ module.exports = function(app) {
 
     app.use(function(req,res,next){
         if(ncf.check(req)) {
-            BIRD3.info("BIRD3 CloudFlare Worker -> "+ncf.get(req));
+            debug("BIRD3 CloudFlare Worker -> "+ncf.get(req));
         }
         next();
     });

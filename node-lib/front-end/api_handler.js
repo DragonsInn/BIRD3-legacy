@@ -1,18 +1,19 @@
 var glob = require("glob").sync,
     path = require("path"),
-    bodyParser = require("body-parser");
+    bodyParser = require("body-parser"),
+    debug = require("debug")("bird3:api");
 
 module.exports = function(app) {
-    BIRD3.info("BIRD3 APIService: Starting...");
+    debug("BIRD3 APIService: Starting...");
 
     // There basically isnt anything to go API about.
     // However, we can return the IP as a test.
-    BIRD3.info("BIRD3 APIService: Registering responders...");
+    debug("BIRD3 APIService: Registering responders...");
     var api={};
     var responder = glob( __dirname + "/api/*.js" );
     for(var i=0; i <= responder.length; i++) {
         if(typeof responder[i] == "undefined") continue;
-        BIRD3.info("BIRD3 APIService -> "+responder[i]);
+        debug("BIRD3 APIService -> "+responder[i]);
         api[path.basename(responder[i], ".js")] = require(responder[i]);
     }
 
@@ -59,5 +60,5 @@ module.exports = function(app) {
         ));
     });
 
-    BIRD3.info("BIRD3 APIService: Started!");
+    debug("BIRD3 APIService: Started!");
 }

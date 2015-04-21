@@ -41,21 +41,36 @@ Progress bar
     - http://www.alessioatzeni.com/blog/css3-loading-animation/
 Circular progress bar
     - http://codepen.io/jo-asakura/details/stFHi/
-BIRD3 Markdown Editor
+BIRD3 Markdown Editor ; Implemented!
     - https://github.com/timdown/rangyinputs
-BIRD3 RPC
+BIRD3 RPC ; Implemented!
     - https://www.npmjs.com/package/avs-rpc
 AJAXChat
     - -> nodejs -> ssh?
         * https://github.com/mscdex/ssh2
     - Data models https://www.npmjs.com/package/mysql-model
-Clustered application
+Clustered application ; Implemented!
     - Diverse clusters https://github.com/valiton/node-various-cluster
     - Domain specific cluster https://github.com/jtblin/master-cluster
 PHP Workerman worker stuff
     - Child Process https://github.com/hfcorriez/php-childprocess/blob/master/README_en.md
     - PHPSandbox https://github.com/fieryprophet/php-sandbox
         * Can OVERRIDE stuff!! No runkit...?
+        * Uses an AST. that might get lost over includes.
+Better pagination
+    - https://github.com/mardix/Paginator
+Better HTML rendering
+    - https://github.com/Anahkiasen/html-object
+CLI stuff
+    - https://github.com/c9s/CLIFramework
+    - https://github.com/kevinlebrun/colors.php
+Active Records made amazing
+    - https://github.com/TimeToogo/Pinq
+child_process.fork and sockets
+    - http://www.wiredprairie.us/blog/index.php/archives/1930
+Better content caching
+    - https://github.com/taxilian/connect-dyncache/pull/2
+        * Waiting on merge..........
 
 // Possible to add
 Grid system | http://salvattore.com/

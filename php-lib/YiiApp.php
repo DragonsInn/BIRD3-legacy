@@ -29,7 +29,6 @@ function exception_error_handler($severity, $message, $file, $line) {
     echo "$message ($file : $line)\n";
     throw new ErrorException($message, 0, $severity, $file, $line);
 }
-set_error_handler("exception_error_handler");
 
 function objectToArray($d) {
     if (is_object($d)) {
@@ -180,110 +179,54 @@ class HttpResponse {
 // This app is exported to NodeJS.
 class YiiApp {
     static function run($preq, $opt) {
-        // Stuff that we got
-        $config = $opt["config"];
-        $_ENV["userData"]=$opt["userData"];
-
-        // Convert some arrays.
-        foreach($preq["request"] as $key=>$val) {
-            $GLOBALS[$key]=array_merge($GLOBALS[$key], $val);
-        }
-
-        // Prepare to respond.
-        $req = new HttpRequest();
-        $res = new HttpResponse();
-
-        $GLOBALS["req"]=$req;
-        $GLOBALS["res"]=$res;
-
-        /*try {
-            $sb = new \PHPSandbox\PHPSandbox();
-            $manager = new \Pagon\ChildProcess();
-            $manager->listen();
-            $out = "";
-            $child = $manager->parallel(function($p){
-                try{
-                    $p->on("message", function($ch){
-                        echo "Got chunk...\n";
-                    });
-                    $p->on("exit", function(){
-                        echo "Child is exiting...\n";
-                    });
-                    $p->listen();
-                    echo "Meep!\n";
-                    ob_start();
-                    echo "o.o!\n";
-                    $res = ob_get_contents();
-                    ob_end_clean();
-                    $p->send($res);
-                } catch(\Exception $e) {
-                    echo "Child exception\n";
-                }
-                sleep(2);
-            }, false);
-            $child->on("message", function($ch) use($out){
-                echo "Got message; $ch\n";
-                $out .= $ch;
-            });
-            $child->on("exit", function(){
-                echo "Exiting...\n";
-            });
-            $child->on("listen", function(){
-                echo "\$child: listen\n";
-            });
-            #$child->listen();
-            $child->wait();
-            return $res->end($out);
-        } catch(\Exception $e) {
-            return $res->end("ERROR: ".$e->getMessage());
-        }*/
-
+        // Install the CLI stuff
+        set_error_handler("exception_error_handler");
         try {
-            // Run Yii
-            ob_start();
-            $res->header("Content-type: text/html");
-
-            $fname = $_SERVER["SCRIPT_FILENAME"];
-            if(file_exists($fname) && is_file($fname)) {
-                $fnp = explode(".", $fname);
-                $ext = array_pop($fnp);
-                if($ext == "php") {
-                    require($fname);
-                } else {
-                    echo file_get_contents($fname);
+            // Prepare to run a sub process
+            $spec = [
+                0 => ["pipe", "r"], # STDIN
+                1 => ["pipe", "w"], # STDOUT
+                2 => ["pipe", "w"]  # STDERR
+            ];
+            $cmd = implode(" ",[PHP_BINARY, __DIR__."/executor.php"]);
+            $env = [
+                "CONFIG" => hprose_serialize([
+                    "env" => $_ENV,
+                    "req" => $preq,
+                    "opt" => $opt
+                ])
+            ];
+            $ph = proc_open($cmd, $spec, $pipes, __DIR__,$env);
+            $res = new HttpResponse();
+            if(is_resource($ph)) {
+                // Get STDOUT/-ERR
+                // @meme All your error are belong to you.
+                $stdout = stream_get_contents($pipes[1]);
+                echo stream_get_contents($pipes[2]);
+                foreach($pipes as $p=>$k) fclose($pipes[$p]);
+                $rtv = proc_close($ph);
+                try {
+                    $out = hprose_unserialize($stdout);
+                } catch(\Exception $e) {
+                    // Yii MIGHT had caught an exception.
+                    // Hence, hprose can not parse it...since its raw HTML...
+                    // ...because Yii kills my output buffers. >v<
+                    // Therefore, print that HTML out. Meh.
+                    $res->header("Content-type: text/html");
+                    $res->status(200);
+                    $out = $res->end($stdout);
                 }
             } else {
-                # Hotfix
-                $_SERVER["SCRIPT_NAME"]="/app.php";
-                $_SERVER["DOCUMENT_URI"]="/app.php";
-                $_SERVER["SCRIPT_FILENAME"]=realpath($config["base"]."/app.php");
-                // change the following paths if necessary
-                $yii_config=$config["base"].'/protected/config/main.php';
-                // remove the following line when in production mode
-                defined('YII_DEBUG') or define('YII_DEBUG',true);
-                $c=require_once($yii_config);
-                Yii::createWebApplication($c);
-                set_error_handler("exception_error_handler");
-                Yii::app()->run();
+                echo "Nnnnooooooo......";
+                $res->header("Content-type: text/plain");
+                $res->status(500);
+                $out = $res->end("INTERNAL: Process could not be launched.");
             }
-
-            $o_res = ob_get_contents();
-            ob_end_clean();
+            return $out;
         } catch(\Exception $e) {
-            $o_res = ob_get_contents();
-            ob_end_clean();
-            $res->status(500);
-            $res->header("Content-type: text/pain");
-            $o_res .= "\n\nEXCEPTION[ ".int2err($e->getCode())." ]: ".$e->getMessage()."\n";
-            $o_res.= "At: ".$e->getFile()."@".$e->getLine()."\n";
-            $o_res.= $e->getTraceAsString();
+            // Just die this one out. Period.
+            print_r($e);
+            return "o.o; Oh dear.";
         }
-
-        return $res->end($o_res);
-    }
-
-    static function stop() {
-        echo "Baibai...\n";
-        posix_kill(getmypid(), SIGUSR1);
     }
 }

@@ -14,10 +14,16 @@
         "erusev/parsedown-extra": "0.7.*",
         "evenement/evenement": "2.0.*",
         "walkor/workerman": "3.1.*",
-        "fieryprophet/php-sandbox": "1.3.*",
-        "pagon/childprocess": "*"
+        "pagon/childprocess": "*",
+        "corneltek/cliframework": "*",
+        "voodoophp/paginator": "2.*",
+        "kevinlebrun/colors.php": "0.*",
+        "timetoogo/pinq": "~3.1"
     },
     "config": {
         "vendor-dir": "php_modules/"
+    },
+    "possible_packages": {
+        "fieryprophet/php-sandbox": "1.3.*"
     }
 }

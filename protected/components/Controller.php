@@ -133,112 +133,26 @@
 		$yiiUrl = Yii::app()->request->getBaseUrl(true);
 
 
-		// Gracefuly update jQuery :)
+		// Gracefuly disable jQuery :)
 		$cs->scriptMap["jquery.js"]=false;
-
 		// Just in case.
 		$cs->packages["jquery"] = [
-			"basePath"=>Yii::app()->cdn->basePath,
-			"baseUrl"=>$cdnUrl,
-			"js"=>["js/jquery-1.11.1.js"]
+			"basePath"=>null,
+			"baseUrl"=>null,
+			"js"=>null
 		];
 
-		// jQuery
-		Yii::app()->cdn->js("jquery-1.11.1.js");
-
-		# Bootstrap
-		$vers = "3.3.4";
-		Yii::app()->cdn
-			->alt("css", "/bootstrap/css/bootstrap-cyborg-{$vers}.min.css")
-			->alt("js", "/bootstrap/js/bootstrap.min.js")
-			->alt("js", "/bootstrap-accessibility/js/bootstrap-accessibility.js");
-
-		# Socket.IO
-		Yii::app()->cdn
-			->js('delivery.js')
-			->js('socket.io.js')
-			->js('avs-rpc.min.js');
-
-			# Plugins
-			#->js("circle-progress.js");
-			#->alt("js", "/mmenu/js/jquery.mmenu.min.all.js")
-
-		// Font Awesome
-		Yii::app()->cdn
-			->alt("css", "font-awesome/css/font-awesome.css");
-
-		// Metro UI Kit
-		Yii::app()->cdn
-			->css("m-buttons.css")
-			->css("m-forms.css")
-			->css("m-icons.css")
-			->js("m-dropdown.js")
-			->js("m-radio.js");
-
-		// Bootstrap dialog
-		Yii::app()->cdn
-			->css("bootstrap-dialog.css")
-			->js("bootstrap-dialog.min.js");
-
-		// OJ runtime
-		Yii::app()->cdn->js("oj-runtime.js");
-
-		// BIRD3 Theme. We use the URL here to avoid minification. Trickery, yo.
-		$cs->registerCssFile($yiiUrl.$tbase."/css/main.ws.php");
-		$cs->registerScriptFile($yiiUrl."/cdn/oj/BIRD3.oj");
-		$cs->registerCssFile($tbase."/css/bs-extra.css");
-		$cs->registerScriptFile($tbase."/js/panels.js");
-
-		$faBase = $cdnUrl."/font-awesome";
-		$bsBase = $cdnUrl."/bootstrap";
-		$mImg = $cdnUrl."/metro-img";
-		$cs->registerCss("fa_bs-fix","
-		@font-face {
-			font-family: 'FontAwesome';
-			src: url('{$faBase}/fonts/fontawesome-webfont.eot');
-			src: url('{$faBase}/fonts/fontawesome-webfont.eot?#iefix') format('embedded-opentype'),
-			     url('{$faBase}/fonts/fontawesome-webfont.woff') format('woff'),
-				 url('{$faBase}/fonts/fontawesome-webfont.ttf') format('truetype'),
-				 url('{$faBase}/fonts/fontawesome-webfont.svg#fontawesomeregular') format('svg');
-			font-weight: normal;
-			font-style: normal;
-		}
-		@font-face {
-  			font-family: 'Glyphicons Halflings';
-			src: url('{$bsBase}/fonts/glyphicons-halflings-regular.eot');
-			src: url('{$bsBase}/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
-				 url('{$bsBase}/fonts/glyphicons-halflings-regular.woff') format('woff'),
-				 url('{$bsBase}/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
-				 url('{$bsBase}/fonts/glyphicons-halflings-regular.svg#glyphicons') format('svg');
-		}
-		.m-btn [class^=\"icon-\"] { background-image: url({$mImg}/glyphicons-halflings.png); }
-		.m-btn .icon-white        { background-image: url({$mImg}/glyphicons-halflings-white.png); }
-		[class^=\"m-icon-\"]      { background-image: url({$mImg}/syncfusion-icons.png); }
-		[class^=\"m-icon-big-\"]  { background-image: url({$mImg}/syncfusion-icons.png); }
-		.m-icon-white             { background-image: url({$mImg}/syncfusion-icons-white.png); }
-		");
-
-		// Make our footer sticky
-
-		Yii::app()->cdn
-			->js("jquery.stickyfooter.min.js")
-			->css("jquery.stickyfooter.css");
-		$cs->registerScript("stickyFooter",
-			'$("#footer").stickyFooter({content:"#MainPage"});',
-		CClientScript::POS_READY);
-		$cs->registerScript("bootstrap-tooltip",
-			"$('[data-toggle=\"tooltip\"]').tooltip();",
-		CClientScript::POS_READY);
-		$cs->registerScript("bootstrap-popover",
-			"$('[data-toggle=\"popover\"]').popover();",
-		CClientScript::POS_READY);
+		// Load webpack stuff
+		global $opt;
+		$hash = $opt["userData"]["webpackHash"];
+		$cdnApp = Yii::app()->cdn->baseUrl."/app";
+		$cs->registerScriptFile("$cdnApp/$hash-libwebpack.js");
+		$cs->registerScriptFile("$cdnApp/$hash-main.js");
+		$cs->registerCssFile("$cdnApp/$hash-main.css");
 
 		// Special script for index.
 		$fbAlpha = 0.3;
 		if($this->isIndex && Yii::app()->user->isGuest) {
-			Yii::app()->cdn
-				->js("jquery.fracs.min.js");
-
 			if(Compatibility::check("blur_bg")) {
 				// Do the blur! hur hur hur.
 				// FIXME: Did I spell "blur" right? o.o
@@ -255,13 +169,6 @@
 					});",
 				CClientScript::POS_READY);
 			}
-
-			// The app is locked in the #app container. So it gets the scroll event.
-			$cs->registerScript("app-scroll","
-				$('#app').scroll(function(){
-					$('#intro').fracs('check');
-				});",
-			CClientScript::POS_READY);
 		}
 
 		// For browsers that are NOT compatible with the blurr effect
@@ -272,6 +179,22 @@
 				background: rgba(0,0,0, $fbAlpha);
 			}");
 		}
+
+		// Mobile browsers cant center the bg properly. So we need to use "scroll".
+		$browser = Yii::app()->browser;
+		if(
+		    $browser->getBrowser() == Browser::BROWSER_IPHONE
+		    || $browser->getBrowser() == Browser::BROWSER_IPAD
+		    || $browser->getBrowser() == Browser::BROWSER_ANDROID
+		) {
+			$cs->registerCss("mobile-bg-fix", "/* Mobile browser fixture... */
+				#blurr-bg, #bg {
+				    /* Makes the backround fixed on mobile devices... wut? Logic? >.> */
+				    background-attachment: scroll;
+				}
+			/* End fixture */");
+		}
+
 
 		// Aditions
 		if($this->rqSwitch) $this->requireSwitch();
@@ -293,22 +216,7 @@
 			->js("bootstrap-checkbox.js");
 	}
 	public function requireMarkdown() {
-		Yii::app()->cdn
-			->css("jshl/hybrid.css")
-			->js("highlight.pack.js");
-		Yii::app()->clientScript->registerScript("jshl_init",'// JSHL init
-			hljs.configure({
-				tabReplace: Array(5).join(" ")
-			});
-			$("body").find("pre code").each(function(i,v){
-				if($(v).prop("class").match(/language-.+/ig) != null) {
-					// The current block has a language- class.
-					$(v).addClass("hascode");
-					$(v).parent().addClass("hascode");
-					hljs.highlightBlock(v);
-				}
-			});
-		// end', CClientScript::POS_LOAD);
+		# Noop
 	}
 	public function requireMaxlength() {
 		Yii::app()->cdn

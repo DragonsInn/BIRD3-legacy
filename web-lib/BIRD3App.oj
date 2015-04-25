@@ -1,0 +1,157 @@
+// Requires...
+var socketio = require("socket.io-client/socket.io");
+var deliver = require("delivery/lib/client/delivery");
+var avs = require("avs-rpc");
+
+// jQuery plugins
+require("./onEnter");
+
+// Bootstrap
+var BootstrapDialog = require("bootstrap3-dialog/dist/js/bootstrap-dialog.js")(jQuery);
+
+// CSS
+require("bootstrap3-dialog/dist/css/bootstrap-dialog.css");
+
+@implementation BIRD3App {
+    var io;
+    var rpc;
+    var rpcr;
+}
+-(id)init {
+    if(self = [super init]) {
+        console.log("Init...");
+        io = socketio();
+        rpc = new avs.ioRpc(io);
+        io.on("connect", function(){
+            io.on("rpc_init_data", function(methods){
+                console.log("methods:"+JSON.stringify(methods));
+                rpcr = rpc.remote.call(rpc, methods);
+            });
+            io.emit("rpc_init");
+        });
+
+        // Do an AJAX request to Yii to update the user. Easy.
+        $.ajax(window.location.origin, {
+            async: true,
+            cache: false,
+            data: {
+                ajax: true,
+                action: "user:update_visit",
+                via: "bird3"
+            }
+        });
+    }
+    return self;
+}
+
+-(BIRD3App)emit:(string)name data:(id)obj {
+    io.emit(name, obj);
+    return self;
+}
+
+-(BIRD3App)on:(string)name callback:(callable)cb {
+    io.on(name, cb);
+    return self;
+}
+
+
+/*
+    Convenience methods for dialogs and modals
+*/
++(BootstrapDialog)alert:(string)msg withTitle:(string)title type:(dtype)t {
+    return BootstrapDialog.show({
+        type: t,
+        title: title,
+        message: msg,
+        closable: true,
+        onshown: function(dialog) {
+            dialog.getModalFooter().find("#btn-ok")[0].focus();
+        },
+        buttons: [{
+            id: 'btn-ok',
+            icon: 'fa fa-check',
+            label: 'OK',
+            cssClass: 'btn-default',
+            autospin: false,
+            action: function(dialogRef){
+                dialogRef.close();
+            }
+        }]
+    });
+}
++(BootstrapDialog)alert:(string)msg withTitle:(string)title {
+    return [self alert:msg
+                 withTitle:title
+                 type:BootstrapDialog.TYPE_DEFAULT
+           ];
+}
++(BootstrapDialog)alert:(string)msg {
+    return [self alert:msg withTitle:__TITLE__];
+}
++(BootstrapDialog)prompt:(string)what thenDo:(callable)cb {
+    var msg="";
+    if(typeof what == "object") {
+        var holder="";
+        if(typeof what.text != "undefined")
+            msg = '<p>'+what.text+'</p>';
+        if(typeof what.placeholder != "undefined")
+            holder = 'placeholder="'+what.placeholder+'"';
+        msg += '<input type="text" class="form-control bootstrap-dialog-input" '+holder+'>';
+    } else {
+        msg = what;
+    }
+    return BootstrapDialog.show({
+        type: "type-default",
+        title: __TITLE__,
+        message: msg,
+        closable: true,
+        onshown: function(dialog) {
+            var $footer = dialog.getModalFooter();
+            var $body = dialog.getModalBody();
+            $body.find("input")[0].focus();
+            $(".bootstrap-dialog-input").pressEnter(function(e){
+                var $button = $footer.find("#btn-ok")[0];
+                $button.click();
+            });
+        },
+        buttons: [{
+            id: 'btn-ok',
+            icon: 'fa fa-check',
+            label: 'OK',
+            cssClass: 'btn-default',
+            autospin: false,
+            action: function(dialog) {
+                var data, $body = dialog.getModalBody();
+                data = $body.find("input")[0].value;
+                cb(data);
+                dialog.close();
+            }
+        },{
+            id: 'btn-cancel',
+            //icon: 'fa fa-ellipsis-h',
+            label: 'Cancel',
+            cssClass: 'btn-danger',
+            autospin: false,
+            action: function(dialog) {
+                dialog.close();
+            }
+        }]
+    });
+}
+@end
+
+// Nice stuff
+window.alert = function(msg, title, _type) {
+    if(typeof title == "undefined" && typeof _type == "undefined") {
+        return [BIRD3App alert:msg];
+    } else if(typeof title != "undefined" && typeof _type == "undefined") {
+        return [BIRD3App alert:msg withTitle:title];
+    } else {
+        return;
+    }
+}
+
+var app = {};
+app.prompt = function(what, cb) { return [BIRD3App prompt:what thenDo:cb]; }
+
+module.exports = app;

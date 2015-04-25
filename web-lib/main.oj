@@ -1,0 +1,62 @@
+// jQuery
+// Export jQuery to window
+var $ = require("jquery");
+global.$ = $;
+global.jQuery = $;
+// Plugin
+require("jquery.stickyFooter");
+require("jquery-fracs");
+
+// Bootstrap
+require("bootstrap");
+require("bootstrapaccessibilityplugin");
+require("font-awesome/css/font-awesome.css");
+
+// metro UI
+/*
+    - m-buttons.css
+    - m-forms.css
+    - m-icons.css
+    - m-dropdown.js
+    - m-radio.js
+*/
+
+// Theme
+require("dragonsinn/js/panels.js");
+require("dragonsinn/css/bs-extra.css");
+require("dragonsinn/css/main.ws.php");
+
+// Requires
+var app = require("./BIRD3App");
+// Import the main class.
+// This file is loaded /before/ the main class is.
+// In general, its a good idea to @class stuff.
+@class BIRD3App;
+
+$(function(){
+    var BIRD3 = [[BIRD3App alloc] init];
+    $("#footer").stickyFooter({content:"#MainPage"});
+    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="popover"]').popover();
+
+    // I can haz code?
+    if($("body").find("pre code").length > 0) {
+        require([
+            "highlight.js",
+            "highlight.js/styles/hybrid.css"
+        ], function(hljs){
+            console.log("Highlight.JS activated");
+            hljs.configure({
+                tabReplace: Array(5).join(" ")
+            });
+            $("body").find("pre code").each(function(i,v){
+                if($(v).prop("class").match(/language-.+/ig) != null) {
+                    // The current block has a language- class.
+                    $(v).addClass("hascode");
+                    $(v).parent().addClass("hascode");
+                    hljs.highlightBlock(v);
+                }
+            });
+        });
+    }
+});

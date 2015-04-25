@@ -20,7 +20,10 @@ global.config = ini.getSync("./config/BIRD3.ini");
 config.base = __dirname;
 config.version = me.version;
 config.package = me;
+// Max workers
 config.maxWorkers = args.workers || cpus;
+// The key to share WebPack data on
+config.wpKey = "BIRD3.webpack";
 
 // Logging
 global.log = process.logger = mylog = require("./node-lib/logger.js")(config.base);
@@ -44,6 +47,11 @@ var house = PowerHouse({
             type: "child",
             config: global.config,
             //amount: config.maxWorkers
+        },{
+            title: "BIRD3: WebPack",
+            exec: "./node-lib/webpack_worker.js",
+            type: "cluster",
+            config: global.config.wpKey
         }
     ],
     master: function(conf, run) {

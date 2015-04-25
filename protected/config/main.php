@@ -33,9 +33,7 @@ return array(
 		'ext.redis.*',
 		# Misc
 		'ext.easyimage.*',
-		'ext.BIRD3.components.*',
-		'ext.ExtendedClientScript.cssmin.*',
-		'ext.ExtendedClientScript.jsmin.*',
+		'ext.BIRD3.components.*'
 	),
 
 	'modules'=>array(
@@ -70,14 +68,6 @@ return array(
 		),
 		'clientCache'=>array(
 			'class'=>'ClientCache'
-		),
-		'clientScript'=>array(
-			'class'=>'ext.ExtendedClientScript.ExtendedClientScript',
-			'basePath'=>$base,
-			'combineCss'=>!isset($_GET["dev"]),
-            'compressCss'=>false,
-            'combineJs'=>!isset($_GET["dev"]),
-            'compressJs'=>false,
 		),
 		'contentCompactor' => array(
 			'class' => 'ext.contentCompactor.ContentCompactor',

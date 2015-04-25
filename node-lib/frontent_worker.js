@@ -2,7 +2,6 @@ Error.stackTraceLimit = Infinity;
 
 var session = require("express-session"),
     RedisStore = require('connect-redis')(session),
-    sockpress = require("sockpress").init,
     express = require("express"),
     socketio = require("socket.io"),
     sioRedis = require("socket.io-redis"),
@@ -10,7 +9,7 @@ var session = require("express-session"),
     http = require("http"),
     // FIXME: This will result in a Master->worker->worker scenario...
     // Before i can use this, i need to structure this better.
-    MC = require("master-cluster"),
+    //MC = require("master-cluster"),
     sticky = require("sticky-session"),
     house = require("powerhouse")();
 

@@ -5,6 +5,7 @@ var fs = require("fs");
 var path = require("path");
 var url = require("url");
 var util = require("util");
+var redis = require("redis").createClient();
 
 module.exports = function() {
     return function(req,res,next){
@@ -72,18 +73,24 @@ module.exports = function() {
             ctx: arg
         });
 
-        client.invoke("yii_run", arg, opt, function(obj){
-            var status = obj.status || 200;
-            res.status(status);
-            for(var k in obj.headers) {
-                var v = obj.headers[k];
-                res.setHeader(k,v);
-            }
-            for(var k in obj.cookies) {
-                var v = obj.cookies[k];
-                res.cookie(k, v[0], v.opts);
-            }
-            res.end(obj.body);
+        // We _need_ webpack.
+        redis.get("BIRD3.webpack",function(err,chunk){
+            if(err) throw err;
+            opt.userData.webpackHash = chunk;
+
+            client.invoke("yii_run", arg, opt, function(obj){
+                var status = obj.status || 200;
+                res.status(status);
+                for(var k in obj.headers) {
+                    var v = obj.headers[k];
+                    res.setHeader(k,v);
+                }
+                for(var k in obj.cookies) {
+                    var v = obj.cookies[k];
+                    res.cookie(k, v[0], v.opts);
+                }
+                res.end(obj.body);
+            });
         });
     }
 }

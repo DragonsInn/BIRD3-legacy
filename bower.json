@@ -1,0 +1,39 @@
+{
+  "name": "BIRD3",
+  "version": "3.0.0",
+  "authors": [
+    "Ingwie Phoenix <ingwie2000@googlemail.com>"
+  ],
+  "description": "Roleplayer's CMS. Runs the Dragon's Inn.",
+  "keywords": [
+    "roleplay",
+    "cms",
+    "php",
+    "nodejs"
+  ],
+  "license": "MIT",
+  "homepage": "http://git.ingwie.me/ingwie/bird3",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "textarea-autosize": "~0.4.0",
+    "bootstrap": "bootswatch-dist#3.3.4-cyborg",
+    "jquery": "~2.1.3",
+    "jQuery.mmenu": "~5.0.4",
+    "jquery.terminal": "~0.8.8",
+    "bootstrap-checkbox": "~1.2.7",
+    "bootstrap-maxlength": "~1.5.7",
+    "jquery-migrate": "~1.2.1",
+    "jquery.stickyFooter": "~1.2.0",
+    "rangyinputs": "~1.2.0",
+    "typeahead.js": "~0.10.5",
+    "jquery-fracs": "~0.15.1",
+    "bootstrap3-dialog": "~1.34.4",
+    "bootstrapaccessibilityplugin": "~1.0.4"
+  }
+}

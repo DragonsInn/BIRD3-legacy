@@ -2,43 +2,8 @@
 error_reporting(E_ALL);
 date_default_timezone_set("UTC");
 $main = dirname(__FILE__)."/../../..";
-
-// Yii
-require_once("$main/php_modules/autoload.php");
-$config = require_once("$main/protected/config/main.php");
-Yii::createWebApplication($config);
-require_once("$main/protected/components/Controller.php");
-
-// Cause...yii.
-#header_remove("Pragma");
-
-// Cache ourselves. Trick borrowed: http://css-tricks.com/snippets/php/intelligent-php-cache-control/
-$lastModified=filemtime(__FILE__);
-$etagFile = md5_file(__FILE__);
-// Obtain headers
-$ifModifiedSince=(isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : false);
-$etagHeader=(isset($_SERVER['HTTP_IF_NONE-MATCH']) ? $_SERVER['HTTP_IF_NONE-MATCH'] : false);
-// Send
-HttpResponse::header("X-WingStyle: Alive");
-HttpResponse::header("Cache-control: public, max-age=604800");
-HttpResponse::header("Last-Modified: ".gmdate("D, d M Y H:i:s", $lastModified)." GMT");
-HttpResponse::header("Etag: $etagFile");
-HttpResponse::header("Content-type: text/css");
-
-//check if page has changed. If not, send 304 and exit
-if($etagHeader && $etagHeader == $etagFile) {
-    HttpResponse::status(304);
-    exit;
-}
-
-// Internal cache. Hacking Yii to do things...ahh...poor thing. :)
-$key = "ws-$etagFile";
-$c = Yii::app()->controller = new Controller("WingStyle");
-if($c->beginCache($key)) {
-// This is pretty much the else condition.
-
+class_exists("HttpResponse") && HttpResponse::header("Content-type: text/css");
 // WingStyle
-define("WS_NO_HEADER", 1);
 include_once("$main/php_modules_ext/WingStyle/WingStyle.php");
 
 // Helper function
@@ -58,8 +23,10 @@ WS()->load(
 
 
 // Variables
-$base = Yii::app()->cdn->baseUrl."/theme";
-$img = Yii::app()->cdn->baseUrl."/images";
+$config = parse_ini_file("$main/config/BIRD3.ini",true);
+$cdn = $config["CDN"]["baseUrl"];
+$base = $cdn."/theme";
+$img = $cdn."/images";
 
 // Panel styles
 include "panels.ws";
@@ -432,20 +399,3 @@ WS(".thumbnail.avatar")
         background-size: 100% 100%;
     }
 }
-
-<?php
-} // End of $c->beginCache($key)
-?>
-
-/* Browser specific fixes */
-<?php $browser = Yii::app()->browser; ?>
-<?php if(
-    $browser->getBrowser() == Browser::BROWSER_IPHONE
-    || $browser->getBrowser() == Browser::BROWSER_IPAD
-    || $browser->getBrowser() == Browser::BROWSER_ANDROID
-): ?>
-#blurr-bg, #bg {
-    /* Makes the backround fixed on mobile devices... wut? Logic? >.> */
-    background-attachment: scroll;
-}
-<?php endif; ?>

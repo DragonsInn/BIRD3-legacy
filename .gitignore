@@ -14,3 +14,5 @@ cdn/oj/*.js
 cache/*
 *.lock
 php_modules/*
+bower_components/
+cdn/app/

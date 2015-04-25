@@ -1,4 +1,5 @@
 $(document).ready(function(win){
+    var useBottomPanel = window.useBottomPanel;
     console.log("Setting up panels...");
     // Panel vars
     window.pLeft = $("#Pleft");

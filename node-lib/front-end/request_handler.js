@@ -12,8 +12,6 @@ var st = require("st"),
     ex_static = require("express-static"),
     oj = require("connect-oj"),
     php = require("./php_handler.js"),
-    Imagemin = require("imagemin"),
-    cssmin = require("cssmin"),
     bodyParser = require('body-parser'),
     multiparty = require("connect-multiparty"),
     responseTime = require("response-time"),
@@ -116,81 +114,6 @@ module.exports = function(app) {
         dir: config.base+"/cdn/oj"
     }));
 
-    // For any generic file, this will work.
-    app.use(config.CDN.baseUrl, function(req, res, next){
-        var fname = path.basename(req.url);
-        var ext = path.extname(fname);
-        if(ext.substr(1).match(/^(png|jpg|jpeg|gif|svg)$/i)) {
-            var infile = config.base+"/cdn/"+url.parse(req.url).pathname;
-            if(!fs.existsSync(infile)) return next();
-            if(
-                typeof req.headers["if-none-match"] != "undefined"
-                && req.headers["if-none-match"]==md5_file(infile)
-            ) {
-                //debug("Its cached.");
-                res.statusCode = 304;
-                return res.end();
-            }
-            var dirname = path.dirname(req.url);
-            mkdirp(config.base+"/cache/cdn/"+dirname, function(err){
-                if(err) {
-                    console.log("Error",err);
-                    return next();
-                }
-                var cacheDir = config.base+"/cache/";
-                var outdir = config.base+"/cache/cdn/"+path.dirname(req.url);
-                var outname = md5_file(infile)+"-"+path.basename(infile);
-                var outfile = path.join(outdir, outname);
-                var extName = ext.substr(1);
-                fs.exists(outfile, function(exists){
-                    // One way or another, we're sending something here, so set headers.
-                    var age = 30*24*60*60;
-                    var time = Date.now();
-                    var d = new Date(Date.now() + age*1000);
-                    res.setHeader("Etag", md5_file(infile)); // Outfile wont exist, but we can cheat. :)
-                    res.setHeader("Cache-control", "public, max-age="+age);
-                    res.setHeader("Expires", d.toUTCString());
-                    if(!exists) {
-                        //debug("BIRD3 CDN -> Generating: ",outfile);
-                        var imagemin = new Imagemin()
-                            .src(infile)
-                            .use(Imagemin.jpegtran({ progressive: true }))
-                            .use(Imagemin.gifsicle())
-                            .use(Imagemin.optipng())
-                            .use(Imagemin.pngquant())
-                            .use(Imagemin.svgo());
-                        imagemin.run(function(err, files, stream){
-                            if(err) {
-                                BIRD3.error("Imagemin error");
-                                BIRD3.error(err);
-                                return next();
-                            }
-                            fs.writeFile(outfile, files[0].contents, function(err){
-                                if(err) {
-                                    //BIRD3.error("Can not write optimized image: "+outfile);
-                                    console.error(err);
-                                }
-                                res.setHeader("Content-type", mime.types[extName]);
-                                res.end(files[0].contents);
-                                return;
-                            });
-                        });
-                    } else {
-                        //debug("BIRD3 CDN -> Sending generated: "+outfile);
-                        fs.readFile(outfile, function(err, output){
-                            if(err) {
-                                //BIRD3.error(err);
-                                return next();
-                            }
-                            res.setHeader("Content-type", mime.types[extName]);
-                            res.end(output);
-                            return;
-                        });
-                    }
-                });
-            });
-        } else return next();
-    });
     var cdn_st = stOpts;
     cdn_st.path = config.base+"/cdn";
     app.use(config.CDN.baseUrl, st(cdn_st));
@@ -200,10 +123,6 @@ module.exports = function(app) {
       extended: true
     }));
     app.use("/", multiparty(config.version));
-    app.use("/", function(_req, _res, next){
-        BIRD3.emit("web_request", {req:_req, res:_res});
-        return next();
-    });
     app.use("/", php());
 
     debug("BIRD3 WebService: Running.");

@@ -8,14 +8,14 @@ $this->isIndex=true;
 ?>
 
 <h5>Friendly reminder: <small>This is a demo page.</small></h5>
-<!--<div><pre><?php
+<div><pre><?php
     /*BIRD3::mail([
         "to"=>"ingwie2000@gmail.com",
         "subject"=>"Testing nodemailer",
         "text"=>"o.o"
     ]);*/
-    #if(!isset($_SESSION["_date"])) $_SESSION["_date"]=time();
-?></pre></div>-->
+    print_r($_COOKIE);
+?></pre></div
 
 <div class="row">
     <div class="col-md-12">

@@ -74,11 +74,14 @@ function int2err($ec) {
 // Re-Creation
 function bird3_session_regenerate_id($delold=false) {
     if(session_status() == PHP_SESSION_ACTIVE) {
+        // See if we have an existing ID...
+        #$sid = session_id();
+
         // in session.c, I saw this:
         // PS(id) = PS(mod)->s_create_sid(&PS(mod_data), NULL TSRMLS_CC);
         // I dunno how to properly reproduce this...
         if($delold || !isset($_COOKIE["PHPSESSID"])) {
-            $id = openssl_random_pseudo_bytes(20);
+            $id = base64_encode(openssl_random_pseudo_bytes(20));
             session_id($id);
             HttpResponse::setcookie("PHPSESSID",$id,60*60*24*(30*6));
             return true;

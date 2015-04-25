@@ -18,7 +18,7 @@ if(typeof global.config == "undefined") {
 } else {
     var config = global.config;
 }
-config.maxFileSize = 1024*50;
+config.maxFileSize = 1024*10;
 
 var __debug = global.__debug || false;
 
@@ -69,7 +69,7 @@ var extractor = new extractText("style","[hash]-[name].css");
 // FIXME: Learn UglyfyJS
 var uglify = new webpack.optimize.UglifyJsPlugin({
     compress: {
-        warnings: true,
+        warnings: false,
 		sequences: true,
 		dead_code: true,
 		conditionals: true,
@@ -90,13 +90,30 @@ var uglify = new webpack.optimize.UglifyJsPlugin({
         ]
     }
 });
+// Querystring for the CSS Loader
+var cssq = [
+    "keepSpecialComments=0",
+    "processImport=true",
+    "rebase=true",
+    "relativeTo="+config.base,
+    "shorthandCompacting=true",
+    "target="+app,
+    "sourceMap"
+].join("?");
+// Progress output
+var logger = require(config.base+"/node-lib/logger")(config.base);
+var progress = new webpack.ProgressPlugin(function(p, msg){
+    if(p===0) msg = "Starting compilation...";
+    if(p===1) msg = "Done!";
+    logger.update("WebPack => [%s%%]: %s", p.toFixed(2)*100, msg);
+});
 
 // Return the config
 module.exports = {
     context: config.base,
-    //cache: true,
+    cache: true,
     debug: __debug,
-    progress: true,
+    watchDelay: 1000*5,
     //devtool: "#inline-source-map",
     entry: {
         main: path.join(__dirname, "../web-lib/main.oj")
@@ -126,7 +143,10 @@ module.exports = {
         loaders: [
             { // Extract CSS
                 test: /\.css$/,
-                loader: extractText.extract("style", "css")
+                loader: extractText.extract(
+                    "style",
+                    "css?"+cssq
+                )
             },{ // OJ -> JS
                 test: /\.oj$/,
                 loader: "oj"
@@ -135,7 +155,7 @@ module.exports = {
                 loader: extractText.extract(
                     "style",
                     [
-                        "css",
+                        "css?root="+config.base,
                         path.join(__dirname,"wingstyle-loader.js")
                     ].join("!")
                 )
@@ -148,8 +168,8 @@ module.exports = {
                     "url?limit="+config.maxFileSize,
                 ].join("!")
             },{ // Fonts
-                test: /\.(eot|woff|woff2|ttf)/,
-                loader: "file"
+                test: /\.(eot|woff|woff2|ttf|otf)/,
+                loader: "url?limit="+config.maxFileSize
             },{ // Markdown
                 test: /\.(md|markdown)$/,
                 loader: "markdown"
@@ -164,6 +184,7 @@ module.exports = {
         ]
     },
     plugins: [
+        progress,
         commonsPlugin,
         defines,
         provider,

@@ -19,12 +19,11 @@ require("bootstrap3-dialog/dist/css/bootstrap-dialog.css");
 }
 -(id)init {
     if(self = [super init]) {
-        console.log("Init...");
         io = socketio();
         rpc = new avs.ioRpc(io);
         io.on("connect", function(){
             io.on("rpc_init_data", function(methods){
-                console.log("methods:"+JSON.stringify(methods));
+                //console.log("methods:"+JSON.stringify(methods));
                 rpcr = rpc.remote.call(rpc, methods);
             });
             io.emit("rpc_init");

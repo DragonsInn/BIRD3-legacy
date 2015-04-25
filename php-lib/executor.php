@@ -26,6 +26,8 @@ $config = $opt['config'];
 // Build the request stuff.
 // YiiApp.php created the arrays for us.
 foreach($req["request"] as $key=>$val) {
+    if(!is_array($GLOBALS[$key])) $GLOBALS[$key] = array();
+    if(!is_array($val)) continue;
     $GLOBALS[$key]=array_merge($GLOBALS[$key], $val);
 }
 // Prepare to respond.

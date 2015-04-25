@@ -1,8 +1,6 @@
 Error.stackTraceLimit = Infinity;
 
-var session = require("express-session"),
-    RedisStore = require('connect-redis')(session),
-    express = require("express"),
+var express = require("express"),
     socketio = require("socket.io"),
     sioRedis = require("socket.io-redis"),
     redis = require("redis"),
@@ -18,16 +16,6 @@ var session = require("express-session"),
 
     // Make it sticky
     return sticky(conf.maxWorkers, function(){
-        var sessionSettings = {
-            store: new RedisStore({
-                prefix: "BIRD3.Session.",
-                db: 0
-            }),
-            name: 'PHPSESSID',
-            secret: config.version,
-            resave: false,
-            saveUninitialized: true
-        };
         var app = express();
         var io = socketio();
         var server = http.createServer(app);

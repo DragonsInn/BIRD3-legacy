@@ -60,7 +60,15 @@ module.exports = function() {
         for(var k in req.query) arg.request._REQUEST[k]=req.query[k];
         for(var k in req.cookies) {
             var v = req.cookies[k];
-            arg.request._COOKIE[k]=(Buffer.isBuffer(v) ? v.toString("utf8") : v);
+            var ct;
+            if(typeof v.type != "undefined") {
+                ct = (new Buffer(v.data)).toString("utf8");
+            } else if(Buffer.isBuffer(v)) {
+                ct = v.toString("utf8");
+            } else {
+                ct = v;
+            }
+            arg.request._COOKIE[k]=ct;
         }
         if(req.method=="POST") {
             for(var k in req.body) arg.request._REQUEST[k]=req.body[v];

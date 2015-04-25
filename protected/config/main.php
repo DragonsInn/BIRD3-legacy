@@ -54,8 +54,6 @@ return array(
 		'assetManager'=>array(
 			'basePath'=>$base."/cdn/assets",
 			'baseUrl'=>$BIRD3['CDN']['baseUrl']."/assets",
-			#'class' => 'EAssetManagerBoost',
-      		#'minifiedExtensionFlags'=>array('min.js','minified.js','packed.js')
 		),
 		'themeManager'=>array(
 			'basePath'=>$base."/themes",

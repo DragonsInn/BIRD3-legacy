@@ -10,9 +10,11 @@ var fs = require("fs"),
 // Connect
 var st = require("st"),
     ex_static = require("express-static"),
-    oj = require("connect-oj"),
     php = require("./php_handler.js"),
     bodyParser = require('body-parser'),
+    cookies = require("cookie-parser"),
+    session = require("express-session"),
+    RedisStore = require('connect-redis')(session),
     multiparty = require("connect-multiparty"),
     responseTime = require("response-time"),
     compression = require("compression");
@@ -65,55 +67,12 @@ module.exports = function(app) {
     require("./cloudflare_worker.js")(app);
     require("./api_handler.js")(app);
 
-    // Initialize the cache server...
-    var __url = 'http://'+config.CDN.url+config.CDN.baseUrl;
     // CDN must not return caching when not needed.
     app.use(config.CDN.baseUrl, function(req, res, next){
         if("nocache" in req.query) {
             return ex_static(config.base+"/cdn")(req, res, next);
         } else return next();
     });
-    // OJ is sort-of dynamic, so it needs to be first.
-    var files={};
-    app.use("/cdn/oj", function(req, res, next){
-        var file = config.base+"/cdn/oj"+req.url;
-        if(fs.existsSync(file)) {
-            var out;
-            var age = 30*24*60*60;
-            var time = Date.now();
-            var d = new Date(Date.now() + age*1000);
-            if(
-                typeof files[file] != "undefined" && (
-                    files[file].time < time
-                    || md5_file(file) == files[file].md5)
-            ) {
-                out = files[file].out;
-                files[file].time = time;
-            } else {
-                out = md5_file(file);
-                files[file] = {};
-                files[file].out = out;
-                files[file].time = time;
-                files[file] = out;
-            }
-            if(
-                "if-none-match" in req.headers
-                && req.headers["if-none-match"] == out
-            ) {
-                res.writeHead(304);
-                return res.end();
-            } else {
-                res.setHeader("Etag", out);
-                res.setHeader("Cache-control", "public, max-age="+age);
-                res.setHeader("Expires", d.toUTCString());
-                return next();
-            }
-        } else return next();
-    });
-    app.use("/cdn/oj", oj({
-        dir: config.base+"/cdn/oj"
-    }));
-
     var cdn_st = stOpts;
     cdn_st.path = config.base+"/cdn";
     app.use(config.CDN.baseUrl, st(cdn_st));
@@ -123,6 +82,17 @@ module.exports = function(app) {
       extended: true
     }));
     app.use("/", multiparty(config.version));
+    app.use("/", cookies());
+    /*app.use("/", session({
+        store: new RedisStore({
+            prefix: "BIRD3.Session.",
+            db: 0
+        }),
+        name: 'PHPSESSID',
+        secret: config.version,
+        resave: false,
+        saveUninitialized: true
+    }));*/
     app.use("/", php());
 
     debug("BIRD3 WebService: Running.");

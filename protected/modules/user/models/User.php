@@ -121,8 +121,16 @@
             'permissions'=>array(self::HAS_MANY, "UserPermissions", "uID"),
             'settings'=>array(self::HAS_ONE, "UserSettings", "id"),
             # Dynamic relations
-            'sent_pms'=>array(self::HAS_MANY, "PrivateConversation", "sID"),
-            'rec_pms'=>array(self::HAS_MANY, "PrivateConversation", "tID"),
+            "convos"=>array(
+                self::MANY_MANY,
+                "PrivateConversation",
+                "tbl_user_pm_conv_members(user_id,conv_id)"
+            ),
+            "my_convos"=>array(
+                self::HAS_MANY,
+                "PrivateConversation",
+                "owner_id"
+            ),
             // External
             // All the users' characters.
             #'characters'=>array(self::HAS_MANY, "Character", "uID"),

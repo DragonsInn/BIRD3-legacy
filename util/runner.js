@@ -38,12 +38,13 @@ switch(argv._[0]) {
         var compiler = webpack(wpConf);
         compiler.run(function(err, stats){
             console.log(stats.toString({
+                modulesSort: "size",
                 colors: true,
                 version: true,
                 timings: true,
-                assets: true,
-                reasons: true,
-                errorDetails: true
+                //assets: true,
+                //reasons: true,
+                //errorDetails: true
             }));
         });
     break;

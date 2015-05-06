@@ -1,5 +1,6 @@
 {
   "name": "BIRD3",
+  "private": true,
   "version": "3.0.0",
   "authors": [
     "Ingwie Phoenix <ingwie2000@googlemail.com>"
@@ -28,19 +29,24 @@
     "jquery.terminal": "~0.8.8",
     "bootstrap-checkbox": "~1.2.7",
     "bootstrap-maxlength": "~1.5.7",
-    "jquery-migrate": "~1.2.1",
     "jquery.stickyFooter": "~1.2.0",
     "rangyinputs": "~1.2.0",
     "typeahead.js": "~0.10.5",
     "jquery-fracs": "~0.15.1",
-    "bootstrap3-dialog": "~1.34.4",
+    "bootstrap3-dialog": "nakupanda/bootstrap3-dialog#496d874c52726994edeb5c64c3c57c57aac56f1a",
     "bootstrapaccessibilityplugin": "~1.0.4",
     "font-awesome": "~4.3.0",
     "BrandButtons": "*",
-    "pick-a-color": "~1.2.3",
     "octicons": "~2.2.2",
     "jquery-knob": "~1.2.11",
-    "blueimp-file-upload": "~9.9.3"
+    "blueimp-file-upload": "~9.9.3",
+    "eight-bit-color-picker": "~1.1.0",
+    "bootstrap-arrow-buttons": "~0.1.0",
+    "metro-buttons": "css3-microsoft-metro-buttons#~1.2.1",
+    "codemirror": "~5.2.0",
+    "progressbar.js": "~0.8.1",
+    "bootstrap-sass": "~3.3.4",
+    "bootswatch": "~3.3.4+1"
   },
   "resolutions": {
     "bootstrap": "3.3.4-cyborg",

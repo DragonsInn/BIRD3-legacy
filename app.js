@@ -43,7 +43,8 @@ var house = PowerHouse({
             config: global.config
         },{
             title: "BIRD3: Front-End",
-            exec: "./node-lib/frontent_worker.js",
+            //exec: "./node-lib/frontent_worker.js",
+            exec: "./node-lib/socketcluster_worker.js",
             type: "child",
             config: global.config,
             //amount: config.maxWorkers
@@ -59,6 +60,7 @@ var house = PowerHouse({
         require("./node-lib/error_handler.js")();
         mylog.info("Starting: BIRD@"+config.version);
         var sub = redis.createClient();
+        var redisClient = redis.createClient();
         sub.on("error", function(e){
             console.error(e.stack);
             process.exit(1);
@@ -88,6 +90,7 @@ var house = PowerHouse({
             */
             mylog.info("Ports to be used: "+JSON.stringify(ports));
             global.config.hprosePort = ports[0];
+            redisClient.set("bird3.hprosePort", ports[0]);
             run();
         });
     }

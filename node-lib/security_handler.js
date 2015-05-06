@@ -2,7 +2,7 @@ var fs = require("fs");
 var util = require("util");
 var wrench = require("wrench");
 var debug = require("debug")("bird3:security");
-var BIRD3 = require("./communicator.js")();
+var BIRD3 = require("./logger.js")();
 
 var dirs = [
     config.base+"/cache",

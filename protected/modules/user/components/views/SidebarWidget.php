@@ -1,7 +1,7 @@
 <div>
     <?php $user = Yii::app()->user; ?>
     <ul class="list-group">
-        <li class="list-group-item">
+        <li class="list-group-item list-group-item-soft">
             <span class="pull-right"><?=CHtml::link(
                 "Logout", ["/user/logout"],
                 ["class"=>"btn btn-danger btn-xs"]
@@ -22,7 +22,7 @@
                 )?>
             </div>
         </li>
-        <li class="list-group-item">
+        <li class="list-group-item list-group-item-soft">
             <span class="badge"><?php
                 switch(Yii::app()->user->getModel()->superuser) {
                     case User::R_USER:
@@ -42,12 +42,12 @@
             You are
         </li>
         <?php if($user->developer): ?>
-        <li class="list-group-item">
+        <li class="list-group-item list-group-item-soft">
             <span class="badge alert-warning"><?=($user->developer ? "Yes":"No")?></span>
             Developer
         </li>
         <?php endif; ?>
-        <li class="list-group-item">
+        <li class="list-group-item list-group-item-soft">
             <span class="badge alert-info">0</span>
             <p>Private Messages</p>
             <div class="btn-group btn-group-xs">
@@ -56,19 +56,19 @@
                 <button type="button" class="btn btn-info">Outbox</button>
             </div>
         </li>
-        <li class="list-group-item">
+        <li class="list-group-item list-group-item-soft">
             <span class="badge alert-success">0</span>
             Characters
         </li>
-        <li class="list-group-item">
+        <li class="list-group-item list-group-item-soft">
             <span class="badge alert-success">0</span>
             Art
         </li>
-        <li class="list-group-item">
+        <li class="list-group-item list-group-item-soft">
             <span class="badge alert-success">0</span>
             Music
         </li>
-        <li class="list-group-item">
+        <li class="list-group-item list-group-item-soft">
             <span class="badge alert-success">0</span>
             Essays
         </li>

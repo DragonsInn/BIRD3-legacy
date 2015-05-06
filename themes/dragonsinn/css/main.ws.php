@@ -292,7 +292,7 @@ WS("pre")
 WS("blockquote")
     ->background->rgba(0,0,0,0.7)
 ->end;
-WS(".well", ".list-group-item", ".panel")
+WS(".well", ".panel", ".list-group-item-soft")
     ->background->rgba(21,21,21, 0.6)
 ->end;
 WS(".well")
@@ -343,6 +343,40 @@ WS("pre.nocode")
 # Avatar
 WS(".thumbnail.avatar")
     ->height(100)
+->end;
+
+# PM
+WS(".pm")->end; # Pseudo element
+WS(".pm.pm-new")
+    ->background->rgba(0,100,0, 0.5)
+->end;
+WS(".pm.pm-new:hover")
+    ->background->rgba(0,100,0, 0.8)
+->end;
+WS(".pm.pm-read")
+    ->background->rgba(40,40,40, 0.5)
+->end;
+WS(".pm.pm-read:hover")
+    ->background->rgba(40,40,40, 0.8)
+->end;
+WS(".pm-icon")
+    ->verticalAlign("middle")
+    ->textAlign("center")
+->end;
+WS(".pm-status")
+    ->width(50)
+    ->fontSize(20)
+->end;
+WS(".hint")
+    ->textAlign(center)
+    ->fontStyle("italic")
+    ->color("#404040")
+->end;
+
+# Other
+WS(".vertical-divider")
+    ->display("inline-block")
+    ->width(10)
 ->end;
 ?>
 

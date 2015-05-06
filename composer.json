@@ -1,5 +1,6 @@
 {
-    "name": "bird3-php",
+    "name": "IngwiePhoenix/bird3-php",
+    "private": true,
     "description": "The PHP backend to the Dragon's Inn runtime, BIRD3.",
     "require": {
         "php": ">=5.4.0",
@@ -18,7 +19,11 @@
         "corneltek/cliframework": "*",
         "voodoophp/paginator": "2.*",
         "kevinlebrun/colors.php": "0.*",
-        "timetoogo/pinq": "~3.1"
+        "timetoogo/pinq": "~3.1",
+        "querypath/QueryPath": "~3.0",
+        "phine/path": "~1.0",
+        "kohkimakimoto/earray": "~2.2",
+        "anahkiasen/html-object": "~1.4"
     },
     "config": {
         "vendor-dir": "php_modules/"

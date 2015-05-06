@@ -3,43 +3,40 @@
         return parent::model($className);
     }
     public function tableName() {
-        return "{{user_pm}}";
+        return "{{user_pm_msg}}";
     }
     public function primaryKey() { return "id"; }
 
     /**
      *  @int id PK          | Message ID
+     *  @int conv_id        | The conversation this message belongs to
      *  @int from_ID        | Sender's uID
-     *  @int to_ID          | Acceptor's uID
-     *  @varchar subject    | Subject
-     *  @text message       | Message body
+     *  @text body          | Message body
+     *  @timestamp sent     | When was it sent
      */
 
      public function relations() {
          return [
-             # Redundant, but should keep it the Yii way.
-             "owner"=>array(self::BELONGS_TO, "User", "sID"),
-             # Actual relations
-             "sender"=>array(self::HAS_ONE, "User", "sID"),
-             "acceptor"=>array(self::HAS_ONE, "User", "tID"),
+             "sender"=>array(self::BELONGS_TO, "User", "from_id"),
+             "conv"=>array(SELF::BELONGS_TO, "PrivateConversation", "conv_id")
          ];
      }
 
-    public function getConvo() {
-        return PrivateConversation::model()->findByAttributes([
-            "mID"=>$this->id
-        ]);
-    }
-
     public function rules() {
-        return [ ["to_ID, subject, message", "required"] ];
+        return [ ["body", "required"] ];
     }
 
     public function attributeLabels() {
         return [
-            "to_ID"=>"To",
-            "subject"=>"Subject",
-            "message"=>"Message"
+            "body"=>"Message content"
         ];
+    }
+
+    public function beforeSave() {
+        if($this->isNewRecord) {
+            $this->sent = time();
+        }
+        parent::onBeforeSave();
+        return true;
     }
 }

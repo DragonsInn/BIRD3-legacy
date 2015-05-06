@@ -21,6 +21,10 @@ if(typeof global.config == "undefined") {
 config.maxFileSize = 1024*10;
 
 var __debug = global.__debug || false;
+//var _jquery = "jquip/dist/jquip.all"; // 154 kb
+//var _jquery = "zepto/src/zepto"; // 135 kb
+//var _jquery = "cash/dist/cash.js"; // 129 kb
+var _jquery = "jquery"; // 207 kb
 
 // Webpack: Load plugins
 var webpack = require("webpack");
@@ -46,9 +50,10 @@ var defines = new webpack.DefinePlugin({
     "__TITLE__": JSON.stringify(config.BIRD3.name),
 });
 // Bower integration. Mind the excludes!
-var bowerPlugin = new bowerwp({
-    excludes: /\.(less|sass|scss)/,
-});
+var bowerProvider = new webpack.ResolverPlugin([
+    new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("bower.json", ["main"]),
+    new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin(".bower.json", ["main"])
+], ["normal", "loader"]);
 // This file is read by php_handler.js and given as userData.webpackHash
 // Required to properly inject generated sources, enables cache busting.
 // I <3 my NodeJS+PHP system!
@@ -58,10 +63,10 @@ var assetsp = new HashPlugin({
 });
 // The usual jQuery madness.
 var provider = new webpack.ProvidePlugin({
-    $: "jquery",
-    jQuery: "jquery",
-    "window.jQuery": "jquery",
-    "window.$": "jquery"
+    $: _jquery,
+    jQuery: _jquery,
+    "window.jQuery": _jquery,
+    "window.$": _jquery
 });
 // Generate bundled CSS. (id, fileName)
 var extractor = new extractText("style","[hash]-[name].css");
@@ -70,21 +75,29 @@ var extractor = new extractText("style","[hash]-[name].css");
 var uglify = new webpack.optimize.UglifyJsPlugin({
     compress: {
         warnings: false,
+        properties: true,
 		sequences: true,
 		dead_code: true,
 		conditionals: true,
+        comparisons: true,
+        evaluate: true,
 		booleans: true,
 		unused: true,
+        loops: true,
+        hoist_funs: true,
+        cascade: true,
 		if_return: true,
 		join_vars: true,
-		drop_console: true
+		//drop_console: true,
+        drop_debugger: true,
+        negate_iife: true,
+        unsafe: true
 	},
     sourceMap: true,
     mangle: {
         except: [
             "$oj_oj", "oj",
             "jQuery", "$",
-            "require",
             "cloudflare",
             "hljs"
         ]
@@ -98,8 +111,18 @@ var cssq = [
     "relativeTo="+config.base,
     "shorthandCompacting=true",
     "target="+app,
-    "sourceMap"
-].join("?");
+    //"sourceMap"
+].join("&");
+// Configure SASS
+var sassq = [
+    "includePaths[]="+path.join(
+        config.base, "bower_components",
+        "bootstrap-sass/assets/stylesheets"
+    ),
+    "includePaths[]="+path.join(config.base, "bower_components"),
+    "includePaths[]="+path.join(config.base, "node_modules"),
+    "includePaths[]="+path.join(config.base, "themes")
+].join("&");
 // Progress output
 var logger = require(config.base+"/node-lib/logger")(config.base);
 var progress = new webpack.ProgressPlugin(function(p, msg){
@@ -107,6 +130,8 @@ var progress = new webpack.ProgressPlugin(function(p, msg){
     if(p===1) msg = "Done!";
     logger.update("WebPack => [%s%%]: %s", p.toFixed(2)*100, msg);
 });
+// Try to press down further
+var dedupe = new webpack.optimize.DedupePlugin();
 
 // Return the config
 module.exports = {
@@ -114,7 +139,7 @@ module.exports = {
     cache: true,
     debug: __debug,
     watchDelay: 1000*5,
-    //devtool: "#inline-source-map",
+    devtool: "#source-map",
     entry: {
         main: path.join(__dirname, "../web-lib/main.oj")
     },
@@ -128,16 +153,53 @@ module.exports = {
         sourcePrefix: "    "
     },
     resolve: {
-        extensions: ["",".js",".json",".oj"],
-        modulesDirectories: [
-            // NPM, Bower
-            'node_modules',
-            'bower_components',
+        extensions: [
+            "", // Support supplied extensions.
+            ".js", ".oj", // JavaScript
+            ".json", // Structured data
+            ".css", ".scss" // Styles
+        ],
+        root: [
+            config.base,
             // Yii
             path.join(config.base,"protected/modules"),
             path.join(config.base,"protected/extensions"),
             path.join(config.base,"themes")
         ],
+        modulesDirectories: [
+            // NPM, Bower
+            'bower_components',
+            'node_modules',
+        ],
+        alias: {
+            debug: path.join(
+                config.base,
+                "node_modules",
+                "debug"
+            ),
+            // Ensure compatibility to original bootstrap
+            "bootstrap.js": path.join(
+                config.base,
+                "bower_components",
+                "bootstrap-sass/assets/javascripts/bootstrap"
+            ),
+            bootstrap: path.join(
+                config.base,
+                "web-lib/bootstrapper.js"
+            ),
+            "a11y.bs": path.join(
+                config.base,
+                "bower_components",
+                "bootstrapaccessibilityplugin/src"
+            ),
+            jquery: _jquery,
+            /*"jquery.js": path.join(
+                config.base,
+                "bower_components",
+                "jquery/src"
+            ),*/
+            ws: "ws/lib/browser"
+        }
     },
     module: {
         loaders: [
@@ -147,15 +209,18 @@ module.exports = {
                     "style",
                     "css?"+cssq
                 )
-            },{ // OJ -> JS
-                test: /\.oj$/,
-                loader: "oj"
+            },{ // Extract Sassy CSS
+                test: /\.scss$/,
+                loader: extractText.extract(
+                    "style",
+                    "css?"+cssq+"!sass?"+sassq
+                )
             },{ // WingStyle -> CSS
                 test: /\.ws\.php$/,
                 loader: extractText.extract(
                     "style",
                     [
-                        "css?root="+config.base,
+                        "css?"+cssq,
                         path.join(__dirname,"wingstyle-loader.js")
                     ].join("!")
                 )
@@ -176,7 +241,10 @@ module.exports = {
             },{ // HTML
                 test: /\.html$/,
                 loader: "html"
-            }
+            },{ // OJ -> JS
+                test: /\.oj$/,
+                loader: "oj"
+            },
         ],
         noParse: [
             /node_modules\/socket\.io-client\/socket\.io\.js$/,
@@ -188,9 +256,10 @@ module.exports = {
         commonsPlugin,
         defines,
         provider,
-        bowerPlugin,
+        bowerProvider,
         extractor,
         assetsp,
+        dedupe,
         uglify
     ]
 };

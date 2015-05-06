@@ -14,8 +14,8 @@ $this->isIndex=true;
         "subject"=>"Testing nodemailer",
         "text"=>"o.o"
     ]);*/
-    print_r($_COOKIE);
-?></pre></div
+    print_r(User::me()->convos[0]->messages);
+?></pre></div>
 
 <div class="row">
     <div class="col-md-12">

@@ -80,26 +80,44 @@ CREATE TABLE IF NOT EXISTS `tbl_user_permissions` (
     PRIMARY KEY (`id`)
 );
 
+/*
+    User conversations
 
-/* Private messages */
-CREATE TABLE IF NOT EXISTS `tbl_user_pm` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `from_ID` int(11) NOT NULL, -- Sender
-  `to_ID` int(11) NOT NULL, -- Reciever
-  `subject` varchar(255) NOT NULL,
-  `message` text NOT NULL,
-  PRIMARY KEY (`id`)
+        ONE Conversation
+        HAS MANY Conversation Members
+            HAS MANY Users
+        HAS ONE Private Message
+*/
+CREATE TABLE IF NOT EXISTS `tbl_user_pm_conv_members` (
+    `user_id` int(11),
+    `conv_id` int(11),
+    PRIMARY KEY (`user_id`, `conv_id`)
 );
-
-/* Conversations */
 CREATE TABLE IF NOT EXISTS `tbl_user_pm_conv` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `mID` int(11) NOT NULL, -- MSG
-  -- Response to mID if gt -1
-  `response` int(11) NOT NULL DEFAULT -1,
-  `composed` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `owner_id` int(11) NOT NULL,
+    `subject` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
 );
+CREATE TABLE IF NOT EXISTS `tbl_user_pm_msg` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `conv_id` int(11) NOT NULL,
+    `from_id` int(11) NOT NULL,
+    `body` text NOT NULL,
+    `sent` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+);
+ALTER TABLE `tbl_user_pm_conv_members`
+    ADD CONSTRAINT `user_fk`
+        FOREIGN KEY (`user_id`)
+        REFERENCES `tbl_users` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION,
+    ADD CONSTRAINT `conversation_fk`
+        FOREIGN KEY (`conv_id`)
+        REFERENCES `tbl_user_pm_conv` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION;
 
 /* User Subscription
    Users can subscribe to other users.

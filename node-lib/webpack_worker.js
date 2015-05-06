@@ -19,27 +19,20 @@ module.exports.run = function(conf) {
             redis.set(key, ch);
         }
     });
-    var compiler = webpack(config, function(err,state){
-        if(err) {
-            console.log(err);
-            BIRD3.emitRedis("bird3.exit");
-        } else {
-            BIRD3.info("BIRD3 WebPack: Compiler online. Watching now.");
-            // Check every 10 seconds, rebuild then.
-            var watcher = compiler.watch(config.watchDelay, function(err,stats){
-                if(err) throw err;
-                console.log(stats.toString({
-                    colors: true,
-                    version: true,
-                    timings: true,
-                    assets: true,
-                    reasons: true,
-                    errorDetails: true
-                }));
-                var out = stats.toJson({hash:true});
-                var hash = out.hash;
-                redis.set(key, hash);
-            });
-        }
+    var compiler = webpack(config);
+    var watcher = compiler.watch(config.watchDelay, function(err,stats){
+        if(err) throw err;
+        console.log(stats.toString({
+            colors: true,
+            version: true,
+            assets: true,
+            timings: true,
+            reasons: true,
+            errorDetails: true
+        }));
+        var out = stats.toJson({hash:true});
+        var hash = out.hash;
+        redis.set(key, hash);
     });
+
 }

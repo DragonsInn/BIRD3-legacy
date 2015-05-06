@@ -7,56 +7,41 @@
         ];
     }
 
-    public function actionBox($ajax=false) {
-
+    public function actionBox($page=1) {
+        $convos = PrivateConversation::model()->countByAttributes([
+            "owner_id" => User::me()->id
+        ]);
+        $pg = new Voodoo\Paginator();
+        #$pg->setUrl($_SERVER["REQUEST_URI"], "/user/pm/box/page/{:num}");
+        $pg->setPage($page);
+        $count = count($convos);
+        $pg->setItems($count, 20);
+        $pg->setPrevNextTitle(
+            '<i class="fa fa-caret-left" aria-hidden="true"></i> Prev',
+            'Next <i class="fa fa-caret-right" aria-hidden="true"></i>'
+        );
+        $limit = $pg->getPerPage();
+        $offset = $pg->getStart();
+        $myConvos = PrivateConversation::model()->findAll([
+            "limit"=>$limit,
+            "offset"=>$offset
+        ]);
+        $pages = $pg->toArray();
+        $this->render("box", ["pages"=>$pages, "convos"=>$myConvos]);
     }
 
-    public function actionCompose($to=null, $response=null) {
-        $pm = new PrivateMessage;
-        $conv = new PrivateConversation;
-        $sm = Yii::app()->securityManager;
+    public function actionCompose($to=null) {
+        $user = null;
+        if(!is_null($to)) $user = User::get($to);
+        else $user = new User;
 
-        // Pre-setting some
-        $pm->to_ID = $to; # The user does not want weird numbers!
+        // The conversation
+        $convo = new PrivateConversation;
+        $convo->owner_id = User::me()->id;
+        $members = [];
 
-        if(isset($_POST["PrivateMessage"])) {
-            // Obtain data
-            $data = unserialize(base64_decode($sm->validateData($_POST["data"])));
-            $response = $data["response"];
-
-            // Make the PM
-            $pm->attributes = $_POST["PrivateMessage"];
-            $pm->from_ID = User::me()->id;
-            $conv->response = $response;
-
-            // Wait! $pm->to_ID is a userNAME.
-            $u = User::model()->findByAttributes([
-                "username"=>$pm->to_ID
-            ]);
-            if(is_null($u)) {
-                // Uh oh.
-                $pm->setError("to_ID", "User {$pm->to_ID} was not found!");
-            } else {
-                // Okay, we have the user, let's make it happen.
-                // Subject and Message are already set.
-                $pm->to_ID = $u->id;
-                if($pm->save()) {
-                    $conv->mID=$pm->id;
-                    $conv->save();
-                    return $this->redirect("/user/pm/box");
-                }
-            }
-        } else {
-            // Encrypt this data, its important.
-            $data = $sm->hashData(base64_encode(serialize([
-                "response"=>$response
-            ])));
-        }
-        $this->render("compose", [
-            "conv"=>$conv,
-            "pm"=>$pm,
-            "data"=>$data
-        ]);
+        // A new message
+        $msg = new PrivateMessage;
     }
 
     public function actionShow($mid) {

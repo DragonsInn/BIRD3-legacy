@@ -1,32 +1,35 @@
 // Requires...
-var socketio = require("socket.io-client/socket.io");
-var deliver = require("delivery/lib/client/delivery");
+var socketCluster = require("socketcluster-client"); // 168 kb
+//var deliver = require("delivery/lib/client/delivery");
 var avs = require("avs-rpc");
 
 // jQuery plugins
 require("./onEnter");
 
-// Bootstrap
-var BootstrapDialog = require("bootstrap3-dialog/dist/js/bootstrap-dialog.js")(jQuery);
-
-// CSS
-require("bootstrap3-dialog/dist/css/bootstrap-dialog.css");
+// Bootstrap3 Dialogs
+var BootstrapDialog = require("bootstrap3-dialog/dist/js/bootstrap-dialog");
+require("bootstrap3-dialog/dist/css/bootstrap-dialog");
 
 @implementation BIRD3App {
-    var io;
+    var socket;
     var rpc;
     var rpcr;
 }
 -(id)init {
     if(self = [super init]) {
-        io = socketio();
-        rpc = new avs.ioRpc(io);
-        io.on("connect", function(){
-            io.on("rpc_init_data", function(methods){
-                //console.log("methods:"+JSON.stringify(methods));
+        socket = socketCluster.connect();
+        rpc = new avs.ioRpc(socket);
+        socket.on('error', function (err) {
+            console.log(err);
+        });
+        socket.on('connect', function () {
+            console.log('CONNECTED');
+            socket.on("rpc_init_data", function(methods){
+                console.log("Methods: "+methods);
                 rpcr = rpc.remote.call(rpc, methods);
+                //console.log(rpcr.foo({baz:"bar"}));
             });
-            io.emit("rpc_init");
+            socket.emit("rpc_init");
         });
 
         // Do an AJAX request to Yii to update the user. Easy.
@@ -152,5 +155,6 @@ window.alert = function(msg, title, _type) {
 
 var app = {};
 app.prompt = function(what, cb) { return [BIRD3App prompt:what thenDo:cb]; }
+app.alert = alert;
 
 module.exports = app;

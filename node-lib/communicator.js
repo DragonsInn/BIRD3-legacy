@@ -1,4 +1,4 @@
-var io_router = require('socket.io-events')();
+//var io_router = require('socket.io-events')();
 var events = require("events");
 var avs = require("avs-rpc");
 var extend = require("util")._extend;
@@ -64,15 +64,15 @@ module.exports = function(io, redis) {
 
     function makeIo() {
         // Mixed-matter
-        obj.onIO = io_router.on;
+        //obj.onIO = io_router.on;
         obj.emitIO = io.emit;
 
         // Add the router
-        io.use(io_router);
+        //io.use(io_router);
 
         // Make it public:
-        obj.io = io;
-        obj.ior = io_router;
+        //obj.io = io;
+        //obj.ior = io_router;
 
         // Create a function and run it - private/public can work that way.
         obj.rpc = (function(){
@@ -111,12 +111,12 @@ module.exports = function(io, redis) {
         });
 
         // Add the basics
-        io_router.on("*", function(sock, args, next){
+        /*io_router.on("*", function(sock, args, next){
             //console.log("*: ", arguments);
             var name = args[0], msg = args[1];
             obj.info("BIRD3 Events (Socket.IO): "+name+"("+msg+")");
             return next();
-        });
+        });*/
     }
 
     debug("BIRD3 Events: Initializing...");
@@ -143,10 +143,10 @@ module.exports = function(io, redis) {
 
     obj.onAll = function(name, cb) {
         if(typeof io != "undefined" && io != null) {
-            io_router.on("*", function(sock, args, next){
+            /*io_router.on("*", function(sock, args, next){
                 var name = args.shift(), msg = args.shift();
                 cb(name, msg);
-            });
+            });*/
         }
         if(typeof redis != "undefined" && redis != null) {
             subscriber.on("message", function(ch, msg){

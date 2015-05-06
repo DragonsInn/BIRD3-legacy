@@ -71,13 +71,29 @@ child_process.fork and sockets
 Better content caching
     - https://github.com/taxilian/connect-dyncache/pull/2
         * Waiting on merge..........
+Code editor for page CSS for users
+    - http://codemirror.net/doc/manual.html
 
 // Possible to add
 Grid system | http://salvattore.com/
+https://github.com/idleberg/m8tro-bootstrap
 
 // UI stuff
 Metro UI kit
     - http://ace-subido.github.io/css3-microsoft-metro-buttons/buttons.html
+OJ templating
+    - https://github.com/ojjs/oj
+Syntax highlighting
+    - https://github.com/scrivo/highlight.php
+
+// Backend stuff
+general templating
+    - https://www.npmjs.com/package/jsph
+
+// Database
+Migrations
+    - https://github.com/robmorgan/phinx
+    - https://github.com/okv/east
 
 // Specials
 Taala:

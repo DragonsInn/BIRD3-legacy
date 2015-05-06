@@ -280,7 +280,7 @@
                     </form>
                 </div>
                 <div class="col-md-5">
-                    <div>Version: <i>BIRD@<?=Yii::app()->params['version']?></i></div>
+                    <div>Version: <i><?=Yii::app()->params['version']?></i></div>
                     <div>
                         On: <i><?=$b->getBrowser()?>@<?=$b->getVersion()?> (<?=$b->getPlatform()?>)</i>
                     </div>

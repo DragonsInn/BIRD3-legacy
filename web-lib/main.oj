@@ -6,23 +6,23 @@ global.jQuery = $;
 // Plugin
 require("jquery.stickyFooter");
 require("jquery-fracs");
+//require("jQuery.mmenu");
 
-// Bootstrap
-require("bootstrap");
-require("bootstrapaccessibilityplugin");
+// Bootstrap. Font Awesome or Glyphicons? I need to choose.
+require("./bootstrapper.js");
+require("./bootstrapper.scss");
 require("font-awesome/css/font-awesome.css");
 
-// metro UI
-/*
-    - m-buttons.css
-    - m-forms.css
-    - m-icons.css
-    - m-dropdown.js
-    - m-radio.js
-*/
+// metro UI. I need a better thing...
+require("metro-buttons/css/m-buttons.css");
+require("metro-buttons/css/m-icons.css");
+
+// Highlight.js
+// The server can pre-render code, so we should have this.
+require("highlight.js/styles/hybrid.css");
 
 // Theme
-require("dragonsinn/js/panels.js");
+//require("dragonsinn/js/panels.js");
 require("dragonsinn/css/bs-extra.css");
 require("dragonsinn/css/main.ws.php");
 
@@ -36,15 +36,15 @@ var app = require("./BIRD3App");
 $(function(){
     var BIRD3 = [[BIRD3App alloc] init];
     $("#footer").stickyFooter({content:"#MainPage"});
-    $('[data-toggle="tooltip"]').tooltip();
-    $('[data-toggle="popover"]').popover();
+    if($("body").find('[data-toggle="tooltip"]').length > 0)
+        $('[data-toggle="tooltip"]').tooltip();
+    if($("body").find('[data-toggle="popover"]').length > 0)
+        $('[data-toggle="popover"]').popover();
 
     // I can haz code?
+    /* FIXME: PHP can pre-render that. Should only be used in Chat.
     if($("body").find("pre code").length > 0) {
-        require([
-            "highlight.js",
-            "highlight.js/styles/hybrid.css"
-        ], function(hljs){
+        require(["highlight.js"], function(hljs){
             console.log("Highlight.JS activated");
             hljs.configure({
                 tabReplace: Array(5).join(" ")
@@ -59,4 +59,5 @@ $(function(){
             });
         });
     }
+    */
 });

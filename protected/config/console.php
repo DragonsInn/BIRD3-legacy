@@ -14,10 +14,9 @@ return array(
 	'basePath'=>$base."/protected",
 	'runtimePath'=>$base."/cache",
 	'name'=>'BIRD3',
-	'theme'=>'dragonsinn',
 
 	// preloading 'log' component
-	'preload'=>array('log', 'user'),
+	'preload'=>array(),
 
 	// autoloading model and component classes
 	'import'=>array(
@@ -32,13 +31,10 @@ return array(
 		# Caching
 		'ext.redis.*',
 		# Misc
-		'ext.easyimage.*',
 		'ext.BIRD3.components.*'
 	),
 
-	'modules'=>array(
-		"user",
-	),
+	'modules'=>array("redis"),
 
 	// application components
 	'components'=>array(
@@ -47,10 +43,6 @@ return array(
 			'allowAutoLogin'=>true,
 			'autoRenewCookie'=>true,
 		),
-		'cleanTalk'=>array(
-            'class'=>'ext.yii-antispam.CleanTalkApi',
-            'apiKey'=>$BIRD3["API"]["cleantalk.key"],
-        ),
 		'assetManager'=>array(
 			'basePath'=>$base."/cdn/assets",
 			'baseUrl'=>$BIRD3['CDN']['baseUrl']."/assets",
@@ -84,9 +76,6 @@ return array(
 				'script_compression_callback_args' => array(),
 			)
 		),
-		'browser'=>array(
-			'class'=>'Browser'
-		),
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname='.$BIRD3['DB']['mydb'],
 			'emulatePrepare' => true,
@@ -94,10 +83,6 @@ return array(
 			'password' => $BIRD3['DB']['pass'],
 			'charset' => 'utf8',
 			'tablePrefix' => 'tbl_'
-		),
-		'session'=>array(
-			'class'=>"ext.redis.ARedisSession",
-			"keyPrefix" => "BIRD3.Session."
 		),
 		'urlManager'=>array(
 			'urlFormat'=>'path',
@@ -123,18 +108,6 @@ return array(
 		'cache'=>array(
 			'class'=>'ext.redis.ARedisCache',
 		),
-		'easyImage' => array(
-			'class' => 'application.extensions.easyimage.EasyImage',
-			//'driver' => 'GD',
-			//'quality' => 100,
-			'cachePath' => "$base/cdn/content/images/"
-			//'cacheTime' => 2592000,
-			//'retinaSupport' => false,
-		),
-		'errorHandler'=>array(
-			// use 'site/error' action to display errors
-			'errorAction'=>'site/error',
-		),
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
@@ -142,12 +115,6 @@ return array(
 					'class'=>'CFileLogRoute',
 					'levels'=>'error, warning',
 				),
-				// uncomment the following to show log messages on web pages
-				/*
-				array(
-					'class'=>'CWebLogRoute',
-				),
-				*/
 			),
 		),
 	),

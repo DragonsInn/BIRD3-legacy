@@ -1,0 +1,90 @@
+var template = require("./Dialog/template.ejs");
+var Modal = require("bootstrap.native/lib/modal-native");
+require("./onEnter");
+
+// From: http://stackoverflow.com/questions/6860853/generate-random-string-for-div-id
+function guidGenerator() {
+    var S4 = function() {
+       return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    };
+    return "rid_"+(S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
+
+function render(obj, modify) {
+    var $id = guidGenerator();
+    var modalTemplate = template({
+        title: obj.title,
+        id: $id,
+        type: obj.type,
+        size: obj.size,
+        header: obj.header,
+        body: obj.body,
+        footer: obj.footer
+    });
+    var modalOpts = obj.modalOpts || {};
+    // Create the DIV
+    var elem = document.createElement("div");
+    elem.innerHTML = modalTemplate;
+    var modalNode = elem.firstChild;
+    $("body").append(modalNode);
+    var modal = new Modal(modalNode, modalOpts);
+    modal.close = function() {
+        modal._close();
+        $($id).remove();
+    }
+    if(typeof modify == "function") modify(modal, $id, modalNode);
+    modal.open();
+    return modal;
+}
+
+@implementation Dialog
+// Public methods
++(void)alert:(string)message {
+    return render({
+        title: "Alert",
+        type: "success",
+        size: "sm",
+        body: message,
+        footer: '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
+    });
+}
+
++(void)prompt:(string)title withMessage:(string)message onResult:(callable)cb {
+    var putId = guidGenerator();
+    return render({
+        title: title,
+        size: "sm",
+        type: "info",
+        header: '<p>'+message+'</p>',
+        body: '<div class="form-group">'
+                +'<input type="text" name="'+putId+'" id="'+putId+'" class="form-control" />'
+                +'</div>',
+        footer: '<button id="'+putId+'-button" class="btn btn-default">OK</button>'
+    }, function(modal, id, node){
+        var close = modal.close;
+        var $modal = $("#"+id);
+        modal.close = function() {
+            var val = $modal.find("#"+putId).val();
+            cb(val);
+            close.call(modal);
+        }
+        // Set up the triggers
+        $modal.find("#"+putId+"-button").click(modal.close);
+        $modal.find("#"+putId).onEnter(modal.close);
+    });
+}
+
++(void)info:(string)message {
+    return render({
+        title: "Information",
+        type: "info",
+        size: "lg",
+        body: message,
+        footer: '<button type="button" class="btn btn-default" data-dismiss="modal">Okay.</button>'
+    });
+}
++(void)error:(string)message {}
+@end
+
+// Export
+module.exports = require("frameworks/oj-expose")([Dialog class]);

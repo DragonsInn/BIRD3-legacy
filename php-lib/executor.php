@@ -22,6 +22,7 @@ $req = $args["req"];
 $opt = $args["opt"];
 foreach($args["env"] as $k=>$v) $_ENV[$k]=$v;
 $config = $opt['config'];
+$_ENV["config"] = $config;
 
 // Build the request stuff.
 // YiiApp.php created the arrays for us.
@@ -42,7 +43,6 @@ $res = new HttpResponse();
 register_shutdown_function(function() use($res){
     $out = ob_get_contents();
     if($out!==false) {
-        echo "...";
         // This was a clean request, stuff is given.
         // On a rough request, we're fine with what is on STDOUT.
         ob_end_clean();
@@ -57,9 +57,19 @@ if(!file_exists($file) || is_dir($file)) {
     // This is a request for Yii.
     $res->header("Content-type: text/html");
     $config=dirname(__FILE__).'/../protected/config/main.php';
-    $c=include_once($config);
+    $c=require_once($config);
     Yii::createWebApplication($c);
-    Yii::app()->run();
+    set_error_handler("exception_error_handler");
+    try{
+        Yii::app()->run();
+    } catch(Exception $e) {
+        # Bring up the sexy Xynu!
+        ob_end_clean();
+        require_once "../protected/controllers/SiteController.php";
+        $Xynu = new SiteController("error");
+        Yii::app()->errorHandler->error = $e;
+        $Xynu->actionError();
+    }
 } else {
     require_once($file);
 }

@@ -73,6 +73,13 @@ var house = PowerHouse({
                     mylog.error("Shutting down the entire server.");
                     process.kill(process.pid, "SIGTERM");
                 }
+                if(o.name=="rpc.log") {
+                    try {
+                        mylog[o.data.method].apply(mylog, o.data.args);
+                    } catch(e) {
+                        mylog.error("Unhandled call: %s",JSON.stringify(o));
+                    }
+                }
             }
         });
         getports(6, function(err, ports){

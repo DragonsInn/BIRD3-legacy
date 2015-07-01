@@ -103,7 +103,7 @@ module.exports = function(io, redis) {
             return this;
         })();
         io.on("connection", function(sock){
-            var rpc = new avs.ioRpc(sock);
+            var rpc = new avs.scRpc(sock);
             obj.rpc.implementTo(rpc);
             sock.on("rpc_init", function(){
                 sock.emit("rpc_init_data", obj.rpc.methodNames());

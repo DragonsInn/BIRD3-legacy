@@ -39,7 +39,6 @@ $menu_height=40;
 $bgStr = "url(\"$base/images/bg.jpg\") no-repeat center center";
 $blurStr = "url(\"$base/images/blur.png\") no-repeat center center";
 
-
 WS(body)
     # Fallback for image loading
     ->background->color(black)
@@ -169,6 +168,9 @@ WS("#footer")
     # Fix and clear the mess from above.
     ->display(block)
     ->position(relative)
+    ->bottom(0)
+    ->left(0)
+    ->right(0)
     # Now the style.
     ->text->align(center)
     ->background->rgba(0,0,0,0.4)

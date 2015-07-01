@@ -2,35 +2,9 @@
 $root=dirname(__FILE__)."/..";
 require_once "$root/php_modules/autoload.php";
 require_once "$root/php_modules_ext/ParseArgs.php";
-require_once "$root/php_modules/walkor/workerman/Workerman/Autoloader.php";
+require_once "$root/php_modules/walkor/workerman/Autoloader.php";
 require_once "$root/php_modules_ext/hprose-workerman/HproseWorkermanService.php";
-
-class Log {
-    private static $redis = null;
-    public static function getRedis() {
-        if(self::$redis==null) {
-            self::$redis = new Redis;
-            $rt = self::$redis->popen("127.0.0.1");
-            if($rt!=true) {
-                echo "Error: Can not connect to Redis!!";
-                exit(1);
-            }
-            #self::$redis->select(0);
-        }
-        return self::$redis;
-    }
-    static function __callStatic($method, $args) {
-        $redis = self::getRedis();
-        $msg = json_encode([
-            "name"=>"rpc.log",
-            "data"=>[
-                "method"=>$method,
-                "args"=>$args
-            ]
-        ]);
-        return $redis->publish("BIRD3", $msg);
-    }
-}
+require_once "Log.php";
 
 // The global server instance
 class AppServer {

@@ -8,14 +8,6 @@ $this->isIndex=true;
 ?>
 
 <h5>Friendly reminder: <small>This is a demo page.</small></h5>
-<div><pre><?php
-    /*BIRD3::mail([
-        "to"=>"ingwie2000@gmail.com",
-        "subject"=>"Testing nodemailer",
-        "text"=>"o.o"
-    ]);*/
-    print_r(User::me()->convos[0]->messages);
-?></pre></div>
 
 <div class="row">
     <div class="col-md-12">

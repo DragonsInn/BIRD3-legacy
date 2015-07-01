@@ -20,14 +20,17 @@ module.exports.run = function(conf) {
         }
     });
     var compiler = webpack(config);
-    var watcher = compiler.watch(config.watchDelay, function(err,stats){
+    var watcher = compiler.watch({
+        aggregateTimeout: config.watchDelay,
+        poll: true
+    }, function(err,stats){
         if(err) throw err;
         console.log(stats.toString({
             colors: true,
             version: true,
             assets: true,
             timings: true,
-            reasons: true,
+            //reasons: true,
             errorDetails: true
         }));
         var out = stats.toJson({hash:true});

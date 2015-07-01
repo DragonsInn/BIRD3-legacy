@@ -30,7 +30,7 @@
 
         <!-- Now for the fun part. -->
         <?php
-            Yii::app()->cdn->css("normalize.css");
+            #Yii::app()->cdn->css("normalize.css");
             $base = Yii::app()->cdn->baseUrl."/theme/images";
         ?>
         <style>

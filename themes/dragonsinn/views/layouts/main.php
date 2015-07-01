@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html>
+<!--[if lt IE 7]>      <html class="ie6"> <![endif]-->
+<!--[if IE 7]>         <html class="ie7"> <![endif]-->
+<!--[if IE 8]>         <html class="ie8"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="pure"><!--<![endif]-->
     <head>
         <?php // PHP logic
             $meta_desc = "The Dragon's Inn is a cozy place for furry and non-furry"
@@ -262,7 +265,7 @@
 
             <?php if(!$this->allPage): ?>
             <!-- Copyright and the like. -->
-            <div class="clearfix"></div>
+            <div class="clearfix" id="elementToExpand"></div>
             <footer id="footer" class="container-fluid">
                 <div class="col-md-5">
                     <div>Dragon's Inn, BIRD3 and design "Exciting Night" by <a href="http://ingwie.me">Ingwie Phoenix</a></div>

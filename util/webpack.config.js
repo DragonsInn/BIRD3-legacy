@@ -24,7 +24,8 @@ var __debug = global.__debug || false;
 //var _jquery = "jquip/dist/jquip.all"; // 154 kb
 //var _jquery = "zepto/src/zepto"; // 135 kb
 //var _jquery = "cash/dist/cash.js"; // 129 kb
-var _jquery = "jquery"; // 207 kb
+//var _jquery = "jquery"; // 207 kb
+var _jquery = path.join( config.base, "web-lib/jquery" );
 
 // Webpack: Load plugins
 var webpack = require("webpack");
@@ -34,11 +35,16 @@ var HashPlugin = require('hash-webpack-plugin');
 var bowerwp = require("bower-webpack-plugin");
 var stripper = require("strip-loader").loader;
 
+// postcss
+
 // Webpack: make instances
 // Generate the general webpack file - make it a lil' lib.
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin({
     name: "libwebpack",
-    filename: "[hash]-libwebpack.js"
+    filename: "[hash]-libwebpack.js",
+    //children: true,
+    //async: true,
+    minChunks: Infinity
 });
 // Constants that should be distributed namelessly to the front-end
 var defines = new webpack.DefinePlugin({
@@ -76,31 +82,33 @@ var uglify = new webpack.optimize.UglifyJsPlugin({
     compress: {
         warnings: false,
         properties: true,
-		sequences: true,
-		dead_code: true,
-		conditionals: true,
+        sequences: true,
+        dead_code: true,
+        conditionals: true,
         comparisons: true,
         evaluate: true,
-		booleans: true,
-		unused: true,
+        booleans: true,
+        unused: true,
         loops: true,
         hoist_funs: true,
         cascade: true,
-		if_return: true,
-		join_vars: true,
-		//drop_console: true,
+        if_return: true,
+        join_vars: true,
+        //drop_console: true,
         drop_debugger: true,
+        unsafe: true,
+        hoist_vars: true,
         negate_iife: true,
-        unsafe: true
-	},
-    sourceMap: true,
+        //side_effects: true
+    },
+    //sourceMap: true,
     mangle: {
-        except: [
-            "$oj_oj", "oj",
-            "jQuery", "$",
-            "cloudflare",
-            "hljs"
-        ]
+        toplevel: true,
+        sort: true,
+        eval: true
+    },
+    output: {
+        comments: false
     }
 });
 // Querystring for the CSS Loader
@@ -111,7 +119,7 @@ var cssq = [
     "relativeTo="+config.base,
     "shorthandCompacting=true",
     "target="+app,
-    //"sourceMap"
+    "sourceMap"
 ].join("&");
 // Configure SASS
 var sassq = [
@@ -121,7 +129,8 @@ var sassq = [
     ),
     "includePaths[]="+path.join(config.base, "bower_components"),
     "includePaths[]="+path.join(config.base, "node_modules"),
-    "includePaths[]="+path.join(config.base, "themes")
+    "includePaths[]="+path.join(config.base, "themes"),
+    "sourceMap"
 ].join("&");
 // Progress output
 var logger = require(config.base+"/node-lib/logger")(config.base);
@@ -139,15 +148,16 @@ module.exports = {
     cache: true,
     debug: __debug,
     watchDelay: 1000*5,
-    devtool: "#source-map",
+    //devtool: "#source-map",
     entry: {
+        libwebpack: ["ojc/src/runtime"],
         main: path.join(__dirname, "../web-lib/main.oj")
     },
     output: {
         // to cdn/app/
         path: app,
         filename: "[hash]-[name].js",
-        //chunkFilename: "[name].[id].js",
+        chunkFilename: "[hash]-[name].[id].js",
         sourceMapFilename: "[hash]-[name].[id].map",
         publicPath: "/cdn/app/",
         sourcePrefix: "    "
@@ -170,13 +180,9 @@ module.exports = {
             // NPM, Bower
             'bower_components',
             'node_modules',
+            'web_modules'
         ],
         alias: {
-            debug: path.join(
-                config.base,
-                "node_modules",
-                "debug"
-            ),
             // Ensure compatibility to original bootstrap
             "bootstrap.js": path.join(
                 config.base,
@@ -193,12 +199,21 @@ module.exports = {
                 "bootstrapaccessibilityplugin/src"
             ),
             jquery: _jquery,
-            /*"jquery.js": path.join(
+            "jquery.js": path.join(
                 config.base,
                 "bower_components",
                 "jquery/src"
-            ),*/
-            ws: "ws/lib/browser"
+            ),
+            ws: "ws/lib/browser",
+            "highlight.js$": path.join(
+                config.base,
+                "web-lib/highlight.js"
+            ),
+            "LDT": path.join(
+                config.base,
+                "web_modules/LDT.webpack.js"
+            ),
+            "behave.js": "behave.js/behave.js"
         }
     },
     module: {
@@ -207,13 +222,13 @@ module.exports = {
                 test: /\.css$/,
                 loader: extractText.extract(
                     "style",
-                    "css?"+cssq
+                    "css!postcss?"+cssq
                 )
             },{ // Extract Sassy CSS
                 test: /\.scss$/,
                 loader: extractText.extract(
                     "style",
-                    "css?"+cssq+"!sass?"+sassq
+                    "css!postcss?"+cssq+"!sass?"+sassq
                 )
             },{ // WingStyle -> CSS
                 test: /\.ws\.php$/,
@@ -221,6 +236,7 @@ module.exports = {
                     "style",
                     [
                         "css?"+cssq,
+                        "postcss",
                         path.join(__dirname,"wingstyle-loader.js")
                     ].join("!")
                 )
@@ -230,36 +246,45 @@ module.exports = {
                     // optimize image
                     "img?minimize=true&optimizationLevel=7",
                     // 50kb or smaller
-                    "url?limit="+config.maxFileSize,
+                    "file",
                 ].join("!")
             },{ // Fonts
-                test: /\.(eot|woff|woff2|ttf|otf)/,
-                loader: "url?limit="+config.maxFileSize
+                test: /\.(eot|woff|woff2|ttf|otf|mp3|wav|ogg)/,
+                loader: "file"
             },{ // Markdown
-                test: /\.(md|markdown)$/,
+                test: /\.md$/,
                 loader: "markdown"
             },{ // HTML
                 test: /\.html$/,
                 loader: "html"
+            },{ // Embedded JS templates
+                test: /\.ejs$/,
+                loader: "ejs-compiled?delimiter=?&+rmWhitespaces"
+            },{ // Load JSON. How stupid is this...?
+                test: /\.json$/,
+                loader: "json",
             },{ // OJ -> JS
                 test: /\.oj$/,
-                loader: "oj"
-            },
+                loader: "oj?warn-unknown-ivars=&-warn-unknown-selectors"
+            },{ // Webfont generator
+                test: /\.font\.(js|json)$/,
+                loader: "fontgen"
+            }
         ],
         noParse: [
-            /node_modules\/socket\.io-client\/socket\.io\.js$/,
             /\.(min|bundle|pack)\.js$/,
         ]
     },
+    postcss: [],
     plugins: [
-        progress,
+        //progress,
+        dedupe,
         commonsPlugin,
         defines,
         provider,
         bowerProvider,
         extractor,
         assetsp,
-        dedupe,
         uglify
     ]
 };

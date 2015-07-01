@@ -128,7 +128,11 @@
 - [ ] Hotel
     * [ ] Jobs
         - Make a listing of jobs that would fit the hotel.
-
+- [ ] Misc features
+    - [ ] #HashTag support.
+        - Posting
+        - Rendering
+        - Searching
 
 ## Notes... Scribbles...
 (23:04:14) Sapphy: (whispers) -Birth and Death Tab-

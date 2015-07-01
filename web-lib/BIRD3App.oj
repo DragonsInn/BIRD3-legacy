@@ -1,38 +1,45 @@
 // Requires...
-var socketCluster = require("socketcluster-client"); // 168 kb
-//var deliver = require("delivery/lib/client/delivery");
-var avs = require("avs-rpc");
-
-// jQuery plugins
-require("./onEnter");
+// FIXME: Is 34.6 KB. Find alternative...
+//var async = require("async");
 
 // Bootstrap3 Dialogs
-var BootstrapDialog = require("bootstrap3-dialog/dist/js/bootstrap-dialog");
-require("bootstrap3-dialog/dist/css/bootstrap-dialog");
+// FIXME: I need...a new thing.
+
+// Singleton in OJ. I...think.
+var __app = null;
 
 @implementation BIRD3App {
     var socket;
     var rpc;
     var rpcr;
 }
--(id)init {
++(BIRD3App)instance {
+    if(__app==null) __app = [[self alloc] realInit];
+    return __app;
+}
+-(id)realInit {
     if(self = [super init]) {
-        socket = socketCluster.connect();
-        rpc = new avs.ioRpc(socket);
-        socket.on('error', function (err) {
-            console.log(err);
-        });
-        socket.on('connect', function () {
-            console.log('CONNECTED');
-            socket.on("rpc_init_data", function(methods){
-                console.log("Methods: "+methods);
-                rpcr = rpc.remote.call(rpc, methods);
-                //console.log(rpcr.foo({baz:"bar"}));
+        require(["socketcluster-client", "avs-rpc"], function(sc, avs){
+            socket = sc.connect();
+            rpc = new avs.scRpc(socket);
+            socket.on('error', function (err) {
+                console.log("Error:", err);
             });
-            socket.emit("rpc_init");
+            socket.on('connect', function () {
+                console.log('CONNECTED');
+                socket.on("rpc_init_data", function(methods){
+                    console.log("Methods: "+methods);
+                    rpcr = rpc.remote.call(rpc, methods);
+                    rpcr.foo({baz:"bar"}, function(err, res){
+                        console.log("callback", res);
+                    });
+                });
+                socket.emit("rpc_init");
+            });
         });
 
         // Do an AJAX request to Yii to update the user. Easy.
+        /*
         $.ajax(window.location.origin, {
             async: true,
             cache: false,
@@ -42,6 +49,7 @@ require("bootstrap3-dialog/dist/css/bootstrap-dialog");
                 via: "bird3"
             }
         });
+        */
     }
     return self;
 }
@@ -55,106 +63,6 @@ require("bootstrap3-dialog/dist/css/bootstrap-dialog");
     io.on(name, cb);
     return self;
 }
-
-
-/*
-    Convenience methods for dialogs and modals
-*/
-+(BootstrapDialog)alert:(string)msg withTitle:(string)title type:(dtype)t {
-    return BootstrapDialog.show({
-        type: t,
-        title: title,
-        message: msg,
-        closable: true,
-        onshown: function(dialog) {
-            dialog.getModalFooter().find("#btn-ok")[0].focus();
-        },
-        buttons: [{
-            id: 'btn-ok',
-            icon: 'fa fa-check',
-            label: 'OK',
-            cssClass: 'btn-default',
-            autospin: false,
-            action: function(dialogRef){
-                dialogRef.close();
-            }
-        }]
-    });
-}
-+(BootstrapDialog)alert:(string)msg withTitle:(string)title {
-    return [self alert:msg
-                 withTitle:title
-                 type:BootstrapDialog.TYPE_DEFAULT
-           ];
-}
-+(BootstrapDialog)alert:(string)msg {
-    return [self alert:msg withTitle:__TITLE__];
-}
-+(BootstrapDialog)prompt:(string)what thenDo:(callable)cb {
-    var msg="";
-    if(typeof what == "object") {
-        var holder="";
-        if(typeof what.text != "undefined")
-            msg = '<p>'+what.text+'</p>';
-        if(typeof what.placeholder != "undefined")
-            holder = 'placeholder="'+what.placeholder+'"';
-        msg += '<input type="text" class="form-control bootstrap-dialog-input" '+holder+'>';
-    } else {
-        msg = what;
-    }
-    return BootstrapDialog.show({
-        type: "type-default",
-        title: __TITLE__,
-        message: msg,
-        closable: true,
-        onshown: function(dialog) {
-            var $footer = dialog.getModalFooter();
-            var $body = dialog.getModalBody();
-            $body.find("input")[0].focus();
-            $(".bootstrap-dialog-input").pressEnter(function(e){
-                var $button = $footer.find("#btn-ok")[0];
-                $button.click();
-            });
-        },
-        buttons: [{
-            id: 'btn-ok',
-            icon: 'fa fa-check',
-            label: 'OK',
-            cssClass: 'btn-default',
-            autospin: false,
-            action: function(dialog) {
-                var data, $body = dialog.getModalBody();
-                data = $body.find("input")[0].value;
-                cb(data);
-                dialog.close();
-            }
-        },{
-            id: 'btn-cancel',
-            //icon: 'fa fa-ellipsis-h',
-            label: 'Cancel',
-            cssClass: 'btn-danger',
-            autospin: false,
-            action: function(dialog) {
-                dialog.close();
-            }
-        }]
-    });
-}
 @end
 
-// Nice stuff
-window.alert = function(msg, title, _type) {
-    if(typeof title == "undefined" && typeof _type == "undefined") {
-        return [BIRD3App alert:msg];
-    } else if(typeof title != "undefined" && typeof _type == "undefined") {
-        return [BIRD3App alert:msg withTitle:title];
-    } else {
-        return;
-    }
-}
-
-var app = {};
-app.prompt = function(what, cb) { return [BIRD3App prompt:what thenDo:cb]; }
-app.alert = alert;
-
-module.exports = app;
+module.exports = require("frameworks/oj-expose")([BIRD3App class]);

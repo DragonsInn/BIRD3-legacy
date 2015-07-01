@@ -8,7 +8,7 @@ var express = require("express"),
     global.config = global.config || conf;
 
     var socketCluster = new SocketCluster({
-        workers: config.maxWorkers || 2,
+        workers: config.maxWorkers || 4,
         stores: 1,
         port: config.BIRD3.http_port,
         host: config.BIRD3.host,

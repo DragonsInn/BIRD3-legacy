@@ -5,7 +5,7 @@
 // Variables...
 @import "bootstrap/variables";
 @import "bootswatch/cyborg/variables";
-@import "bootswatch/cyborg/bootswatch";
+//@import "bootswatch/cyborg/bootswatch";
 
 // Bootstrap's mixins
 @import "bootstrap/mixins";
@@ -18,11 +18,12 @@
 //@import "bootstrap/glyphicons";
 
 // Core CSS
+
 @import "bootstrap/scaffolding";
 @import "bootstrap/type";
 @import "bootstrap/code";
 @import "bootstrap/grid";
-@import "bootstrap/tables";
+//@import "bootstrap/tables";
 @import "bootstrap/forms";
 @import "bootstrap/buttons";
 
@@ -40,7 +41,7 @@
 @import "bootstrap/media";
 @import "bootstrap/list-group";
 @import "bootstrap/panels";
-@import "bootstrap/responsive-embed";
+//@import "bootstrap/responsive-embed";
 @import "bootstrap/wells";
 @import "bootstrap/close";
 
@@ -54,6 +55,7 @@
 @import "bootstrap/responsive-utilities";
 
 // Accessibility
+
 @import "bootstrapaccessibilityplugin/src/sass/partials/variables";
 @import "bootstrapaccessibilityplugin/src/sass/partials/mixins";
 @import "bootstrapaccessibilityplugin/src/sass/partials/alerts";

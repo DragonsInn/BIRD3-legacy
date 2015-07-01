@@ -1,18 +1,19 @@
-$(document).ready(function(win){
-    var useBottomPanel = window.useBottomPanel;
+$.ready(function(){
     console.log("Setting up panels...");
     // Panel vars
-    window.pLeft = $("#Pleft");
-    window.pRight = $("#Pright");
-    window.pTop = $("#Ptop");
-    // Panel triggers
-    window.tLeft = $("#trigger-left");
-    window.tRight = $("#trigger-right");
-    window.tTop = $("#trigger-top");
-    window.everything = $(".panel-pusher");
+    var useBottomPanel = window.useBottomPanel,
+        pLeft = $("#Pleft"),
+        pRight = $("#Pright"),
+        pTop = $("#Ptop"),
+        // Panel triggers
+        tLeft = $("#trigger-left"),
+        tRight = $("#trigger-right"),
+        tTop = $("#trigger-top"),
+        everything = $(".panel-pusher");
+
     if(useBottomPanel) {
-        window.pBottom = $("#Pbottom");
-        window.tBottom = $("#trigger-bottom");
+        var pBottom = $("#Pbottom");
+        var tBottom = $("#trigger-bottom");
     }
 
     tLeft.click(function(e) {
@@ -53,7 +54,7 @@ $(document).ready(function(win){
     }
 
     // BIRD3 Menu stuff. Yup, its a panel too.
-    window.mTabList = $("#BIRD3Menu > li.isTab");
+    mTabList = $("#BIRD3Menu > li.isTab");
     $("#BIRD3Menu").click(function(e){ e.stopPropagation(); });
     mTabList.click(function(e){
         var $e = $(e.target);
@@ -65,7 +66,7 @@ $(document).ready(function(win){
             if($("#Ptop").find(id).length > 0) {
                 $($("#Ptop").find(id)[0]).show();
                 $("#BIRD3Menu > li.isTab").removeClass("active");
-                window.disableOthers("top");
+                disableOthers("top");
                 removePushers("top");
                 pTop.addClass("panel-top-active");
                 everything.addClass("panel-pusher-fromtop");
@@ -76,7 +77,8 @@ $(document).ready(function(win){
     });
 
     // Finalize
-    $(document).click(function(e) {
+    $("body").click(function(e) {
+        console.trace("doc click");
         $("#BIRD3Menu > li.isTab").removeClass("active");
         pLeft.removeClass("panel-side-active");
         pRight.removeClass("panel-side-active");
@@ -90,7 +92,7 @@ $(document).ready(function(win){
         }
     });
 
-    window.disableOthers = function(panel) {
+    function disableOthers(panel) {
         if(panel != "left") pLeft.removeClass("panel-side-active");
         if(panel != "right") pRight.removeClass("panel-side-active");
         if(panel != "top") pTop.removeClass("panel-top-active");
@@ -99,7 +101,7 @@ $(document).ready(function(win){
         }
     }
 
-    window.removePushers = function(panel) {
+    function removePushers(panel) {
         if(panel != "left") everything.removeClass("panel-pusher-toright");
         if(panel != "right") everything.removeClass("panel-pusher-toleft");
         if(panel != "top") everything.removeClass("panel-pusher-fromtop");

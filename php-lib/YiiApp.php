@@ -26,9 +26,11 @@ function exception_error_handler($severity, $message, $file, $line) {
         // This error code is not included in error_reporting
         return;
     }
-    echo "$message ($file : $line)\n";
+    $output = "$message ($file : $line)";
+    Log::error($output);
     throw new ErrorException($message, 0, $severity, $file, $line);
 }
+#set_error_handler("exception_error_handler");
 
 function objectToArray($d) {
     if (is_object($d)) {
@@ -201,26 +203,29 @@ class YiiApp {
             ];
             $ph = proc_open($cmd, $spec, $pipes, __DIR__,$env);
             $res = new HttpResponse();
+            Log::info("$ $cmd");
             if(is_resource($ph)) {
                 // Get STDOUT/-ERR
                 // @meme All your error are belong to you.
                 $stdout = stream_get_contents($pipes[1]);
-                echo stream_get_contents($pipes[2]);
                 foreach($pipes as $p=>$k) fclose($pipes[$p]);
                 $rtv = proc_close($ph);
+                $out = "";
                 try {
                     $out = hprose_unserialize($stdout);
+                    Log::info("Request is healthy.");
                 } catch(\Exception $e) {
                     // Yii MIGHT had caught an exception.
                     // Hence, hprose can not parse it...since its raw HTML...
                     // ...because Yii kills my output buffers. >v<
                     // Therefore, print that HTML out. Meh.
+                    Log::warn("Response was unclear. ".$e);
                     $res->header("Content-type: text/html");
                     $res->status(200);
                     $out = $res->end($stdout);
                 }
             } else {
-                echo "Nnnnooooooo......";
+                Log::error("Unable to process request!");
                 $res->header("Content-type: text/plain");
                 $res->status(500);
                 $out = $res->end("INTERNAL: Process could not be launched.");
@@ -228,6 +233,7 @@ class YiiApp {
             return $out;
         } catch(\Exception $e) {
             // Just die this one out. Period.
+            Log::error("A fatal error occured. This request is dead. "+$e);
             print_r($e);
             return "o.o; Oh dear.";
         }

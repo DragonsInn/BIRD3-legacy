@@ -17,4 +17,7 @@
 	public function actionFail() {
 		throw new CException("Failing on purpose.");
 	}
+	public function actionDerp() {
+		$this->render("derp");
+	}
 }

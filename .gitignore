@@ -17,3 +17,4 @@ php_modules/*
 bower_components/
 cdn/app/
 tmp/
+*.hpr

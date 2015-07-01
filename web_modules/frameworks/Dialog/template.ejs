@@ -1,0 +1,22 @@
+<div class="modal bootstrap-dialog type-<?=type?> fade"
+     id="<?=id?>" tabindex="-1" role="dialog" aria-label="<?=title?>" aria-hidden="true">
+    <div class="modal-dialog modal-<?=size?>">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <p class="modal-title"><?-title?></p>
+            </div>
+            <div class="modal-body">
+                <? if(typeof header != "undefined") { ?>
+                        <div><?-header?></div>
+                <? } ?>
+                <?-body?>
+            </div>
+            <div class="modal-footer">
+                <?-footer?>
+            </div>
+        </div>
+    </div>
+</div>

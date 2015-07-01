@@ -14,3 +14,9 @@
         path = php_modules_ext/hprose-workerman
         url = https://github.com/hprose/hprose-workerman.git
 
+[submodule "web_modules/LDT"]
+	path = web_modules/LDT
+	url = https://github.com/kueblc/LDT.git
+[submodule "web_modules/behave.js"]
+	path = web_modules/behave.js
+	url = https://github.com/jakiestfu/Behave.js.git

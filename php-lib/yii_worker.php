@@ -20,11 +20,11 @@ $_ENV=array_merge($_ENV, $_SERVER);
 // Configure events
 AppServer::on("start", function($w){
     $pid = getmypid();
-    #Log::info("BIRD3 worker@$pid is online!");
+    Log::info("BIRD3 worker@$pid is online!");
 });
 AppServer::on("stop", function($w){
     $pid = getmypid();
-    Log::warn("BIRD3 worker@$pid is going down.");
+    Log::notice("BIRD3 worker@$pid is going down.");
 });
 AppServer::on("error", function($connection, $error_code, $error_msg){
     $msg = "AN ERROR OCCURED: $error_code : $error_msg";
@@ -33,14 +33,29 @@ AppServer::on("error", function($connection, $error_code, $error_msg){
     $connection->end();
 });
 
+AppServer::on("connect", function($w){
+    $pid = getmypid();
+    #Log::info("BIRD3 worker@$pid got connection.");
+});
+AppServer::on("close", function($w){
+    $pid = getmypid();
+    #Log::info("BIRD3 worker@$pid lost connection.");
+});
+AppServer::on("buffer_full", function($w){
+    $pid = getmypid();
+    Log::info("BIRD3 worker@$pid: Buffer full!");
+});
+AppServer::on("buffer_empty", function($w){
+    $pid = getmypid();
+    Log::info("BIRD3 worker@$pid: Buffer empty.");
+});
+
+
+
 // Add the YiiApp.
 require_once "YiiApp.php";
 AppServer::on("start", function($w){
     $h = AppServer::hprose();
+    $h->setDebugEnabled(true);
     $h->addClassMethods("YiiApp", null, "yii");
-});
-
-AppServer::on("error", function(){
-    # Reload this worker
-    YiiApp::stop();
 });

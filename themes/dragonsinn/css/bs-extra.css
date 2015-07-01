@@ -3,6 +3,9 @@
 */
 
 /* navbar */
+.navbar {
+    margin-bottom: 0 !important;
+}
 .navbar-soft, .navbar-nav {
     background-color: rgba(0,0,0,0.3);
     border-color: transparent;
@@ -85,8 +88,8 @@ and (orientation : portrait) {
 
 /* Form controlz */
 .form-control {
-    background: black;
-    color: white;
+    background: black !important;
+    color: white !important;
 }
 
 /* Thumbnail elements */

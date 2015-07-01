@@ -1,3 +1,3 @@
 module.exports.run = function (store) {
-  console.log('   >> Store PID:', process.pid);
+    process.title = "BIRD3: SC Store";
 };

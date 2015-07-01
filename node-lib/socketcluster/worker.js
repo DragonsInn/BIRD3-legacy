@@ -1,4 +1,5 @@
 module.exports.run = function (worker) {
+    process.title = "BIRD3: SC Worker";
     // Load up the config
     // Initialize the config object.
     var ini = require("multilevel-ini"),
@@ -15,8 +16,6 @@ module.exports.run = function (worker) {
 
     // Be secure
     require("../security_handler.js")();
-
-    console.log('   >> Worker PID:', process.pid);
 
     var app = require('express')();
 

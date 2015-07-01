@@ -131,7 +131,7 @@
 		$tbase = Yii::app()->theme->baseUrl;
 		$cdnUrl = Yii::app()->cdn->baseUrl;
 		$yiiUrl = Yii::app()->request->getBaseUrl(true);
-
+		$escYiiUrl = str_replace('/','\/', $yiiUrl);
 
 		// Gracefuly disable jQuery :)
 		$cs->scriptMap["jquery.js"]=false;
@@ -146,8 +146,22 @@
 		global $opt;
 		$hash = $opt["userData"]["webpackHash"];
 		$cdnApp = Yii::app()->cdn->baseUrl."/app";
-		$cs->registerScriptFile("$cdnApp/$hash-libwebpack.js");
-		$cs->registerScriptFile("$cdnApp/$hash-main.js");
+		// These settings are mandatory.
+		$cs->registerScript("settings","window.BIRD3 = {
+			baseUrl: '$escYiiUrl'
+		}", CClientScript::POS_HEAD);
+		// Load the "library" first.
+		$cs->registerScriptFile(
+			"$cdnApp/$hash-libwebpack.js",
+			CClientScript::POS_END
+		);
+		// Now load the stuff itself.
+		#$cs->registerScriptFile("$cdnApp/$hash-compatibility.js", CClientScript::POS_END);
+		$cs->registerScriptFile(
+			"$cdnApp/$hash-main.js",
+			CClientScript::POS_END
+		);
+		// The design.
 		$cs->registerCssFile("$cdnApp/$hash-main.css");
 
 		// Special script for index.
@@ -157,17 +171,25 @@
 				// Do the blur! hur hur hur.
 				// FIXME: Did I spell "blur" right? o.o
 				$cs->registerScript("fracs+intro",
-					"$('#intro').fracs(function(fracs, prevFracs){
-							$('#blurr-bg').css({opacity: (1-fracs.visible)});
+					"$.ready(function(){
+						window.addEventListener('scroll', function(){
+							$('#blurr-bg').css({opacity: (1-$('#intro').visibility())});
+						});
 					});",
-				CClientScript::POS_READY);
+				CClientScript::POS_END);
 			} else {
 				// Since the blur effect would cause issues, let's just darken the BG more.
 				$cs->registerScript("fracs+intro",
-					"$('#intro').fracs(function(fracs, prevFracs){
-							$('#outerContent').css({background: 'rgba(0,0,0, '+($fbAlpha-($fbAlpha*fracs.visible))+')'});
+					"$.ready(function(){
+						window.addEventListener('scroll', function(){
+							$('#outerContent').css({
+								background: 'rgba(0,0,0,'+(
+									$fbAlpha-($fbAlpha*$('#intro').visibility())
+								)+')'
+							});
+						});
 					});",
-				CClientScript::POS_READY);
+				CClientScript::POS_END);
 			}
 		}
 

@@ -52,7 +52,10 @@
             <p>Private Messages</p>
             <div class="btn-group btn-group-xs">
                 <button type="button" class="btn btn-info">Compose</button>
-                <button type="button" class="btn btn-info">Inbox</button>
+                <?=CHtml::link(
+                    "Inbox", ["/user/pm/box"],
+                    ["class"=>"btn btn-info"]
+                )?>
                 <button type="button" class="btn btn-info">Outbox</button>
             </div>
         </li>

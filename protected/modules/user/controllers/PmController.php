@@ -44,7 +44,16 @@
         $msg = new PrivateMessage;
     }
 
-    public function actionShow($mid) {
-
+    public function actionShow($conv_id) {
+        // Find and back-travel all messages
+        $messages = PrivateMessage::model()->findAllByAttributes([
+            "conv_id"=>$conv_id
+        ]);
+        $convo = PrivateConversation::model()->findByPk($conv_id);
+        $this->render("show",[
+            "messages"=>$messages,
+            "convo"=>$convo,
+            "newMsg"=>new PrivateMessage
+        ]);
     }
 }

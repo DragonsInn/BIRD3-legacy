@@ -1,44 +1,47 @@
-define([
-	"jquery.js/core",
-    "jquery.js/sizzle/dist/sizzle",
-    "jquery.js/event",
-    "jquery.js/event/alias",
-	"jquery.js/traversing",
-	"jquery.js/callbacks",
-	"jquery.js/deferred",
-	"jquery.js/core/ready",
-	"jquery.js/data",
-	"jquery.js/queue",
-	"jquery.js/queue/delay",
-	"jquery.js/attributes",
-	"jquery.js/manipulation",
-	"jquery.js/manipulation/_evalUrl",
-	"jquery.js/wrap",
-	"jquery.js/css",
-	"jquery.js/css/hiddenVisibleSelectors",
-	"jquery.js/serialize",
-	"jquery.js/ajax",
-	"jquery.js/ajax/xhr",
-	"jquery.js/ajax/script",
-	"jquery.js/ajax/jsonp",
-	"jquery.js/ajax/load",
-	"jquery.js/event/ajax",
-	"jquery.js/effects",
-	"jquery.js/effects/animatedSelector",
-	"jquery.js/offset",
-	"jquery.js/dimensions",
-	"jquery.js/deprecated"
-], function( jQuery, Sizzle ) {
+var $ = require("cash");
 
-// Hotfix Sizzle
-jQuery.find = Sizzle;
-jQuery.expr = Sizzle.selectors;
-jQuery.expr[":"] = jQuery.expr.pseudos;
-jQuery.unique = Sizzle.uniqueSort;
-jQuery.text = Sizzle.getText;
-jQuery.isXMLDoc = Sizzle.isXML;
-jQuery.contains = Sizzle.contains;
+// jQuery methods
+$.ready = function(fn) {
+    $(document).ready(fn);
+}
+$.fn.load = $.fn.ready;
+$.load = $.ready;
 
-return jQuery;
+$.fn.click = function(cb) {
+    if(this[0] === null) return null;
+    $(this).on("click", cb);
+}
 
-});
+// Implement a tiny data store
+$.data = function(elem, target) {
+    return $.grab(elem).data($("body").data("cshid")+target);
+}
+
+$.fn.toggleClass = function(cl) {
+    if(this.hasClass(cl)) {
+        this.removeClass(cl);
+    } else {
+        this.addClass(cl);
+    }
+}
+
+// Implement the way to get native Element objects
+// Beware, its minimal.
+$.grab = function(el) {
+    var raw = $();
+    if(typeof el == "object") {
+        raw.length=1;
+        raw[0]=el;
+    } else if(typeof el == "array") {
+        raw.length = el.length;
+        raw[0] = el;
+    } else {
+        throw new TypeError("Expected argument 1 to be an object or array. Got "+typeof(el)+" instead.");
+    }
+    return raw;
+}
+
+// Export
+module.exports = $;
+global.$ = $;
+global.jQuery = $;

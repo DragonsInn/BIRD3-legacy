@@ -1,5 +1,6 @@
 <?php class BIRD3MarkdownEditor extends CWidget {
     public $placement="bottom";
+    public $taClass = "";
     public $context;
     public $model;
     public $attribute;
@@ -8,14 +9,23 @@
     public $useWell=true;
     public $editorPlacement="bottom";
     public $groupSize="sm";
+    public $placeholder="";
+    public $height="200px";
 
     public function run() {
-        $this->controller->rqCaret=true;
-        $this->render("BIRD3MarkdownEditorView",[
-            "form"=>$this->context,
-            "model"=>$this->model,
-            "attr"=>$this->attribute,
-            "wid"=>CHtml::activeId($this->model, $this->attribute)
-        ]);
+        # Render a div that will contain the editor.
+        echo CHtml::tag("div", [
+            "id"=>CHtml::activeId($this->model, $this->attribute),
+            #"id"=>$wid,
+            "class"=>($this->useWell ? "well well-sm" : ""),
+            "data-b3me"=>true,
+            "data-name"=>CHtml::activeId($this->model, $this->attribute),
+            "data-ta-class"=>$this->taClass,
+            "data-text-display"=>$this->textDisplay,
+            "data-group-size"=>$this->groupSize,
+            "data-placeholder"=>htmlspecialchars($this->placeholder),
+            "data-placement"=>htmlspecialchars($this->placement),
+            "data-editor-placement"=>htmlspecialchars($this->editorPlacement)
+        ], "");
     }
 }

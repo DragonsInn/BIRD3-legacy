@@ -1,63 +1,70 @@
 // jQuery
 // Export jQuery to window
-var $ = require("jquery");
-global.$ = $;
-global.jQuery = $;
+var $ = require("./jquery");
+
 // Plugin
-require("jquery.stickyFooter");
-require("jquery-fracs");
 //require("jQuery.mmenu");
 
 // Bootstrap. Font Awesome or Glyphicons? I need to choose.
-require("./bootstrapper.js");
+// FIXME: Split into a smaller file or allow hot-loading.
 require("./bootstrapper.scss");
-require("font-awesome/css/font-awesome.css");
-
-// metro UI. I need a better thing...
-require("metro-buttons/css/m-buttons.css");
-require("metro-buttons/css/m-icons.css");
-
-// Highlight.js
-// The server can pre-render code, so we should have this.
-require("highlight.js/styles/hybrid.css");
+$.ready(function(){ require("./bootstrapper.js"); });
 
 // Theme
-//require("dragonsinn/js/panels.js");
+require("dragonsinn/js/panels.js");
 require("dragonsinn/css/bs-extra.css");
 require("dragonsinn/css/main.ws.php");
+//require("dragonsinn/Birdcons/Birdcons.font.js");
+require("highlight.js/styles/hybrid.css");
 
-// Requires
-var app = require("./BIRD3App");
-// Import the main class.
-// This file is loaded /before/ the main class is.
-// In general, its a good idea to @class stuff.
-@class BIRD3App;
+// Hotfix for jquery.fracs
+var vq = require("ally.js/src/dom/visible-quotient");
+$.fn.visibility = function() {
+    return vq(this[0]);
+}
 
-$(function(){
-    var BIRD3 = [[BIRD3App alloc] init];
-    $("#footer").stickyFooter({content:"#MainPage"});
-    if($("body").find('[data-toggle="tooltip"]').length > 0)
-        $('[data-toggle="tooltip"]').tooltip();
-    if($("body").find('[data-toggle="popover"]').length > 0)
-        $('[data-toggle="popover"]').popover();
+function makeFooter() {
+    var fullHeight = 0
+        + $("#MainPage").height()
+        + $("footer").height();
+    if(window.innerHeight < fullHeight) return $('footer').css('margin-top',"auto");
+    if($("body").height() > $("#MainPage").height()) {
+        $('footer').css('margin-top',(
+            window.innerHeight
+            - $('#MainPage').height()
+            - $('footer').height()
+        )+"px");
+    } else {
+        $('footer').css('margin-top',"auto");
+    }
+}
+window.addEventListener("resize", makeFooter);
+$.ready(makeFooter);
 
-    // I can haz code?
-    /* FIXME: PHP can pre-render that. Should only be used in Chat.
-    if($("body").find("pre code").length > 0) {
-        require(["highlight.js"], function(hljs){
-            console.log("Highlight.JS activated");
-            hljs.configure({
-                tabReplace: Array(5).join(" ")
-            });
-            $("body").find("pre code").each(function(i,v){
-                if($(v).prop("class").match(/language-.+/ig) != null) {
-                    // The current block has a language- class.
-                    $(v).addClass("hascode");
-                    $(v).parent().addClass("hascode");
-                    hljs.highlightBlock(v);
-                }
-            });
+// Requires.
+// Using oj-expose in order to get the talkable objects.
+var BIRD3App = require("./BIRD3App");
+var Dialog = require("frameworks/dialog");
+
+$.ready(function(){
+    var BIRD3 = [BIRD3App instance];
+
+    window.alert = function(msg) {
+        // Introduce a convenience method.
+        [Dialog alert:msg];
+    };
+
+    // Patch a default behaviour that is inconsistent between browsers.
+    // It also makes more sense.
+    $("button").each(function(el){
+        el.type="button";
+    })
+
+    // BIRD3 Markdown editor
+    if($("body").find('div[data-b3me]').length > 0) {
+        require(["BIRD3/js/editor"], function(editor){
+            // Easy.
+            editor();
         });
     }
-    */
 });

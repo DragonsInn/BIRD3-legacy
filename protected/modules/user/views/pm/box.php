@@ -42,7 +42,7 @@
                 <h4 class="media-heading">
                     <?=Link::create(
                         $this->createUrl("/user/pm/show",[
-                            "mid"=>$convo->id
+                            "conv_id"=>$convo->id
                         ]
                     ))->value($convo->subject)?>
                 </h4>

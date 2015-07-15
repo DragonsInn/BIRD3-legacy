@@ -1,3 +1,7 @@
+[app]
+name = "Dragon's Inn"
+email = ingwie2000@gmail.com
+
 [BIRD3]
 ; The host the server runs on
 host = 127.0.0.1
@@ -12,25 +16,26 @@ url = localhost
 baseUrl = /
 
 ; The user/group that the server should run under
-userName = myuser
-groupName = myusergroup
+userName = www-data
+groupName = www-data
 
 [Yii]
 ; Enable, when Yii should use path-style URLs.
-; Reminder: Not every webserver supports it! But the BIRD3 internal one does.
+; Reminder: Not every webserver supports it!
 use_path_urls = 0
 
 [DB]
-user = your_username
-pass = your_password
-mydb = your_database
+; The username, password and database to use.
+user = bird3
+pass = birddev
+mydb = bird3
 
 [CDN]
 ; Enable?
 enable = no
 
 ; Which hostname?
-url = cdn.yourdomain.com
+url = localhost
 
 ; If disabled, this path will be used on the other hostname instead.
 baseUrl = /cdn
@@ -40,11 +45,14 @@ port = 8200
 
 ; EMail notification configuration.
 ; Given to nodemailer.createTransport().
-; Service can be of: https://github.com/andris9/nodemailer-wellknown#supported-services
 [EMail]
+;port = 25
+;host = smtp.google.com
+;secure = true
+; Service can be of: https://github.com/andris9/nodemailer-wellknown#supported-services
 service = gmail
-auth.user = you@example.com
-auth.pass = yoursecretpassword
+auth.user = your@gmail.com
+auth.pass = password-goes-here
 
 [API]
 ; Twitter
@@ -52,10 +60,10 @@ twitter.key = UNKNOWN
 
 ; CloudFlare
 cloudflare.enable = no
-cloudflare.email = you@example.com
+cloudflare.email = xxx
 cloudflare.token = xxx
 
 ; Facebook
 
 ; Cleantalk
-cleantalk.key = 2agy8a4asuzy
+;cleantalk.key = 

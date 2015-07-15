@@ -20,22 +20,16 @@ if(typeof global.config == "undefined") {
 }
 config.maxFileSize = 1024*10;
 
-var __debug = global.__debug || false;
-//var _jquery = "jquip/dist/jquip.all"; // 154 kb
-//var _jquery = "zepto/src/zepto"; // 135 kb
-//var _jquery = "cash/dist/cash.js"; // 129 kb
-//var _jquery = "jquery"; // 207 kb
-var _jquery = path.join( config.base, "web-lib/jquery" );
+var __debug = global.__debug || process.env["BIRD3_DEBUG"]==true || false;
+var _jquery = path.join( config.base, "web-lib/misc/jquery" );
 
 // Webpack: Load plugins
 var webpack = require("webpack");
-var wpConf = require("./webpack.config");
 var extractText = require("extract-text-webpack-plugin");
 var HashPlugin = require('hash-webpack-plugin');
-var bowerwp = require("bower-webpack-plugin");
-var stripper = require("strip-loader").loader;
 
 // postcss
+var mergeRules = require('postcss-merge-rules')
 
 // Webpack: make instances
 // Generate the general webpack file - make it a lil' lib.
@@ -199,16 +193,7 @@ module.exports = {
                 "bootstrapaccessibilityplugin/src"
             ),
             jquery: _jquery,
-            "jquery.js": path.join(
-                config.base,
-                "bower_components",
-                "jquery/src"
-            ),
             ws: "ws/lib/browser",
-            "highlight.js$": path.join(
-                config.base,
-                "web-lib/highlight.js"
-            ),
             "LDT": path.join(
                 config.base,
                 "web_modules/LDT.webpack.js"
@@ -222,13 +207,13 @@ module.exports = {
                 test: /\.css$/,
                 loader: extractText.extract(
                     "style",
-                    "css!postcss?"+cssq
+                    "css?"+cssq+"!postcss?"+cssq
                 )
             },{ // Extract Sassy CSS
                 test: /\.scss$/,
                 loader: extractText.extract(
                     "style",
-                    "css!postcss?"+cssq+"!sass?"+sassq
+                    "css?"+cssq+"!postcss?"+cssq+"!sass?"+sassq
                 )
             },{ // WingStyle -> CSS
                 test: /\.ws\.php$/,
@@ -236,7 +221,7 @@ module.exports = {
                     "style",
                     [
                         "css?"+cssq,
-                        "postcss",
+                        "postcss?"+cssq,
                         path.join(__dirname,"wingstyle-loader.js")
                     ].join("!")
                 )
@@ -265,7 +250,7 @@ module.exports = {
                 loader: "json",
             },{ // OJ -> JS
                 test: /\.oj$/,
-                loader: "oj?warn-unknown-ivars=&-warn-unknown-selectors"
+                loader: "oj?-warn-unknown-ivars&-warn-unknown-selectors"
             },{ // Webfont generator
                 test: /\.font\.(js|json)$/,
                 loader: "fontgen"
@@ -275,7 +260,7 @@ module.exports = {
             /\.(min|bundle|pack)\.js$/,
         ]
     },
-    postcss: [],
+    postcss: [mergeRules()],
     plugins: [
         //progress,
         dedupe,

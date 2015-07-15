@@ -3,7 +3,7 @@
         return parent::model($className);
     }
     public function tableName() {
-        return "{{user_pm_msg}}";
+        return "user_pm_msg";
     }
     public function primaryKey() { return "id"; }
 
@@ -36,7 +36,7 @@
         if($this->isNewRecord) {
             $this->sent = time();
         }
-        parent::onBeforeSave();
+        parent::beforeSave();
         return true;
     }
 }

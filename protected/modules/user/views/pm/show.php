@@ -7,6 +7,20 @@
     <small>Started by: <?=$convo->owner->username?></small>
 </h3>
 
+<?php if(!empty($errors)): ?>
+    <p style="color:red;">Could not send your message:</p>
+    <ul>
+        <?php foreach($errors as $sect=>$msgs): ?>
+            <?=$sect?>
+            <ul>
+                <?php foreach($msgs as $msg): ?>
+                    <li><?=$msg?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+
 <div class="media">
     <div class="media-left">
         <?=Image::create(User::avatarUrl())
@@ -19,12 +33,10 @@
             # Sneak-form!
             $form = $this->beginWidget('CActiveForm', array(
                 'id'=>'bird3-reply-to-msg',
-                'action'=>$this->createUrl("compose"),
                 'enableAjaxValidation'=>false,
                 'enableClientValidation'=>true,
                 'htmlOptions'=>[
-                    'name'=>'bird3-reply-to-msg',
-                    #"class"=>"form-horizontal"
+                    'name'=>'bird3-reply-to-conv',
                 ]
             ));
             $this->widget("BIRD3MarkdownEditor",[
@@ -36,7 +48,8 @@
                 "placeholder"=>"Use this to reply to the conversation.",
                 "taClass"=>"form-control"
             ]);
-            echo CHtml::hiddenField("conv_id",$convo->id);
+            $scm = Yii::app()->securityManager;
+            echo CHtml::hiddenField("conv_id", $scm->hashData($convo->id));
             echo CHtml::submitButton("Send",[
                 "class"=>"btn btn-info"
             ]);
@@ -54,7 +67,17 @@
             ?>
         </div>
         <div class="media-body">
-            <p class="media-heading">By: <?=$msg->sender->username?> @ time</p>
+            <?php $del = "";
+                if($msg->from_id === User::me()->id) {
+                    $del = CHtml::link("X",[
+                        "deleteMessage",
+                        "message_id"=>$msg->id
+                    ],[
+                        "class"=>"btn btn-danger btn-xs"
+                    ]);
+                }
+            ?>
+            <p class="media-heading"><?=$del?> By: <?=$msg->sender->username?> @ time</p>
             <div><?=$msg->body?></div>
         </div>
     </div>

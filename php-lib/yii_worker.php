@@ -19,8 +19,9 @@ $_ENV=array_merge($_ENV, $_SERVER);
 
 // Configure events
 AppServer::on("start", function($w){
+    if(function_exists("setproctitle")) setproctitle("BIRD3: Workerman Worker");
     $pid = getmypid();
-    Log::info("BIRD3 worker@$pid is online!");
+    #Log::info("BIRD3 worker@$pid is online!");
 });
 AppServer::on("stop", function($w){
     $pid = getmypid();

@@ -4,6 +4,7 @@
 
 // Variables...
 @import "bootstrap/variables";
+@import "bootstrapaccessibilityplugin/src/sass/partials/variables";
 @import "bootswatch/cyborg/variables";
 //@import "bootswatch/cyborg/bootswatch";
 
@@ -13,12 +14,7 @@
 // Reset and dependencies
 @import "bootstrap/normalize";
 
-// FIXME: Do we need them?
-// FIXME: Totally broken...
-//@import "bootstrap/glyphicons";
-
 // Core CSS
-
 @import "bootstrap/scaffolding";
 @import "bootstrap/type";
 @import "bootstrap/code";
@@ -56,7 +52,6 @@
 
 // Accessibility
 
-@import "bootstrapaccessibilityplugin/src/sass/partials/variables";
 @import "bootstrapaccessibilityplugin/src/sass/partials/mixins";
 @import "bootstrapaccessibilityplugin/src/sass/partials/alerts";
 @import "bootstrapaccessibilityplugin/src/sass/partials/buttons";

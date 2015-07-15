@@ -15,6 +15,10 @@ var express = require("express"),
         appName: config.app.name,
         workerController: require.resolve("./socketcluster/worker"),
         storeController: require.resolve("./socketcluster/store"),
+        storeOptions: {
+            host: '127.0.0.1',
+            port: 6379
+        },
         socketChannelLimit: 100,
         rebootWorkerOnCrash: config.debug || false
     });

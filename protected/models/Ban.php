@@ -3,7 +3,7 @@
         return parent::model($className);
     }
     public function tableName() {
-        return "{{bans}}";
+        return "bans";
     }
     public function primaryKey() { return "id"; }
 

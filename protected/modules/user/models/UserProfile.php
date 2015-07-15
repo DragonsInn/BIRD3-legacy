@@ -4,7 +4,7 @@
         return parent::model($className);
     }
     public function tableName() {
-        return "{{user_profile}}";
+        return "user_profile";
     }
     public function primaryKey() { return "uID"; }
 
@@ -23,6 +23,9 @@
      * ? @text signature    | Signature for forum
      * @data avatar         | Image data representing the avvie.
      */
+
+    public $about="";
+    public $avvie_ext="";
 
     public function relations() {
         return array(

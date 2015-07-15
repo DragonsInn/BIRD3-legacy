@@ -1,8 +1,9 @@
 var sh = require('shelljs');
 var spawn = require("child_process").spawn;
 var fs = require("fs");
+var BIRD3 = require("./communicator")(null, require("redis"));
 
-module.exports.run = function(conf) {
+module.exports.run = function(conf, house) {
     // Try to find PHP...
     var phpBin, config = conf.config;
     if(!sh.which("php") && !sh.which("php-cli")) {
@@ -33,6 +34,11 @@ module.exports.run = function(conf) {
         php.on("exit", function(e){
             BIRD3.emitRedis("bird3.exit","PHP exited: "+e);
             process.exit(1);
+        });
+
+        house.addShutdownHandler(function(ctx,n){
+            (ctx.event == "exit") && php.kill();
+            n();
         });
     }
 }

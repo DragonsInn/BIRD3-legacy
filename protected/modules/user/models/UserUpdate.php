@@ -4,7 +4,7 @@
         return parent::model($className);
     }
     public function tableName() {
-        return "{{user_update}}";
+        return "user_update";
     }
     public function primaryKey() { return "id"; }
     public function relations() {

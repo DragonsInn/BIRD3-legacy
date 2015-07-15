@@ -19,7 +19,7 @@
             #"id"=>$wid,
             "class"=>($this->useWell ? "well well-sm" : ""),
             "data-b3me"=>true,
-            "data-name"=>CHtml::activeId($this->model, $this->attribute),
+            "data-name"=>CHtml::activeName($this->model, $this->attribute),
             "data-ta-class"=>$this->taClass,
             "data-text-display"=>$this->textDisplay,
             "data-group-size"=>$this->groupSize,

@@ -13,7 +13,6 @@ module.exports = function(php) {
     // Post-Processor
     php.use("postprocess",function(ctx,next){
         // HighlightJS
-        console.log("Gonna run HLJS...");
         var $ = cheerio.load(ctx.php.body, {decodeEntities: false});
         if($("body").find("pre code").length > 0) {
             $("body").find("pre code").each(function(i,v){

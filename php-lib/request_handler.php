@@ -1,4 +1,4 @@
-<?php
+<?php if(function_exists("setproctitle")) setproctitle("BIRD3: Workerman Master");
 $root=dirname(__FILE__)."/..";
 require_once "$root/php_modules/autoload.php";
 require_once "$root/php_modules_ext/ParseArgs.php";
@@ -100,4 +100,5 @@ if($argv[1] == "start" || $argv[1] == "restart") {
 }
 
 # Start the running.
+\Workerman\Worker::$stdoutFile = "php://stdout";
 \Workerman\Worker::runAll();

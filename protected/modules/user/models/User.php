@@ -34,7 +34,7 @@
         return parent::model($className);
     }
     public function tableName() {
-        return "{{users}}";
+        return "users";
     }
     public function primaryKey() { return "id"; }
 

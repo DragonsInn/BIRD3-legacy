@@ -1,14 +1,10 @@
 // jQuery
 // Export jQuery to window
-var $ = require("./jquery");
+var $ = require("./misc/jquery");
 
-// Plugin
-//require("jQuery.mmenu");
-
-// Bootstrap. Font Awesome or Glyphicons? I need to choose.
-// FIXME: Split into a smaller file or allow hot-loading.
-require("./bootstrapper.scss");
-$.ready(function(){ require("./bootstrapper.js"); });
+// Bootstrap.Native
+require("./misc/bootstrapper.scss");
+$.ready(function(){ require("./misc/bootstrapper.js"); });
 
 // Theme
 require("dragonsinn/js/panels.js");
@@ -56,9 +52,12 @@ $.ready(function(){
 
     // Patch a default behaviour that is inconsistent between browsers.
     // It also makes more sense.
+    // FIXME: It...breaks things.
+    /*
     $("button").each(function(el){
         el.type="button";
     })
+    */
 
     // BIRD3 Markdown editor
     if($("body").find('div[data-b3me]').length > 0) {

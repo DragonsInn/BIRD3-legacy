@@ -5,13 +5,14 @@ Error.stackTraceLimit = Infinity;
 var args = require("optimist").argv,
     me = require("package")(__dirname),
     redis = require("redis"),
-    getports = require("getports");
+    getports = require("getports"),
+    async = require("async"),
+    child_process = require("child_process");
 
 // Clustering
 var PowerHouse = require('powerhouse'),
     cluster = require("cluster"),
-    cpus = require("os").cpus().length,
-    sticky = require("sticky-session");
+    cpus = require("os").cpus().length;
 
 // Initialize the config object.
 var ini = require("multilevel-ini"),
@@ -30,6 +31,7 @@ global.log = process.logger = mylog = require("./node-lib/logger.js")(config.bas
 process.logger.crit = process.logger.error;
 process.logger.notice = process.logger.info;
 
+
 var house = PowerHouse({
     title: "BIRD3: Main",
     // All other processes likely only need one but Http will want more
@@ -40,65 +42,137 @@ var house = PowerHouse({
             title: "BIRD3: Hprose+Workerman",
             exec: "./node-lib/workerman_worker.js",
             amount: 1,
-            config: global.config
+            config: global.config,
+            reloadable: false
         },{
             title: "BIRD3: Front-End",
             //exec: "./node-lib/frontent_worker.js",
             exec: "./node-lib/socketcluster_worker.js",
             type: "child",
             config: global.config,
-            //amount: config.maxWorkers
+            //amount: config.maxWorkers,
+            reloadable: false
         },{
             title: "BIRD3: WebPack",
             exec: "./node-lib/webpack_worker.js",
             type: "cluster",
-            config: global.config.wpKey
+            config: global.config.wpKey,
+            reloadable: true
         }
     ],
     master: function(conf, run) {
-        global.BIRD3 = require("./node-lib/communicator.js")(null, redis);
-        require("./node-lib/error_handler.js")();
-        mylog.info("Starting: BIRD@"+config.version);
-        var sub = redis.createClient();
-        var redisClient = redis.createClient();
-        sub.on("error", function(e){
-            console.error(e.stack);
-            process.exit(1);
-        });
-        sub.subscribe("BIRD3");
-        sub.on("message", function(ch, data){
-            if(ch=="BIRD3") {
-                var o = JSON.parse(data);
-                if(o.name=="bird3.exit") {
-                    mylog.error("Shutting down the entire server.");
-                    process.kill(process.pid, "SIGTERM");
-                }
-                if(o.name=="rpc.log") {
-                    try {
-                        mylog[o.data.method].apply(mylog, o.data.args);
-                    } catch(e) {
-                        mylog.error("Unhandled call: %s",JSON.stringify(o));
+        async.parallel({
+            mysql: function(cb) {
+                log.info("Testing MySQL...");
+                var conn = require("mysql").createConnection({
+                    host:       "localhost",
+                    user:       config.DB.user,
+                    password:   config.DB.pass,
+                    database:   config.DB.mydb
+                });
+                conn.connect(function(err){
+                    if(err) {
+                        log.error("MySQL failed.");
+                        cb(err);
+                    } else {
+                        log.info("MySQL works.");
+                        cb();
                     }
-                }
+                });
+            },
+            redis: function(cb) {
+                log.info("Testing Redis...");
+                var client = redis.createClient();
+                client.on("ready", function(){
+                    log.info("Redis works.");
+                    cb(null, client);
+                });
+                client.on("error", function(err){
+                    log.error("Redis failed.");
+                    cb(err);
+                });
+            },
+            php: function(cb) {
+                log.info("Testing PHP...");
+                child_process.exec("php -m", function(error, stdout, stderr){
+                    if(error) {
+                        log.error("PHP failed.");
+                        return cb(error);
+                    }
+                    var modules = require("ini").parse(stdout);
+                    var pm = modules["PHP Modules"];
+                    var reqs = [
+                        // hprose
+                        "hprose","sockets",
+                        // For workerman
+                        "sysvmsg","sysvsem","sysvshm","pcntl",
+                        // BIRD3
+                        "mysql","runkit","redis","PDO",
+                    ];
+                    var is_working = false;
+                    reqs.forEach(function(v,i){
+                        if(!pm[v]) {
+                            log.error("PHP failed.");
+                            is_working = false;
+                            return cb(new Error("PHP extension '"+v+"' not found."));
+                        } else is_working = true;
+                    });
+                    if(is_working) {
+                        log.info("PHP works.");
+                        return cb();
+                    }
+                });
             }
-        });
-        getports(6, function(err, ports){
+        }, function(err, res){
             if(err) {
-                mylog.error("Error finding a port: "+err);
+                log.error(err);
                 process.exit(1);
+            } else {
+                global.BIRD3 = require("./node-lib/communicator.js")(null, redis);
+                require("./node-lib/error_handler.js")();
+                mylog.info("Starting: BIRD@"+config.version);
+                var sub = redis.createClient();
+                var redisClient = res.redis;
+                sub.on("error", function(e){
+                    console.error(e.stack);
+                    process.exit(1);
+                });
+                sub.subscribe("BIRD3");
+                sub.on("message", function(ch, data){
+                    if(ch=="BIRD3") {
+                        var o = JSON.parse(data);
+                        if(o.name=="bird3.exit") {
+                            mylog.error("Shutting down the entire server.");
+                            process.kill(process.pid, "SIGTERM");
+                        }
+                        if(o.name=="rpc.log") {
+                            try {
+                                mylog[o.data.method].apply(mylog, o.data.args);
+                            } catch(e) {
+                                mylog.error("Unhandled call: %s",JSON.stringify(o));
+                            }
+                        }
+                    }
+                });
+                getports(6, function(err, ports){
+                    if(err) {
+                        mylog.error("Error finding a port: "+err);
+                        process.exit(1);
+                    }
+                    /** All services use Hprose TCP to dish out an internal API
+                        0: Hprose for Yii
+                        1: PHP statistics, workerman
+                        2: Start, stop, query backups
+                        3: Talk to MySQL
+                        4: Chat API
+                        5: trigger update
+                    */
+                    mylog.info("Ports to be used: "+JSON.stringify(ports));
+                    global.config.hprosePort = ports[0];
+                    redisClient.set("bird3.hprosePort", ports[0]);
+                    run();
+                });
             }
-            /** All services use Hprose TCP to dish out an internal API
-                0: Hprose for Yii
-                1: PHP statistics, workerman
-                2: Start, stop, query backups
-                3: Talk to MySQL
-                4: Chat API
-                5: trigger update
-            */
-            mylog.info("Ports to be used: "+JSON.stringify(ports));
-            global.config.hprosePort = ports[0];
-            redisClient.set("bird3.hprosePort", ports[0]);
-            run();
         });
     }
 });

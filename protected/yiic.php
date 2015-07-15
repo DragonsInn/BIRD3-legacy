@@ -10,12 +10,9 @@ if($pid === -1) {
     exit(0); # Good bye npm debug log. Bah. >.<
 }
 
-// change the following paths if necessary
-$yiic=dirname(__FILE__).'/../php_modules/autoload.php';
-require_once($yiic);
+require_once(dirname(__FILE__).'/../php_modules/autoload.php');
 
-$config=dirname(__FILE__).'/config/console.php';
-$c = require_once($config);
+$c=dirname(__FILE__).'/config/console.php';
+$config = require_once($c);
 
-$cli = Yii::createConsoleApplication($c);
-$cli->run();
+require_once(dirname(__FILE__)."/../php_modules/yiisoft/yii/framework/yiic.php");

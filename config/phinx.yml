@@ -1,0 +1,13 @@
+paths:
+    migrations: %%PHINX_CONFIG_DIR%%/../migrations
+
+environments:
+    default_migration_table: phinxlog
+    default_database: BIRD3
+    BIRD3:
+        adapter: mysql
+        host: localhost
+        name: %%PHINX_DB_mydb%%
+        user: %%PHINX_DB_user%%
+        pass: %%PHINX_DB_pass%%
+        charset: utf8

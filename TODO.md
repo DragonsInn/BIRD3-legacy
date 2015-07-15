@@ -1,5 +1,5 @@
 ## ToDo
-- [ ] Add functionality to ban system
+- [X] Add functionality to ban system
 - [ ] User module
     * [X] Profile page
     * [X] Associate User to permissions and settings
@@ -11,16 +11,20 @@
         * [-] Let user upload an avatar.
             - FIXME: `connect-yii`'s file uploading is NOT to be considered stable!!
             - Almost fixed: the new service will handle it.
+            - New service needs testing. :)
         * [X] Edit User, UserProfile and Usersettings.
     * [X] Using/Updating `last_visited` and `create_at`
         - Damn, a typo im not gonna get rid of. Should be `created_at`...
     * [X] Avatar support
     * [X] Cacheable avatars
     * [X] Correct User DB relationships
-    * [ ] Private Messaging
+    * [X] Private Messaging
         * [X] Add models
-        * [ ] Implement PM logic
-            * Almost!
+        * [X] Implement PM logic
+            - [X] Create conversation
+            - [X] View conversation
+            - [X] Reply to conversation
+            - [X] Opt-out of conversation (= Delete when 0 members)
     * [X] E-Mail notifications
         * [X] NodeJS scheduler for notifications
         * [X] Plant notifications via Yii.
@@ -37,25 +41,19 @@
         - View profile
         - See blog
         - See gallery
-- [ ] Front-end caching, part 2
-    * [ ] Optimize sent cache headers
+- [X] Front-end caching, part 2
+    * [X] Optimize sent cache headers
         - Etag? Cache-control? Which one to use at what?
-- [ ] Interaction
-    * [X] Connecting to Socket.IO to talk to backend
-    * [ ] Use Deliver.js to transmit files
-        - Or...not? o.o
-    * [?] Verify that `connect-yii` does uploads
-        - [ ] Obselete. The BIRD3 Hprose service needs to learn it now!
-- [ ] `bird3-hprose`
+        - ETag on JS, Cache-Control + Expires on anything else.
+- [X] `bird3-hprose`
     * [X] Implement basic structure
         - [X] Workerman
         - [X] Hprose
         - [X] Workerman + Hprose = `hprose-workerman`!
-    * [ ] Fine-tuned error handling
-    * [MAYBE] 2-way commication (proxy `res` and `req` functions?)
-        - That...is just plain insane, but not impossible.
-    * [ ] PHP logs to parent
+    * [X] Fine-tuned error handling
+    * [X] PHP logs to parent
         - Probably gonna do it via Redis after all...
+        - Using REDIS indeed. Workerman forbids STDOUT usage.
 - [ ] In-Site docs
     * [ ] Proxy the Wiki into a /docs module
         * [ ] Map the URL

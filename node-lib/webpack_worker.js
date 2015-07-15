@@ -37,5 +37,4 @@ module.exports.run = function(conf) {
         var hash = out.hash;
         redis.set(key, hash);
     });
-
 }

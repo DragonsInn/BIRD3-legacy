@@ -228,7 +228,6 @@ CREATE TABLE IF NOT EXISTS `tbl_characterFaves` (
    I 'love' N2N relations...
 */
 CREATE TABLE IF NOT EXISTS `tbl_characterMedia_Rel` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
     -- The media.
     `mID` int(11) NOT NULL,
     -- The character

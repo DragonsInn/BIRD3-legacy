@@ -8,7 +8,11 @@
     }
 
     public function tableName() {
-        return "{{user_pm_conv_members}}";
+        return "user_pm_conv_members";
+    }
+
+    public static function model($className=__CLASS__) {
+        return parent::model($className);
     }
 
 }

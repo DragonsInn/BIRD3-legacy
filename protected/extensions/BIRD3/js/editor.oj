@@ -45,23 +45,25 @@ module.exports = function(){
         var Tooltips = document.querySelectorAll('[data-toggle=tooltip]');
     	[].forEach.call(Tooltips, function (item,index) {
     		var options = {};
-    		options.animation = item.getAttribute('data-animation');
-    		options.placement = item.getAttribute('data-placement');
-    		options.duration = item.getAttribute('data-duration');
-    		options.delay = item.getAttribute('data-delay');
+            var $i = $.grab(item);
+    		options.animation = $i.data('animation');
+    		options.placement = $i.data('placement');
+    		options.duration = $i.data('duration');
+    		options.delay = $i.data('delay');
     		return new Tooltip(item,options);
     	})
 
         // Give this text-area some super bird power!
         // LDT setup. A bit complicated but do-able.
         var rules = {
-            list: /[-\*]\s[^\n\r]*\n?|[0-9]\.\s[^\n\r]*\n?/,
+            //list: /[-\*]\s[^\n\r]*\n?|[0-9]\.\s[^\n\r]*\n?/,
+            list: /(\d\.|\*|\-)\s(.+)/,
             header: /#+\s[^\n\r]*\n?/,
             "bold fix": /[\*\_]{2}[^\_\*\r\n]*[\*\_]{2}?/,
             "italic fix": /[\_\*][^\_\*\r\n]*[\_\*]?/,
             strike: /-[^-]*-?/,
             code: /```[\r\n].*[\r\n]```/,
-            quote: />[^\r\n]*\n?/,
+            quote: />\s[^\r\n]*\n?/,
             mention: /@[^@\r\n]([a-z0-9\-\._]*)?/,
             anchor: /\[[^\r\n\]\[]*\]?\([^\r\n\(\)]*\)?/,
             url: require("url-regex")(), // Dink! :)

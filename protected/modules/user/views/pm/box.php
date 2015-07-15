@@ -39,6 +39,13 @@
                     ->alt("User avatar")?>
             </div>
             <div class="media-body">
+                <div style="position:absolute;top:5px;right:5px;">
+                    <?=CHtml::link("X",[
+                        "leaveConvo","conv_id"=>$convo->id
+                    ],[
+                        "class"=>"btn btn-danger btn-xs"
+                    ])?>
+                </div>
                 <h4 class="media-heading">
                     <?=Link::create(
                         $this->createUrl("/user/pm/show",[

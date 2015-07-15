@@ -2,12 +2,6 @@
     "name": "IngwiePhoenix/bird3-php",
     "private": true,
     "description": "The PHP backend to the Dragon's Inn runtime, BIRD3.",
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/alanmoment/rsa-util.git"
-        }
-    ],
     "require": {
         "php": ">=5.4.0",
         "ext-pcntl": "*",
@@ -25,13 +19,15 @@
         "corneltek/cliframework": "*",
         "voodoophp/paginator": "2.*",
         "kevinlebrun/colors.php": "0.*",
-        "timetoogo/pinq": "~3.1",
         "querypath/QueryPath": "~3.0",
         "phine/path": "~1.0",
         "kohkimakimoto/earray": "~2.2",
         "anahkiasen/html-object": "~1.4",
         "css-crush/css-crush": "dev-master",
-        "alanmoment/rsa-util": "dev-master"
+        "timetoogo/pinq": "^3.2",
+        "yiiext/migrate-command": "^0.8.0",
+        "robmorgan/phinx": "^0.4.4",
+        "jdorn/sql-formatter": "^1.2"
     },
     "config": {
         "vendor-dir": "php_modules/"

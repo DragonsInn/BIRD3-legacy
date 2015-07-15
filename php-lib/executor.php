@@ -60,16 +60,16 @@ if(!file_exists($file) || is_dir($file)) {
     $c=require_once($config);
     Yii::createWebApplication($c);
     set_error_handler("exception_error_handler");
-    try{
+    // try{
         Yii::app()->run();
-    } catch(Exception $e) {
+    /*} catch(Exception $e) {
         # Bring up the sexy Xynu!
         ob_end_clean();
         require_once "../protected/controllers/SiteController.php";
         $Xynu = new SiteController("error");
         Yii::app()->errorHandler->error = $e;
         $Xynu->actionError();
-    }
+    }*/
 } else {
     require_once($file);
 }

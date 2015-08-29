@@ -1,11 +1,6 @@
 <?php
 
-// Stupid time zone .... >.>
-date_default_timezone_set("UTC");
-
-// error handling?
-error_reporting(E_ALL);
-ini_set('display_errors','1');
+require_once "common.php";
 
 // This could be considered the actual runner.
 // It's STDOUT and STDERR become the request output.
@@ -56,7 +51,7 @@ $file = join(DIRECTORY_SEPARATOR, [$config["base"], $_SERVER["REQUEST_URI"]]);
 if(!file_exists($file) || is_dir($file)) {
     // This is a request for Yii.
     $res->header("Content-type: text/html");
-    $config=dirname(__FILE__).'/../protected/config/main.php';
+    $config=dirname(__FILE__).'/../app/config/main.php';
     $c=require_once($config);
     Yii::createWebApplication($c);
     set_error_handler("exception_error_handler");
@@ -65,7 +60,7 @@ if(!file_exists($file) || is_dir($file)) {
     /*} catch(Exception $e) {
         # Bring up the sexy Xynu!
         ob_end_clean();
-        require_once "../protected/controllers/SiteController.php";
+        require_once "../app/controllers/SiteController.php";
         $Xynu = new SiteController("error");
         Yii::app()->errorHandler->error = $e;
         $Xynu->actionError();

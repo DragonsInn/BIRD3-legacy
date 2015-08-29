@@ -22,7 +22,7 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap-sass": "~3.3.4",
+    "bootstrap-sass": "~3.3.5",
     "bootswatch": "3.3.4",
     "textarea-autosize": "~0.4.0",
     "jQuery.mmenu": "~5.0.4",
@@ -47,7 +47,11 @@
     "tabex": "~1.0.0",
     "hammerjs": "~2.0.4",
     "cash": "~1.0.0",
-    "ally.js": "~0.0.6"
+    "ally.js": "~0.0.6",
+    "set-location-hash": "~0.3.0",
+    "l.js": "~0.1.0",
+    "scriptinclude": "~1.0.0",
+    "radialIndicator": "~1.2.0"
   },
   "resolutions": {
     "bootstrap": "3.3.4-cyborg",

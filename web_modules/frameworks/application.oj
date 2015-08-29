@@ -1,0 +1,67 @@
+/**
+    Basic Application interface.
+
+    This must be extended when wanting to use the short StartApplication() function.
+*/
+
+@protocol Application
+@required
+// Parses the URL into useful information, given as arguments.
+-(void)appIsPreparingWithArguments:(object)args;
+
+// The first is called right away, whilst the latter is called as an onLoad method.
+-(bool)appIsLaunching;
+
+// Called after the onLoad method has finished.
+-(void)run;
+
+// if we can, we run this as the user leaves the page.
+-(void)appIsClosing:(Object)e;
+@end
+
+function StartApplication(ClassName) {
+    if(ClassName instanceof String) {
+        var inst = null;
+        for(var i in oj._cls) {
+            console.log(oj._cls[i].name)
+            if(oj._cls[i].name == ClassName) {
+                inst = oj._cls[i].alloc();
+            }
+        }
+    } else {
+        // ClassName is actually an object.
+        var inst = [ClassName alloc];
+    }
+
+    if(inst == null) {
+        throw Error("Could not create application instance.");
+    }
+
+    if([inst respondsToSelector:@selector(init)]) {
+        [inst init];
+    }
+
+    // Grab the URL and argumentize it...
+    var argv = {0:""};
+    var miuri = require("miuri.js").miuri;
+    var url = new miuri(location.hash);
+    argv[0] = location.href;
+    if(location.hash.substr(0,2) == "#!") {
+        for(var x in url.query) argv[x] = url.query[x];
+    }
+    [inst appIsPreparingWithArguments:argv];
+
+    // This should launch right away.
+    [inst appIsLaunching];
+
+    // the dom-ready stuff.
+    require("domready")(function(){ [inst run]; });
+
+    // Routine before the page is left.
+    var hd = function(e) { return [inst appIsClosing:e]; };
+    if (window.addEventListener) {
+        window.addEventListener('beforeunload', hd);
+    } else {
+        window.attachEvent('onbeforeunload', hd);
+    }
+}

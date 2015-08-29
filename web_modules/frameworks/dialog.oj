@@ -1,6 +1,6 @@
-var template = require("./Dialog/template.ejs");
+var template = require("frameworks/Dialog/template.ejs");
 var Modal = require("bootstrap.native/lib/modal-native");
-require("./onEnter");
+require("frameworks/onEnter");
 
 // From: http://stackoverflow.com/questions/6860853/generate-random-string-for-div-id
 function guidGenerator() {
@@ -85,6 +85,3 @@ function render(obj, modify) {
 }
 +(void)error:(string)message {}
 @end
-
-// Export
-module.exports = require("frameworks/oj-expose")([Dialog class]);

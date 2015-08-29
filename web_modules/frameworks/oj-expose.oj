@@ -1,6 +1,0 @@
-// Exposes the actual object to the exports.
-// Usage: module.exports = require("oj-expose")([MyClass class]);
-
-module.exports = function(cls) {
-    return oj._cls[cls.displayName];
-}

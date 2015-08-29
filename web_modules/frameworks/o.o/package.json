@@ -1,0 +1,25 @@
+{
+  "name": "o.o",
+  "version": "0.0.1",
+  "description": "Teeny tiny library. Use as whole or pick pieces - your choice!",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DragonsInn/o.o.git"
+  },
+  "keywords": [
+    "o.o",
+    "blink",
+    "library",
+    "microframework"
+  ],
+  "author": "Ingwie Phoenix <ingwie2000@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DragonsInn/o.o/issues"
+  },
+  "homepage": "https://github.com/DragonsInn/o.o#readme"
+}

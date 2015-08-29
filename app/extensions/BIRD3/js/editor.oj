@@ -1,0 +1,323 @@
+// Modules
+var behave = require("behave.js");
+var LDT = require("LDT");
+require("../css/editor.scss");
+var Tooltip = require("bootstrap.native/lib/tooltip-native");
+
+// Pull the main class in
+@class BIRD3App;
+
+// The actual logic
+module.exports = function(){
+    var App = [BIRD3App instance];
+    $("div[data-b3me]").each(function(el){
+        var $el = $.grab(el);
+        var id = $el.prop("id");
+        var name = $el.data("name");
+        var taClass = $el.data("taClass");
+        var textDisplay = $el.data("textDisplay");
+        var groupSize = $el.data("groupSize");
+        var placeholder = $el.data("placeholder");
+        var placement = $el.data("placement");
+        var editorPlacement = $el.data("editorPlacement");
+
+        var toolbar = require("./views/editor/toolbar.ejs")({
+            wid: id,
+            placement: placement,
+            textDisplay: textDisplay,
+            groupSize: groupSize
+        });
+        var $tb = $.parseHTML(toolbar)[0];
+
+        // Create the input
+        var $ta = $("<textarea></textarea>");
+        $ta.attr("id", id+"_input");
+        $ta.attr("class", taClass);
+        $ta.attr("name", name);
+        $ta.attr("placeholder", placeholder);
+
+        // Pop the components in
+        if(editorPlacement == "top") $el.append($ta);
+        $el.append($tb);
+        if(editorPlacement == "bottom") $el.append($ta);
+
+        // Rendering the Popovers.
+        var Tooltips = document.querySelectorAll('[data-toggle=tooltip]');
+    	[].forEach.call(Tooltips, function (item,index) {
+    		var options = {};
+            var $i = $.grab(item);
+    		options.animation = $i.data('animation');
+    		options.placement = $i.data('placement');
+    		options.duration = $i.data('duration');
+    		options.delay = $i.data('delay');
+    		return new Tooltip(item,options);
+    	})
+
+        // Give this text-area some super bird power!
+        // LDT setup. A bit complicated but do-able.
+        var rules = {
+            //list: /[-\*]\s[^\n\r]*\n?|[0-9]\.\s[^\n\r]*\n?/,
+            list: /(\d\.|\*|\-)\s(.+)/,
+            header: /#+\s[^\n\r]*\n?/,
+            "bold fix": /[\*\_]{2}[^\_\*\r\n]*[\*\_]{2}?/,
+            "italic fix": /[\_\*][^\_\*\r\n]*[\_\*]?/,
+            strike: /-[^-]*-?/,
+            code: /```[\r\n].*[\r\n]```/,
+            quote: />\s[^\r\n]*\n?/,
+            mention: /@[^@\r\n]([a-z0-9\-\._]*)?/,
+            anchor: /\[[^\r\n\]\[]*\]?\([^\r\n\(\)]*\)?/,
+            url: require("url-regex")(), // Dink! :)
+            ip: require("ip-regex")(),
+            email: require("email-regex")(),
+            hashtag: /(#[a-z0-9][a-z0-9\-_]*)/,
+            whitespace: /\s+/,
+            other: /\S+/
+        };
+        window.$r = rules;
+        var parser = new LDT.Parser(rules, true);
+        var ta_l = new LDT($ta[0], parser);
+        // Create behave.js stuff.
+        var ta_b = new behave({ textarea: ta_l.input });
+        // Re-Attach stuff
+        ta_l.input.addEventListener("keydown", ta_l.update);
+        ta_l.input.addEventListener("keyup", ta_l.update);
+        ta_l.input.addEventListener("keypress", ta_l.update);
+        // Auto-resize? Sure.
+        var $ldt = $.grab(ta_l.input).parent().parent();
+        $ta.data("origSize",$ldt.height());
+        window.$lp = parser;
+        ta_l.input.addEventListener("keyup", function(e){
+            var $e = $.grab(e.target);
+            var lh = parseFloat($e.css("line-height"));
+            var size = parseFloat($ta.data("origSize"));
+            var lines = parseInt($e.val().split("\n").length);
+            var inner = (lh*lines);
+            console.log([inner, size]);
+            if(inner > size) {
+                console.log("rez")
+                // The text "went over the borders". Then lets go borderlandsing.
+                $e.parent().parent().css("height", (inner+lh)+"px");
+            } else {
+                $e.parent().parent().removeAttr("style");
+            }
+        });
+
+        var $preview_btn = $el.find("#"+id+"_preview");
+        $preview_btn.click(function(e){
+            e.preventDefault();
+            $.post(BIRD3.baseUrl+"/tools/render_markdown", {
+                md: $ta.val(),
+            },function(data, status, xhr){
+                $html = $(data);
+                var $div = $("<div/>").html($html);
+                BootstrapDialog.show({
+                    title: app.getTitle()+": Markdown preview",
+                    type: BootstrapDialog.TYPE_DEFAULT,
+                    size: BootstrapDialog.SIZE_WIDE,
+                    message: $div,
+                    buttons: [{
+                        label: "OK",
+                        action: function(d) { d.close(); }
+                    }],
+                    onshow: function(dialog) {
+                        dialog.getModalDialog().addClass("modal-lg");
+                    },
+                    onhidden: function(dialog) {
+                        $ta.focus();
+                    }
+                });
+            });
+        });
+        $("#"+id+"_toolbar button").click(function(e){
+            // These buttons should not do anything.
+            e.preventDefault();
+            e.stopPropagation();
+            var o = $(this),
+                ta = $ta,
+                func = o.data("func");
+            if(typeof func != "undefined") {
+                switch(func) {
+                    case "bold":
+                        ta.surroundSelectedText("**","**","collapseToEnd");
+                        ta.focus();
+                    break;
+                    case "italic":
+                        ta.surroundSelectedText("_","_","collapseToEnd");
+                        ta.focus();
+                    break;
+                    case "font_color":
+                        var html_fg = "<p>Choose a font color.</p>"
+                                 + "<p>Type a color name or any valid CSS color description here.</p>"
+                                 + '<input type="text" class="form-control" name="color_val"/>';
+                        BootstrapDialog.show({
+                            title: app.getTitle(),
+                            message: html_fg,
+                            data: {self:o, input:ta},
+                            buttons: [{
+                                label: "Use this!",
+                                action: function(dialog) {
+                                    var val = dialog.getModalBody().find('input[name=color_val]').val();
+                                    console.log("Val is: "+val);
+                                    dialog.getData("input").surroundSelectedText(
+                                        '<font style="color:'+val+';">',
+                                        '</font>',
+                                        'collapseToEnd'
+                                    );
+                                    dialog.close();
+                                }
+                            }],
+                            onhidden: function(dialog) {
+                                dialog.getData("input").focus();
+                            }
+                        });
+                    break;
+                    case "bg_color":
+                        var exurl = "http://example.com/image.jpg";
+                        var html_bg = require("./views/editor/bg_color.ejs")({
+                            url: exurl
+                        });
+                        BootstrapDialog.show({
+                            title: app.getTitle(),
+                            message: html_bg,
+                            data: {self:o, input:ta},
+                            buttons: [{
+                                label: "Use this!",
+                                action: function(dialog) {
+                                    var val = dialog.getModalBody().find('input[name=color_val]').val();
+                                    console.log("Val is: "+val);
+                                    dialog.getData("input").surroundSelectedText(
+                                        '<font style="background:'+val+';">',
+                                        '</font>',
+                                        'collapseToEnd'
+                                    );
+                                    dialog.close();
+                                }
+                            }],
+                            onhidden: function(dialog) {
+                                dialog.getData("input").focus();
+                            }
+                        });
+                    break;
+                    case "code":
+                        ta.surroundSelectedText("`","`","collapseToEnd");
+                        ta.focus();
+                    break;
+                    case "code_block":
+                        var html_cb = require("./views/editor/code_block.ejs");
+                        BootstrapDialog.show({
+                            title: app.getTitle(),
+                            message: html_cb,
+                            data: {self:o, input:ta},
+                            buttons: [{
+                                label: "Use this!",
+                                action: function(dialog) {
+                                    var val = dialog.getModalBody().find('input[name=cl_val]').val();
+                                    dialog.getData("input").surroundSelectedText(
+                                        '```'+val+"\n\n", "```", 'collapseToEnd'
+                                    );
+                                    dialog.close();
+                                }
+                            }],
+                            onhidden: function(dialog) {
+                                dialog.getData("input").focus();
+                            }
+                        });
+                    break;
+                    case "quote":
+                        var sel = ta.getSelection();
+                        if(sel.length == 0) {
+                            // The user has not selected anything, insert some quote lines.
+                            ta.insertText("\n> \n> \n> ", sel.end, "collapseToEnd");
+                        } else {
+                            // The user has selected text. properly quote it.
+                            var lines = sel.text.split("\n");
+                            for(var i=0; i<lines.length; i++) {
+                                lines[i] = "> "+lines[i];
+                            }
+                            var out = lines.join("\n");
+                            ta.replaceSelectedText(out, "collapseToEnd");
+                        }
+                        ta.focus();
+                    break;
+                    case "ol":
+                        var sel = ta.getSelection();
+                        if(sel.length == 0) {
+                            ta.insertText("\n1. \n2. \n3. ", sel.end, "collapseToEnd");
+                        } else {
+                            // The user has selected text. properly quote it.
+                            var lines = sel.text.split("\n");
+                            for(var i=0; i<lines.length; i++) {
+                                lines[i] = (i*1+1)+". "+lines[i];
+                            }
+                            var out = lines.join("\n");
+                            ta.replaceSelectedText(out, "collapseToEnd");
+                        }
+                        ta.focus();
+                    break;
+                    case "ul":
+                        var sel = ta.getSelection();
+                        if(sel.length == 0) {
+                            // The user has not selected anything, insert some quote lines.
+                            ta.insertText("\n- \n- \n- ", sel.end, "collapseToEnd");
+                        } else {
+                            // The user has selected text. properly quote it.
+                            var lines = sel.text.split("\n");
+                            for(var i=0; i<lines.length; i++) {
+                                lines[i] = "- "+lines[i];
+                            }
+                            var out = lines.join("\n");
+                            ta.replaceSelectedText(out, "collapseToEnd");
+                        }
+                        ta.focus();
+                    break;
+                    case "link":
+                        var html_link = require("./views/editor/link.ejs")();
+                        BootstrapDialog.show({
+                            title: app.getTitle(),
+                            message: html_link,
+                            data: {self:o, input:ta},
+                            buttons: [{
+                                label: "Use this!",
+                                action: function(dialog) {
+                                    var url = dialog.getModalBody().find('input[name=url_val]').val();
+                                    var name = dialog.getModalBody().find('input[name=name_val]').val();
+                                    dialog.getData("input").replaceSelectedText(
+                                        '['+name+']('+url+')',
+                                        'collapseToEnd'
+                                    );
+                                    dialog.close();
+                                }
+                            }],
+                            onhidden: function(dialog) {
+                                dialog.getData("input").focus();
+                            }
+                        });
+                    break;
+                    case "image":
+                        var html_imag = require("./views/editor/image.ejs")();
+                        BootstrapDialog.show({
+                            title: app.getTitle(),
+                            message: html_imag,
+                            data: {self:o, input:ta},
+                            buttons: [{
+                                label: "Use this!",
+                                action: function(dialog) {
+                                    var url = dialog.getModalBody().find('input[name=url_val]').val();
+                                    var name = dialog.getModalBody().find('input[name=name_val]').val();
+                                    dialog.getData("input").replaceSelectedText(
+                                        '!['+name+']('+url+')',
+                                        'collapseToEnd'
+                                    );
+                                    dialog.close();
+                                }
+                            }],
+                            onhidden: function(dialog) {
+                                dialog.getData("input").focus();
+                            }
+                        });
+                    break;
+                }
+            }
+        });
+    });
+}

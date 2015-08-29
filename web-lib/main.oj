@@ -1,23 +1,5 @@
-// jQuery
-// Export jQuery to window
-var $ = require("./misc/jquery");
-
-// Bootstrap.Native
-require("./misc/bootstrapper.scss");
-$.ready(function(){ require("./misc/bootstrapper.js"); });
-
-// Theme
-require("dragonsinn/js/panels.js");
-require("dragonsinn/css/bs-extra.css");
-require("dragonsinn/css/main.ws.php");
-//require("dragonsinn/Birdcons/Birdcons.font.js");
-require("highlight.js/styles/hybrid.css");
-
-// Hotfix for jquery.fracs
-var vq = require("ally.js/src/dom/visible-quotient");
-$.fn.visibility = function() {
-    return vq(this[0]);
-}
+// Commons
+require("./misc/common");
 
 function makeFooter() {
     var fullHeight = 0
@@ -37,33 +19,68 @@ function makeFooter() {
 window.addEventListener("resize", makeFooter);
 $.ready(makeFooter);
 
-// Requires.
-// Using oj-expose in order to get the talkable objects.
-var BIRD3App = require("./BIRD3App");
-var Dialog = require("frameworks/dialog");
+// Dialogs!
+#include <application.oj>
+#include <dialog.oj>
 
-$.ready(function(){
-    var BIRD3 = [BIRD3App instance];
+// Introduce a convenience method.
+window.alert = function(msg) {
+    [Dialog alert:msg];
+};
 
-    window.alert = function(msg) {
-        // Introduce a convenience method.
-        [Dialog alert:msg];
-    };
+@implementation BIRD3App {
+    var socket, rpc, rpcr;
+}
+-(void)appIsPreparingWithArguments:(object)args {
+    console.log("args", args);
+}
+-(bool)appIsLaunching {
+    // Talk to the backend
+    require(
+        ["socketcluster-client/index", "avs-rpc", "nanoajax/index"],
+        function(sc, avs, nanoajax){
+            socket = sc.connect();
+            rpc = new avs.scRpc(socket);
+            socket.on('error', function (err){ console.log("Error:", err); });
+            socket.on('connect', function() {
+                socket.on("rpc_init_data", function(methods){
+                    console.log("Methods:",methods);
+                    rpcr = rpc.remote.call(rpc, methods);
+                    // rpcr.foo({baz:"bar"}, console.log); // func(err, res)
+                }).emit("rpc_init");
+            });
 
-    // Patch a default behaviour that is inconsistent between browsers.
-    // It also makes more sense.
-    // FIXME: It...breaks things.
-    /*
-    $("button").each(function(el){
-        el.type="button";
-    })
-    */
+            // Do an AJAX request to Yii to update the user. Easy.
+            // FIXME: Do it via SC?
+            nanoajax.ajax(window.location.pathname+"?"+[
+                "ajax=true", "via=bird3",
+                "action="+encodeURIComponent("user:update_visit")
+            ].join("&"), function(code, res, req){
+                console.log("AJAX",code,res);
+            });
+        }
+    );
 
-    // BIRD3 Markdown editor
-    if($("body").find('div[data-b3me]').length > 0) {
-        require(["BIRD3/js/editor"], function(editor){
-            // Easy.
-            editor();
-        });
-    }
-});
+    return true;
+}
+-(void)run {
+    console.log("Running main logic...");
+}
+
+-(id)appIsClosing:(Event)e {
+    console.log("Closing...", e);
+}
+
+-(BIRD3App)emit:(string)name data:(id)obj {
+    io.emit(name, obj);
+    return self;
+}
+
+-(BIRD3App)on:(string)name callback:(callable)cb {
+    io.on(name, cb);
+    return self;
+}
+@end
+
+// imagine int main(int argc, char** argv){...} :)
+StartApplication([BIRD3App class]);

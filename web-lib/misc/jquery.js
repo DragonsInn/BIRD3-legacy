@@ -32,13 +32,21 @@ $.grab = function(el) {
     if(typeof el == "object") {
         raw.length=1;
         raw[0]=el;
-    } else if(typeof el == "array") {
+    } else if(typeof el == "object" && el.prototype == Array.prototype) {
         raw.length = el.length;
-        raw[0] = el;
+        for(var i in el) {
+            this[i] = el[i];
+        }
     } else {
         throw new TypeError("Expected argument 1 to be an object or array. Got "+typeof(el)+" instead.");
     }
     return raw;
+}
+
+// Hotfix for jquery.fracs
+var vq = require("ally.js/src/dom/visible-quotient");
+$.fn.visibility = function() {
+    return vq(this[0]);
 }
 
 // Export

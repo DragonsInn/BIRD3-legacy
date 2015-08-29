@@ -58,6 +58,11 @@ var house = PowerHouse({
             type: "cluster",
             config: global.config.wpKey,
             reloadable: true
+        },{
+            title: "BIRD3: Misc servers",
+            exec: "./node-lib/misc_worker.js",
+            type: "cluster",
+            reloadable: false
         }
     ],
     master: function(conf, run) {

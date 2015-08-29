@@ -61,6 +61,8 @@
     * [ ] Write a proper credits page.
     * [ ] Terms of Service
     * [X] Roleplaying book/guide (Mostly done by Rayth)
+- [ ] Front-end refactor
+    - [ ] Finalize Preprocessor component for OJ (OhSoJuicy)
 - [ ] Chat
     * [ ] Authentification through `BIRD3User`
     * [ ] Move message passing to NodeJS/Socket.IO

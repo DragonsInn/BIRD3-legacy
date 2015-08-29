@@ -1,5 +1,8 @@
 // core
 var path = require("path");
+var merge = require("merge");
+var glob = require("glob");
+
 
 // Paths
 var cdn = path.join(__dirname,"..","cdn");
@@ -18,10 +21,12 @@ if(typeof global.config == "undefined") {
 } else {
     var config = global.config;
 }
+var base = config.base;
 config.maxFileSize = 1024*10;
 
 var __debug = global.__debug || process.env["BIRD3_DEBUG"]==true || false;
 var _jquery = path.join( config.base, "web-lib/misc/jquery" );
+var _ojr = require.resolve("ojc/src/runtime");
 
 // Webpack: Load plugins
 var webpack = require("webpack");
@@ -30,6 +35,9 @@ var HashPlugin = require('hash-webpack-plugin');
 
 // postcss
 var mergeRules = require('postcss-merge-rules')
+
+// OJ
+var juicy = require("oj-loader").juicy;
 
 // Webpack: make instances
 // Generate the general webpack file - make it a lil' lib.
@@ -71,7 +79,6 @@ var provider = new webpack.ProvidePlugin({
 // Generate bundled CSS. (id, fileName)
 var extractor = new extractText("style","[hash]-[name].css");
 // Compress and press down our JS.
-// FIXME: Learn UglyfyJS
 var uglify = new webpack.optimize.UglifyJsPlugin({
     compress: {
         warnings: false,
@@ -136,6 +143,24 @@ var progress = new webpack.ProgressPlugin(function(p, msg){
 // Try to press down further
 var dedupe = new webpack.optimize.DedupePlugin();
 
+// Generate entries
+var libs = require("array-merger").merge(
+    glob.sync(path.join(__dirname, "../web-lib/*.js")),
+    glob.sync(path.join(__dirname, "../web-lib/*.oj"))
+);
+var entry = {
+    libwebpack: [
+        "domready", _jquery, _ojr,
+        path.join(config.base, "web-lib/misc/common.js"),
+        path.join(config.base, "web-lib/misc/bootstrapper.js"),
+        "dragonsinn/js/panels.js"
+    ]
+};
+libs.forEach(function(file){
+    var name = path.basename(file, path.extname(file));
+    entry[name] = file;
+});
+
 // Return the config
 module.exports = {
     context: config.base,
@@ -143,10 +168,7 @@ module.exports = {
     debug: __debug,
     watchDelay: 1000*5,
     //devtool: "#source-map",
-    entry: {
-        libwebpack: ["ojc/src/runtime"],
-        main: path.join(__dirname, "../web-lib/main.oj")
-    },
+    entry: entry,
     output: {
         // to cdn/app/
         path: app,
@@ -166,8 +188,8 @@ module.exports = {
         root: [
             config.base,
             // Yii
-            path.join(config.base,"protected/modules"),
-            path.join(config.base,"protected/extensions"),
+            path.join(config.base,"app/modules"),
+            path.join(config.base,"app/extensions"),
             path.join(config.base,"themes")
         ],
         modulesDirectories: [
@@ -234,7 +256,7 @@ module.exports = {
                     "file",
                 ].join("!")
             },{ // Fonts
-                test: /\.(eot|woff|woff2|ttf|otf|mp3|wav|ogg)/,
+                test: /\.(eot|woff|woff2|ttf|otf|mp3|wav|ogg|swf)/,
                 loader: "file"
             },{ // Markdown
                 test: /\.md$/,
@@ -261,6 +283,19 @@ module.exports = {
         ]
     },
     postcss: [mergeRules()],
+    oj: {
+        runtime: _ojr,
+        pre: [ juicy.preprocessor() ],
+        options: {
+            preprocessor: {
+                include_path: [
+                    theme,
+                    path.join(base, "web_modules/frameworks"),
+                ],
+                defines: {}
+            }
+        }
+    },
     plugins: [
         //progress,
         dedupe,
@@ -270,6 +305,6 @@ module.exports = {
         bowerProvider,
         extractor,
         assetsp,
-        uglify
+        //uglify
     ]
 };

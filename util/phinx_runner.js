@@ -18,7 +18,7 @@ argv.unshift(path.join(base, "php_modules/bin/phinx"));
 
 // Are we creating?
 if(argv[1] == "create") {
-    argv.push("--template="+path.join(base, "protected/migration_template.phpt"));
+    argv.push("--template="+path.join(base, "app/migration_template.phpt"));
 }
 
 console.log("> php "+argv.join(" "));

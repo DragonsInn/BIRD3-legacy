@@ -1,3 +1,6 @@
+process.on("uncaughtException",function(e){
+    require("fs").writeFileSync("/tmp/myerror.log",e.stack);
+})
 var redisP = require("redis");
 var redis = redisP.createClient();
 var house = require("powerhouse")();

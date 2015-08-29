@@ -58,6 +58,7 @@ function PHPMiddleware() {
                     var arg = {
                         request: {
                             _SERVER: {
+                                REQUEST_METHOD: req.method,
                                 QUERY_STRING: url.parse(req.url).query,
                                 PHP_SELF: req.url,
                                 SCRIPT_FILENAME: file,

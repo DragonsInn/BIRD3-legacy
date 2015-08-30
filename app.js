@@ -127,6 +127,20 @@ var house = PowerHouse({
                         return cb();
                     }
                 });
+            },
+            phpVersion: function(step) {
+                var semver = require("semver");
+                var phpVersion = require("./composer.json").require.php;
+                log.info("Testing PHP version ("+phpVersion+")");
+                child_process.exec('php -r "echo PHP_VERSION;"', function(err, stdout, stderr){
+                    if(err) return step(err);
+                    if(semver.satisfies(stdout, phpVersion)) {
+                        log.info("PHP is version "+stdout);
+                        step();
+                    } else {
+                        step(new Error("PHP is not compatible! Found: "+stdout));
+                    }
+                });
             }
         }, function(err, res){
             if(err) {

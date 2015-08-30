@@ -20,7 +20,8 @@ var st = require("st"),
     multiparty = require("connect-multiparty"),
     responseTime = require("response-time"),
     compression = require("compression"),
-    favicon = require("serve-favicon");
+    favicon = require("serve-favicon"),
+    redis = require("redis").createClient();
 
 var debug = require("debug")("bird3:http");
 
@@ -101,7 +102,7 @@ module.exports = function(app) {
     }));
     app.use("/", multiparty(config.version));
     app.use("/", cookies());
-    /*app.use("/", session({
+    /*app.use(session({
         store: new RedisStore({
             prefix: "BIRD3.Session.",
             db: 0
@@ -111,9 +112,44 @@ module.exports = function(app) {
         resave: false,
         saveUninitialized: true
     }));*/
+    app.use(function(req, res, next){
+        // A throw-together session implementation.
+        var RedisSession = function(rdKey, afterCb){
+            var key = this._key = "BIRD3.Session."+rdKey;
+            var self = this;
+            redis.get(key, function(err, res){
+                if(err) return afterCb(err);
+                try{
+                    self._store = require("phpjs").unserialize(res);
+                }catch(e){
+                    self._store = {};
+                }
+                afterCb(null, self);
+            });
+        }
+        RedisSession.prototype = {
+            _store: {}, _key: null,
+            get: function(k) { return this._store[k]; },
+            set: function(k,v) { this._store[k]=v; },
+            write: function(cb) {
+                cb = cb || function(){};
+                redis.set(this._key, require("phpjs").serialize(this._store), cb);
+            }
+        }
+        if(typeof req.cookies.PHPSESSID != "undefined") {
+            (new RedisSession(req.cookies.PHPSESSID, function(err, sess){
+                if(err) return next(err);
+                req.session = sess;
+                next();
+            }));
+        } else next();
+    });
+    app.use(function(req, res, next){
+        console.log(req.session._store);
+        next();
+    })
 
     // Set up the PHP stuff
-    //app.use("/", php({}));
     var $php = php();
     require("./php_processor")($php);
     app.use("/", $php.middleware);

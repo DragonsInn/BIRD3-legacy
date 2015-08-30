@@ -5,7 +5,7 @@ runkit_function_redefine("headers_sent", '', 'return false;');
 // Header.
 runkit_function_redefine(
     "header", '$to,$replace=false,$status=200',
-    'return HttpResponse::header("Location: $to");'
+    'return HttpResponse::header($to);'
 );
 // We have a custom handler.
 runkit_function_redefine(
@@ -31,6 +31,7 @@ function exception_error_handler($severity, $message, $file, $line) {
     throw new ErrorException($message, 0, $severity, $file, $line);
 }
 #set_error_handler("exception_error_handler");
+ini_set("session.serialize_handler", "php_serialize");
 
 function objectToArray($d) {
     if (is_object($d)) {
@@ -75,10 +76,8 @@ function int2err($ec) {
 
 // Re-Creation
 function bird3_session_regenerate_id($delold=false) {
+    Log::info("Regenerating PHP Session ID (deleteOld=".($delold ? "true":"false").")");
     if(session_status() == PHP_SESSION_ACTIVE) {
-        // See if we have an existing ID...
-        #$sid = session_id();
-
         // in session.c, I saw this:
         // PS(id) = PS(mod)->s_create_sid(&PS(mod_data), NULL TSRMLS_CC);
         // I dunno how to properly reproduce this...
@@ -203,7 +202,6 @@ class YiiApp {
             ];
             $ph = proc_open($cmd, $spec, $pipes, __DIR__,$env);
             $res = new HttpResponse();
-            Log::info("$ $cmd");
             if(is_resource($ph)) {
                 // Get STDOUT/-ERR
                 // @meme All your error are belong to you.
@@ -213,7 +211,6 @@ class YiiApp {
                 $out = "";
                 try {
                     $out = hprose_unserialize($stdout);
-                    Log::info("Request is healthy.");
                 } catch(\Exception $e) {
                     // Yii MIGHT had caught an exception.
                     // Hence, hprose can not parse it...since its raw HTML...

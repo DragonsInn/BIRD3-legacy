@@ -11,6 +11,7 @@ require_once "common.php";
 
 require_once("../php_modules/autoload.php");
 require_once("YiiApp.php");
+require_once("Log.php");
 // Unserialize our stuff.
 $args = hprose_unserialize($_SERVER["CONFIG"]);
 $req = $args["req"];
@@ -45,6 +46,13 @@ register_shutdown_function(function() use($res){
     }
 });
 
+function dump_cookie($start=false) {
+    if(isset($_COOKIE["PHPSESSID"]))
+        Log::info(($start?"Start":"Stop").": {$_SERVER['REQUEST_URI']} -> {$_COOKIE['PHPSESSID']}");
+    else
+        Log::info(($start?"Start":"Stop").": {$_SERVER['REQUEST_URI']} -> NONE");
+}
+
 // Resolve and run the request
 ob_start();
 $file = join(DIRECTORY_SEPARATOR, [$config["base"], $_SERVER["REQUEST_URI"]]);
@@ -55,16 +63,11 @@ if(!file_exists($file) || is_dir($file)) {
     $c=require_once($config);
     Yii::createWebApplication($c);
     set_error_handler("exception_error_handler");
-    // try{
+    try{
         Yii::app()->run();
-    /*} catch(Exception $e) {
-        # Bring up the sexy Xynu!
-        ob_end_clean();
-        require_once "../app/controllers/SiteController.php";
-        $Xynu = new SiteController("error");
-        Yii::app()->errorHandler->error = $e;
-        $Xynu->actionError();
-    }*/
+    } catch(Exception $e) {
+        Log::error("Something bad happened.");
+    }
 } else {
     require_once($file);
 }

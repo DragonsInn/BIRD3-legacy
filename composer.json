@@ -27,7 +27,8 @@
         "timetoogo/pinq": "^3.2",
         "yiiext/migrate-command": "^0.8.0",
         "robmorgan/phinx": "^0.4.4",
-        "jdorn/sql-formatter": "^1.2"
+        "jdorn/sql-formatter": "^1.2",
+        "ircmaxell/password-compat": "^1.0"
     },
     "config": {
         "vendor-dir": "php_modules/"

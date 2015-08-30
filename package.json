@@ -51,6 +51,7 @@
     "hiredis": "^0.4.0",
     "hprose": "1.*",
     "html-loader": "^0.3.0",
+    "html-minify": "^0.3.1",
     "htmlout": "^0.2.0",
     "image-cropper": "^1.0.1",
     "image-shrink": "^0.1.0",

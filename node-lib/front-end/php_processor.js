@@ -1,5 +1,6 @@
 var cheerio = require("cheerio");
 var hljs = require("highlight.js");
+var htmlminify = require("html-minify").minify;
 
 hljs.configure({
     tabReplace: Array(5).join(" ")
@@ -27,6 +28,16 @@ module.exports = function(php) {
             });
         }
         ctx.php.body = $.html();
+        next();
+    });
+    php.use("postprocess", function(ctx, next){
+        if(typeof ctx.req.query.dev == "undefined") {
+            // Minify the HTML
+            ctx.php.body = htmlminify(ctx.php.body, {
+                collapseWhitespace: true,
+                removeComments: true
+            });
+        }
         next();
     });
 }

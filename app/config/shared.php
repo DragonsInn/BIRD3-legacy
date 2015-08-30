@@ -77,23 +77,6 @@ return array(
 		'clientCache'=>array(
 			'class'=>'ClientCache'
 		),
-		'contentCompactor' => array(
-			'class' => 'ext.contentCompactor.ContentCompactor',
-			'options' => array(
-				'compress_css' => !isset($_GET["dev"]), // Compress CSS
-				'strip_comments' => !isset($_GET["dev"]), // Remove comments
-				'keep_conditional_comments' => !isset($_GET["dev"]), // Remove conditional comments
-				'compress_horizontal' => !isset($_GET["dev"]), // Compress horizontally
-				'compress_vertical' => !isset($_GET["dev"]), // Compress vertically
-				'compress_scripts' => !isset($_GET["dev"]), // Compress inline scripts using basic algorithm
-				'line_break' => PHP_EOL, // The type of rowbreak you use in your document
-				'preserved_tags' => array('textarea', 'pre', 'script', 'style', 'code', "p"),
-				'preserved_boundry' => '@@PRESERVEDTAG@@',
-				'conditional_boundries' => array('@@IECOND-OPEN@@', '@@IECOND-CLOSE@@'),
-				'script_compression_callback' => false,
-				'script_compression_callback_args' => array(),
-			)
-		),
 		'browser'=>array(
 			'class'=>'Browser'
 		),

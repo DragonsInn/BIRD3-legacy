@@ -178,12 +178,12 @@
 			BIRD3.load = function(m){
 				console.log('Loading',m);
 				BIRD3.include.call(BIRD3.include, BIRD3.modules[m], function(){
-					console.log('Done',m);
+					//console.log('Done',m);
 				});
 			};
 			// Load the library
 			BIRD3.include(BIRD3.hash('libwebpack.js'), function(){
-				console.log('Library loaded. Go!');
+				console.log('BIRD3 runtime initialized');
 				BIRD3.load(BIRD3.module);
 			});
 		/* js runner end */", CClientScript::POS_HEAD);
@@ -239,21 +239,6 @@
 				}
 			/* End fixture */");
 		}
-	}
-
-	public function render($view, $data = null, $return = false, $options = null) {
-		$output = parent::render($view, $data, true);
-		$compactor = Yii::app()->contentCompactor;
-		if($compactor == null) {
-			throw new CHttpException(500, Yii::t('messages',
-				'Missing component ContentCompactor in configuration.'
-			));
-		}
-		$coutput = $compactor->compact($output, $options);
-		if($return)
-			return $coutput;
-		else
-			echo $coutput;
 	}
 
 	public function redirect($url,$terminate=true,$statusCode=302) {

@@ -3,6 +3,7 @@ var $ = require("./jquery");
 
 // Bootstrap.Native
 require("./bootstrapper.scss");
+require("./bootstrapper.js");
 // Theme
 require("dragonsinn/css/bs-extra.css");
 require("dragonsinn/css/main.ws.php");

@@ -1,10 +1,7 @@
 var $ = require("cash");
 
 // jQuery methods
-$.ready = function(fn) {
-    $(document).ready(fn);
-}
-$.fn.load = $.fn.ready;
+$.ready = require("domready");
 $.load = $.ready;
 
 $.fn.click = function(cb) {

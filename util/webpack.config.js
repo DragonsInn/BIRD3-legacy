@@ -196,12 +196,20 @@ var purifyPlugin = new purify({
         "app/components/views/*.php",
         "app/modules/*/views/*/*.php",
         "app/modules/*/components/views/*.php",
-        "themes/dragonsinn/views/layouts/*.php",
         "app/extensions/*/components/views/*.php",
+        "themes/*/views/layouts/*.php",
         // JavaScript + OJ
         "web-lib/*.js",
         "web-lib/*.oj",
+        "web_modules/frameworks/*.js",
+        "web_modules/frameworks/*.oj",
+        "web_modules/frameworks/*/*.js",
+        "web_modules/frameworks/*/*.oj",
         "app/extensions/*/js/*.js",
+        "themes/*/js/*.js",
+        // EJS
+        "web_modules/frameworks/*/*.ejs",
+        "app/extensions/*/js/*/*.ejs",
         // Specific
         "app/modules/chat/js/*.js",
         //"app/modules/chat/lib/template/*.html",

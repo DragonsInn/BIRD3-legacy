@@ -27,6 +27,7 @@ $.ready(function(){
     tRight.click(function(e) {
         e.stopPropagation();
         e.preventDefault();
+        console.log("o.o")
         disableOthers("right");
         removePushers("right");
         pRight.toggleClass("panel-side-active");

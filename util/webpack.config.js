@@ -2,7 +2,7 @@
 var path = require("path");
 var merge = require("merge");
 var glob = require("glob");
-
+var fs = require("fs");
 
 // Paths
 var cdn = path.join(__dirname,"..","cdn");
@@ -32,6 +32,8 @@ var _ojr = require.resolve("ojc/src/runtime");
 var webpack = require("webpack");
 var extractText = require("extract-text-webpack-plugin");
 var HashPlugin = require('hash-webpack-plugin');
+var cleanPlugin = require('clean-webpack-plugin');
+var purify = require("./purify-plugin");
 
 // postcss
 var mergeRules = require('postcss-merge-rules')
@@ -109,7 +111,15 @@ var uglify = new webpack.optimize.UglifyJsPlugin({
         eval: true
     },
     output: {
-        comments: false
+        space_colon: false,
+        comments: function(node, comment) {
+            var text = comment.value;
+            var type = comment.type;
+            if (type == "comment2") {
+                // multiline comment
+                return /@copyright/i.test(text);
+            }
+        }
     }
 });
 // Querystring for the CSS Loader
@@ -159,6 +169,45 @@ var entry = {
 libs.forEach(function(file){
     var name = path.basename(file, path.extname(file));
     entry[name] = file;
+});
+
+// Banner
+var bannerPlugin = new webpack.BannerPlugin((function(){
+    return require("ejs").render(
+        fs.readFileSync(path.join(__dirname, "banner.ejs"), "utf8"),
+        {
+            version: config.version
+        },{
+            filename: path.join(__dirname, "banner.ejs"),
+            rmWhitespace: false
+        }
+    );
+})(), {raw: true, entryOnly: false});
+
+// Clear plugin
+var clear = new cleanPlugin(["cdn/app"], config.base);
+
+// PurifyCSS
+var purifyPlugin = new purify({
+    basePath: config.base,
+    paths: [
+        // Yii views
+        "app/views/*/*.php",
+        "app/components/views/*.php",
+        "app/modules/*/views/*/*.php",
+        "app/modules/*/components/views/*.php",
+        "themes/dragonsinn/views/layouts/*.php",
+        "app/extensions/*/components/views/*.php",
+        // JavaScript + OJ
+        "web-lib/*.js",
+        "web-lib/*.oj",
+        "app/extensions/*/js/*.js",
+        // Specific
+        "app/modules/chat/js/*.js",
+        //"app/modules/chat/lib/template/*.html",
+        //"app/modules/chat/lib/template/*.php",
+        "app/modules/chat/views/*/*.php"
+    ]
 });
 
 // Return the config
@@ -297,14 +346,18 @@ module.exports = {
         }
     },
     plugins: [
+        // Output
         //progress,
-        dedupe,
-        commonsPlugin,
-        defines,
-        provider,
-        bowerProvider,
-        extractor,
         assetsp,
-        //uglify
+        // Cosmetics
+        clear, bannerPlugin,
+        // Chunking
+        dedupe, commonsPlugin,
+        // Module enhancements
+        defines, provider, bowerProvider,
+        // CSS
+        extractor, purifyPlugin,
+        // JavaScript
+        uglify
     ]
 };

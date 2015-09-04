@@ -32,13 +32,16 @@ module.exports.run = function(conf, house) {
         };
         var php = spawn(phpBin, args, opts);
         php.on("exit", function(e){
-            BIRD3.emitRedis("bird3.exit","PHP exited: "+e);
-            process.exit(1);
+            if(e1=null) {
+                BIRD3.emitRedis("bird3.exit","PHP exited: "+e);
+            };
+            // This process is only here to maintain PHP.
+            process.exit(0);
         });
 
-        house.addShutdownHandler(function(ctx,n){
-            (ctx.event == "exit") && php.kill();
-            n();
+        house.addShutdownHandler(function(){
+            BIRD3.info("Shutting down Workerman...");
+            php.kill();
         });
     }
 }

@@ -53,6 +53,7 @@ module.exports = function(io, redis) {
 
         subscriber.on("message", function(ch, msg){
             var o = JSON.parse(msg);
+            if(o.name == "rpc.log") return;
             obj.info("BIRD3 Events (Redis: "+ch+"): "+o.name+'('+JSON.stringify(o.data)+')');
         });
 
@@ -139,6 +140,8 @@ module.exports = function(io, redis) {
     if(typeof redis == "undefined" || redis == null) {
         obj.onRedis = dont("onRedis");
         obj.emitRedis = dont("onRedis");
+    } else {
+        makeRedis();
     }
 
     obj.onAll = function(name, cb) {

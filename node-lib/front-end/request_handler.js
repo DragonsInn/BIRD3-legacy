@@ -102,16 +102,6 @@ module.exports = function(app) {
     }));
     app.use("/", multiparty(config.version));
     app.use("/", cookies());
-    /*app.use(session({
-        store: new RedisStore({
-            prefix: "BIRD3.Session.",
-            db: 0
-        }),
-        name: 'PHPSESSID',
-        secret: config.version,
-        resave: false,
-        saveUninitialized: true
-    }));*/
     app.use(function(req, res, next){
         // A throw-together session implementation.
         var RedisSession = function(rdKey, afterCb){
@@ -144,10 +134,6 @@ module.exports = function(app) {
             }));
         } else next();
     });
-    app.use(function(req, res, next){
-        console.log(req.session._store);
-        next();
-    })
 
     // Set up the PHP stuff
     var $php = php();

@@ -31,7 +31,6 @@ global.log = process.logger = mylog = require("./node-lib/logger.js")(config.bas
 process.logger.crit = process.logger.error;
 process.logger.notice = process.logger.info;
 
-
 var house = PowerHouse({
     title: "BIRD3: Main",
     // All other processes likely only need one but Http will want more
@@ -41,6 +40,7 @@ var house = PowerHouse({
         {
             title: "BIRD3: Hprose+Workerman",
             exec: "./node-lib/workerman_worker.js",
+            type: "cluster",
             amount: 1,
             config: global.config,
             reloadable: false
@@ -55,9 +55,9 @@ var house = PowerHouse({
         },{
             title: "BIRD3: WebPack",
             exec: "./node-lib/webpack_worker.js",
-            type: "cluster",
+            type: "child",
             config: global.config.wpKey,
-            reloadable: true
+            reloadable: false
         },{
             title: "BIRD3: Misc servers",
             exec: "./node-lib/misc_worker.js",
@@ -162,14 +162,7 @@ var house = PowerHouse({
                         var o = JSON.parse(data);
                         if(o.name=="bird3.exit") {
                             mylog.error("Shutting down the entire server.");
-                            process.kill(process.pid, "SIGTERM");
-                        }
-                        if(o.name=="rpc.log") {
-                            try {
-                                mylog[o.data.method].apply(mylog, o.data.args);
-                            } catch(e) {
-                                mylog.error("Unhandled call: %s",JSON.stringify(o));
-                            }
+                            process.exit(1);
                         }
                     }
                 });
@@ -189,10 +182,15 @@ var house = PowerHouse({
                     mylog.info("Ports to be used: "+JSON.stringify(ports));
                     global.config.hprosePort = ports[0];
                     redisClient.set("bird3.hprosePort", ports[0]);
+                    // Error handling
                     run();
                 });
             }
         });
+    },
+    shutdown: function(err, res) {
+        mylog.info("BIRD3 has shut down.");
+        process.exit(0);
     }
 });
 

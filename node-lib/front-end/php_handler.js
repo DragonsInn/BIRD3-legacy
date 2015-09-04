@@ -11,7 +11,7 @@ var ginga = require("ginga");
 var ware = ginga();
 var hprosePort = null;
 
-function PHPMiddleware() {
+module.exports = function() {
     // Define the middleware stuff
     var defs = {
         pre: function(ctx,next){
@@ -128,7 +128,7 @@ function PHPMiddleware() {
             var req = ctx.req;
             var res = ctx.res;
             ware.preprocess(ctx,function(pp_err, pp_res){
-                ctx.client.invoke("yii_run", ctx.arg, ctx.opt, function(obj){
+                ctx.client.invoke("yii_run", [ctx.arg, ctx.opt], function(obj){
                     var status = obj.status || 200;
                     res.status(status);
                     for(var k in obj.headers) {
@@ -144,13 +144,17 @@ function PHPMiddleware() {
                         res.end(obj.body);
                         done();
                     });
+                }, function() {
+                    console.log(arguments);
+                    res.end("Error");
+                    done();
                 });
             });
         }
     );
 
     this.use = function(){ return ware.use.apply(ware,arguments); };
-    this.middleware = function(req,res,next) {
+    this.middleware = function PHPMiddleware(req,res,next) {
         ware.request({
             req: req,
             res: res
@@ -161,4 +165,3 @@ function PHPMiddleware() {
 
     return this;
 }
-module.exports = PHPMiddleware;

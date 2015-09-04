@@ -1,20 +1,22 @@
 var cheerio = require("cheerio");
 var hljs = require("highlight.js");
-var htmlminify = require("html-minify").minify;
+var htmlminify = require("html-minifier").minify;
+var path = require("path");
 
 hljs.configure({
     tabReplace: Array(5).join(" ")
 });
 
 module.exports = function(php) {
-    // Request procession
+    // # Request procession
 
-    // Pre-Processor
+    // # Pre-Processor
 
-    // Post-Processor
+    // # Post-Processor
+
+    // HighlightJS
     php.use("postprocess",function(ctx,next){
-        // HighlightJS
-        var $ = cheerio.load(ctx.php.body, {decodeEntities: false});
+        var $ = ctx.$ = cheerio.load(ctx.php.body, {decodeEntities: false});
         if($("body").find("pre code").length > 0) {
             $("body").find("pre code").each(function(i,v){
                 if($(v).attr("class").match(/language-.+/ig) != null) {
@@ -30,12 +32,20 @@ module.exports = function(php) {
         ctx.php.body = $.html();
         next();
     });
+
+    // Minify the HTML
     php.use("postprocess", function(ctx, next){
         if(typeof ctx.req.query.dev == "undefined") {
-            // Minify the HTML
             ctx.php.body = htmlminify(ctx.php.body, {
                 collapseWhitespace: true,
-                removeComments: true
+                removeComments: true,
+                removeCommentsFromCDATA: true,
+                conservativeCollapse: false,
+                removeAttributeQuotes: true,
+                removeRedundantAttributes: true,
+                removeScriptTypeAttributes: true,
+                minifyJS: require(path.join(config.base, "util/uglifyjs.config.js")),
+                minifyCSS: true
             });
         }
         next();

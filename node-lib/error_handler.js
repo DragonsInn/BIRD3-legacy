@@ -6,9 +6,4 @@ module.exports = function() {
     process.on("error", function(e){
         BIRD3.emit("error", e);
     });
-
-    // Signals
-    process.on("SIGINT", function(){
-        BIRD3.emit("error", "SIGINT");
-    });
 }

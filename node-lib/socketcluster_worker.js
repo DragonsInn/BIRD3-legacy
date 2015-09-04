@@ -22,4 +22,9 @@ var express = require("express"),
         socketChannelLimit: 100,
         rebootWorkerOnCrash: config.debug || false
     });
+    house.addShutdownHandler(function(ctx, next){
+        socketCluster.killWorkers();
+        socketCluster.killBrokers();
+        next();
+    });
 })(JSON.parse(process.env.POWERHOUSE_CONFIG).config);

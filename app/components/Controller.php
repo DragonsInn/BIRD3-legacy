@@ -158,7 +158,7 @@
 			$cache->set($key, $ljs);
 		}
 		$cs->registerScript("js.run","/* js runner */
-			BIRD3 = window.BIRD3 = {
+			var sys = {
 				baseUrl: $escYiiUrl,
 				cdnUrl: $escCdnApp,
 				webpackHash: '$hash',
@@ -167,25 +167,32 @@
 				useBottomPanel: $use,
 			};
 			// Holy shit this is SO SO SO SO hacky. But it works XD
-			BIRD3.include = (function(){ var $ljs; return include; })();
+			sys.include = (function(){ var $ljs; return include; })();
 			// Modularize
-			BIRD3.modules = {
-				main: BIRD3.hash('main.js'),
-				chat: BIRD3.hash('chat.js'),
-				compatibility: BIRD3.hash('compatibility.js'),
-				upload: BIRD3.hash('upload.js')
+			sys.modules = {
+				main: sys.hash('main.js'),
+				chat: sys.hash('chat.js'),
+				compatibility: sys.hash('compatibility.js'),
+				upload: sys.hash('upload.js')
 			};
-			BIRD3.load = function(m){
+			sys.load = function(m){
 				console.log('Loading',m);
-				BIRD3.include.call(BIRD3.include, BIRD3.modules[m], function(){
-					//console.log('Done',m);
-				});
+				sys.include.call(sys.include, sys.modules[m]);
 			};
 			// Load the library
-			BIRD3.include(BIRD3.hash('libwebpack.js'), function(){
+			sys.include(sys.hash('libwebpack.js'), function(){
 				console.log('BIRD3 runtime initialized');
-				BIRD3.load(BIRD3.module);
+				sys.load(sys.module);
 			});
+			// Export
+			window.BIRD3 = sys;
+			// Google Analytics
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			ga('create', 'UA-58656116-1', 'auto');
+			ga('send', 'pageview');
 		/* js runner end */", CClientScript::POS_HEAD);
 
 		// The design.

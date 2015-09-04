@@ -100,5 +100,5 @@ if($argv[1] == "start" || $argv[1] == "restart") {
 }
 
 # Start the running.
-\Workerman\Worker::$stdoutFile = "php://stdout";
+\Workerman\Worker::$stdoutFile = __DIR__."/../php.out";
 \Workerman\Worker::runAll();

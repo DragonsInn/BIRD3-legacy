@@ -81,47 +81,7 @@ var provider = new webpack.ProvidePlugin({
 // Generate bundled CSS. (id, fileName)
 var extractor = new extractText("style","[hash]-[name].css");
 // Compress and press down our JS.
-var uglify = new webpack.optimize.UglifyJsPlugin({
-    compress: {
-        warnings: false,
-        properties: true,
-        sequences: true,
-        dead_code: true,
-        conditionals: true,
-        comparisons: true,
-        evaluate: true,
-        booleans: true,
-        unused: true,
-        loops: true,
-        hoist_funs: true,
-        cascade: true,
-        if_return: true,
-        join_vars: true,
-        //drop_console: true,
-        drop_debugger: true,
-        unsafe: true,
-        hoist_vars: true,
-        negate_iife: true,
-        //side_effects: true
-    },
-    //sourceMap: true,
-    mangle: {
-        toplevel: true,
-        sort: true,
-        eval: true
-    },
-    output: {
-        space_colon: false,
-        comments: function(node, comment) {
-            var text = comment.value;
-            var type = comment.type;
-            if (type == "comment2") {
-                // multiline comment
-                return /@copyright/i.test(text);
-            }
-        }
-    }
-});
+var uglify = new webpack.optimize.UglifyJsPlugin(require("./uglifyjs.config.js"));
 // Querystring for the CSS Loader
 var cssq = [
     "keepSpecialComments=0",
@@ -250,18 +210,14 @@ module.exports = {
             path.join(config.base,"themes")
         ],
         modulesDirectories: [
-            // NPM, Bower
+            // Bower, NPM, Composer, Web
             'bower_components',
             'node_modules',
+            'php_modules',
             'web_modules'
         ],
         alias: {
             // Ensure compatibility to original bootstrap
-            "bootstrap.js": path.join(
-                config.base,
-                "bower_components",
-                "bootstrap-sass/assets/javascripts/bootstrap"
-            ),
             bootstrap: path.join(
                 config.base,
                 "web-lib/bootstrapper.js"

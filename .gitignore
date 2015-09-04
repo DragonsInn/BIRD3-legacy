@@ -19,3 +19,4 @@ cdn/app/
 tmp/
 *.hpr
 Thumbs.db
+php.out

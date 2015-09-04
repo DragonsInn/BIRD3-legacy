@@ -5,16 +5,16 @@
     "require": {
         "php": ">=5.5.4",
         "ext-pcntl": "*",
-        "ext-hprose": "1.*",
+        "ext-hprose": "^1.6.1",
         "ext-sockets": "*",
-        "ext-runkit": "1.*",
+        "ext-runkit": "^1.0.0",
         "ext-sysvmsg": "*",
         "yiisoft/yii": "1.1.*",
         "predis/predis": "0.8.*",
         "okwinza/cloudflare-api": "dev-master",
-        "erusev/parsedown-extra": "0.7.*",
-        "evenement/evenement": "2.0.*",
-        "walkor/workerman": "3.1.*",
+        "erusev/parsedown-extra": "^0.7.0",
+        "evenement/evenement": "^2.0.0",
+        "walkor/workerman": "^3.1.0",
         "pagon/childprocess": "*",
         "corneltek/cliframework": "*",
         "voodoophp/paginator": "2.*",
@@ -28,7 +28,8 @@
         "yiiext/migrate-command": "^0.8.0",
         "robmorgan/phinx": "^0.4.4",
         "jdorn/sql-formatter": "^1.2",
-        "ircmaxell/password-compat": "^1.0"
+        "ircmaxell/password-compat": "^1.0",
+        "hprose/hprose": "^1.5"
     },
     "config": {
         "vendor-dir": "php_modules/"

@@ -22,10 +22,6 @@ runkit_function_redefine(
 
 // ...hacky.
 function exception_error_handler($severity, $message, $file, $line) {
-    if (!(error_reporting() & $severity)) {
-        // This error code is not included in error_reporting
-        return;
-    }
     $output = "$message ($file : $line)";
     Log::error($output);
     throw new ErrorException($message, 0, $severity, $file, $line);
@@ -102,7 +98,17 @@ class HttpRequest {
 class HttpResponse {
     public $hr=[
         "cookies"=>[
-            #"name"=>["value", "opts"=>["expires"=>0, "maxAge"=>0, "secure"=>false, "httponly"=>false]]
+            /*
+            "name"=>[
+                "value",
+                "opts"=>[
+                    "expires"=>0,
+                    "maxAge"=>0,
+                    "secure"=>false,
+                    "httponly"=>false
+                ]
+            ]
+            */
         ],
         "headers"=>[
             "Content-type"=>"text/plain",
@@ -128,7 +134,7 @@ class HttpResponse {
         }
         if(substr($str, 0, 4) == "HTTP") {
             // This is a status message...
-            list($vers, $status, $msg) = split(" ", $str);
+            list($vers, $status, $msg) = explode(" ", $str);
             $self->hr["status"]=$status;
         } else {
             list($key, $val) = explode(":", $str, 2);
@@ -193,22 +199,26 @@ class YiiApp {
                 2 => ["pipe", "w"]  # STDERR
             ];
             $cmd = implode(" ",[PHP_BINARY, __DIR__."/executor.php"]);
-            $env = [
-                "CONFIG" => hprose_serialize([
-                    "env" => $_ENV,
-                    "req" => $preq,
-                    "opt" => $opt
-                ])
+            $expose = [
+                "env" => $_ENV,
+                "req" => $preq,
+                "opt" => $opt
             ];
+            $env = ["CONFIG" => hprose_serialize($expose)];
             $ph = proc_open($cmd, $spec, $pipes, __DIR__,$env);
             $res = new HttpResponse();
             if(is_resource($ph)) {
                 // Get STDOUT/-ERR
                 // @meme All your error are belong to you.
                 $stdout = stream_get_contents($pipes[1]);
+                $stderr = stream_get_contents($pipes[2]);
                 foreach($pipes as $p=>$k) fclose($pipes[$p]);
                 $rtv = proc_close($ph);
-                $out = "";
+                $out = '';
+                if($rtv > 0) {
+                    // Log the failure, at least.
+                    Log::error("PHP exited with $rtv.");
+                }
                 try {
                     $out = hprose_unserialize($stdout);
                 } catch(\Exception $e) {
@@ -216,7 +226,7 @@ class YiiApp {
                     // Hence, hprose can not parse it...since its raw HTML...
                     // ...because Yii kills my output buffers. >v<
                     // Therefore, print that HTML out. Meh.
-                    Log::warn("Response was unclear. ".$e);
+                    #Log::warn("Response was unclear. ".$e);
                     $res->header("Content-type: text/html");
                     $res->status(200);
                     $out = $res->end($stdout);

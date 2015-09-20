@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-ini_set('display_errors','1');
+ini_set("display_errors","0");
 
 // Stupid time zone .... >.>
 date_default_timezone_set("UTC");
@@ -12,7 +12,7 @@ $sg = [
     '_SESSION'
 ];
 foreach($sg as $g) {
-    if(isset($GLOBl[$g]) && !is_array($GLOBALS[$g])) {
+    if(isset($GLOBALS[$g]) && !is_array($GLOBALS[$g])) {
         $GLOBALS[$g]=array();
     }
 }

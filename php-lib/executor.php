@@ -12,6 +12,7 @@ require_once "common.php";
 require_once("../php_modules/autoload.php");
 require_once("YiiApp.php");
 require_once("Log.php");
+
 // Unserialize our stuff.
 $args = hprose_unserialize($_SERVER["CONFIG"]);
 $req = $args["req"];
@@ -27,6 +28,7 @@ foreach($req["request"] as $key=>$val) {
     if(!is_array($val)) continue;
     $GLOBALS[$key]=array_merge($GLOBALS[$key], $val);
 }
+
 // Prepare to respond.
 $req = new HttpRequest();
 $res = new HttpResponse();
@@ -46,13 +48,6 @@ register_shutdown_function(function() use($res){
     }
 });
 
-function dump_cookie($start=false) {
-    if(isset($_COOKIE["PHPSESSID"]))
-        Log::info(($start?"Start":"Stop").": {$_SERVER['REQUEST_URI']} -> {$_COOKIE['PHPSESSID']}");
-    else
-        Log::info(($start?"Start":"Stop").": {$_SERVER['REQUEST_URI']} -> NONE");
-}
-
 // Resolve and run the request
 ob_start();
 $file = join(DIRECTORY_SEPARATOR, [$config["base"], $_SERVER["REQUEST_URI"]]);
@@ -62,12 +57,7 @@ if(!file_exists($file) || is_dir($file)) {
     $config=dirname(__FILE__).'/../app/config/main.php';
     $c=require_once($config);
     Yii::createWebApplication($c);
-    set_error_handler("exception_error_handler");
-    try{
-        Yii::app()->run();
-    } catch(Exception $e) {
-        Log::error("Something bad happened.");
-    }
+    Yii::app()->run();
 } else {
     require_once($file);
 }

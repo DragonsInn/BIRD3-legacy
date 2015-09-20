@@ -98,7 +98,10 @@ module.exports = function(app) {
 
     // Configuring the BIRD Main server.
     app.use("/", bodyParser.urlencoded({
-      extended: true
+        extended: true
+    }));
+    app.use("/", bodyParser.raw({
+        limit: "50mb"
     }));
     app.use("/", multiparty(config.version));
     app.use("/", cookies());

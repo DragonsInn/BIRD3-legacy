@@ -47,8 +47,16 @@
         $user = self::me($id);
         $ext = $user->profile->avvie_ext;
         if(!empty($ext)) {
-            $hash = md5_file(self::make_avatar_path($user->id, $ext));
-            return self::make_avatar_path($user->id, $ext, "url")."#$hash";
+            $path = self::make_avatar_path($user->id, $ext);
+            if(file_exists($path)) {
+                $hash = md5_file($path);
+                return self::make_avatar_path($user->id, $ext, "url")."#$hash";
+            } else {
+                // Maybe a derp?
+                $user->profile->avvie_ext = null;
+                $user->profile->update();
+                return self::avatarUrl($id);
+            }
         } else {
             // Return generic image...
             return self::make_avatar_path("generic_avvie", "png", "url");

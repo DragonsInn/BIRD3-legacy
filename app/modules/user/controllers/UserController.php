@@ -62,7 +62,6 @@
     // let the user change some settings
     public function actionSettings() {
         $this->pageTitle = "Settings";
-        $this->rqMarkdown = true;
         $model = User::me();
         if(
             isset($_POST["User"])
@@ -82,7 +81,6 @@
             $user->attributes = $_POST["User"];
             $profile->attributes = $_POST["UserProfile"];
             $settings->attributes = $_POST["UserSettings"];
-
             if($user->validate() && $profile->validate() && $settings->validate()) {
                 $user->update();
                 $profile->update();
@@ -141,7 +139,6 @@
 
     public function actionChangeAvatar() {
         $this->pageTitle = "Change profile picture";
-        $this->rqUpload=true;
         $avvieUrl = "/content/avatars";
         $avviePath = Yii::app()->cdn->getBasePath().$avvieUrl;
         $me = User::me();
@@ -161,35 +158,56 @@
                         $new_ext = "";
 
                         // Check if we already have an image? Indicated, if avvie_ext is set.
-                        if(!empty($old_ext)) {
-                            unlink("$avviePath/{$me->id}.{$old_ext}");
+                        $p_path = "$avviePath/{$me->id}.{$old_ext}";
+                        if(!empty($old_ext) && file_exists($p_path)) {
+                            @unlink($p_path);
                             $me->profile->avvie_ext = null;
+                            $me->profile->update();
+                        } else if(!empty($old_ext) && !file_exists($p_path)) {
+                            // There is a previous derp here. Huh.
+                            $me->profile->avvie_ext = null;
+                            $me->profile->update();
                         }
 
                         // Last check - size.
                         $isize = getimagesize($timg);
+                        $newext = "png";
                         list($iw, $ih) = $isize; // Obtain 0 and 1
                         if($iw > 150 && $ih > 150) {
+                            /*
+                            Log::info("Step 5.1");
                             // Image is NOT resized... Ugh, so we have to actually do it.
                             // Only specific formats are supported.
                             // We resize the image and save it down.
                             $ea = new EasyImage($timg);
                             $ea->resize(150, 150, EasyImage::RESIZE_AUTO);
-                            $ea->render("png");
-                            $ea->save("$avviePath/{$me->id}.png");
-                            $me->profile->avvie_ext = "png";
+                            Log::info("Step 5.2");
+                            $ea->render($newext);
+                            Log::info("Step 5.3");
+                            $ea->save("$avviePath/{$me->id}.$newext");
+                            Log::info("Step 5.4");
+                            $me->profile->avvie_ext = $newext;
+                            */
+                            // There is currently an error that segfaults PHP.
+                            // FIXME: Resize implementation - PLEASE.
+                            $res["error"]=true;
+                            $res["code"]=-1;
                         } else {
                             // It already is resized. Obtain neccessary infos...
                             $new_ext = Mimex::extension($timg);
                             $me->profile->avvie_ext = $new_ext;
                             $path = "$avviePath/{$me->id}.{$new_ext}"; # String templating rocks.
-                            if(!move_uploaded_file($timg, $path)) {
+                            if(!rename($timg, $path)) {
                                 $res["error"]=true;
                                 $res["code"]=-4;
                             }
                         }
-                        // Update...
-                        $me->profile->update();
+                        // Update... FIXME: Optimize me.
+                        if(isset($res["error"])) {
+                            if($res["error"] != false) {
+                                $me->profile->update();
+                            }
+                        } else $me->profile->update();
                         // We want to show the user the new picture!
                         $res["url"]=Yii::app()->cdn->baseUrl.$avvieUrl."/{$me->id}.{$new_ext}";
                     }

@@ -6,8 +6,6 @@
 
 <?php $form = $this->beginWidget('CActiveForm', array(
     'id'=>'bird3-settings',
-    'enableAjaxValidation'=>false,
-    'enableClientValidation'=>true,
     'htmlOptions'=>[
         'name'=>'bird3-settings',
         "class"=>"form-horizontal"
@@ -57,13 +55,14 @@
         </div>
     </div>
 
+    <!--
     <div class="form-group">
         <?=$form->label($model, "password", array(
             "class"=>"col-sm-3 control-label",
             "label"=>"Change your password"
         ))?>
         <div class="col-sm-5">
-            <?=$form->passwordField($model, "username", array(
+            <?=$form->passwordField($model, "password", array(
                 "class"=>"form-control",
             ))?>
             <span class="help-block">
@@ -71,6 +70,7 @@
             </span>
         </div>
     </div>
+    -->
 
 
     <div class="form-group">
@@ -100,50 +100,34 @@
         <div class="col-sm-5">
             <?=$form->checkbox($model->settings, "adult", array(
                 "class"=>"form-control",
-                "id"=>"adult_checkbox"
+                "id"=>"adult_checkbox",
+                "uncheckValue"=>null
             ))?>
         </div>
         <script>
-            $("#adult_checkbox").change(function(ev){
-                if($(this).is(":checked")) {
-                    var diag_type = BootstrapDialog.TYPE_WARNING;
-                    var msg = "<h3>Warning!</h3>"
-                            + "<p>You are about to enable adult content.</p>"
-                            + "<p>Activating this option will enable any explicit content, "
-                            + "including characters and other related content provided by "
-                            + "other users. By deactivating this filter you are confirming "
-                            + "that you are of-, or above 18 years of age.</p>"
-                            + "<p>Thanks for your understanding,<br/>The Dragon's Inn staff.</p>";
-                    BootstrapDialog.show({
-                        title: app.getTitle(),
-                        type: diag_type,
-                        size: BootstrapDialog.SIZE_WIDE,
-                        message: $("<div/>").html(msg),
-                        data: {e:ev},
-                        closable: false,
-                        closeByBackdrop: false,
-                        closeByKeyboard: false,
-                        buttons: [{
-                            label: "I am 18 or older.",
-                            cssClass: "btn-warning",
-                            action: function(d) { d.close(); }
-                        },{
-                            label: "I am younger than 18.",
-                            cssClass: "btn-default",
-                            action: function(d) {
-                                $(d.getData("e").target).prop("checked",false);
-                                d.close();
+            BIRD3.ready(function(){
+                $("#adult_checkbox").click(function(ev){
+                    var $t = $(this);
+                    if($t.is(":checked")) {
+                        var msg = "<h3>Warning!</h3>"
+                                + "<p>You are about to enable adult content.</p>"
+                                + "<p>Activating this option will enable any explicit content, "
+                                + "including characters and other related content provided by "
+                                + "other users. By deactivating this filter you are confirming "
+                                + "that you are of-, or above 18 years of age.</p>"
+                                + "<p>Click the <b>Yep</b> button if you want to continue and "
+                                + "nope if you'd rather not.</p>"
+                                + "<p>Thanks for your understanding,<br/>The Dragon's Inn staff.</p>";
+                        window.question(msg, {}, function(res){
+                            if(!res) {
+                                // Disable by hand. Should have its own method.
+                                $t.each(function(e){
+                                    e.checked = false;
+                                });
                             }
-                        }],
-                        onshown: function(diag) {
-                            dialog.realize();
-                            diag.getModal().focus();
-                        },
-                        onhidden: function(dialog) {
-                            $("#adult_checkbox").focus();
-                        }
-                    });
-                }
+                        });
+                    }
+                });
             });
         </script>
     </div>
@@ -156,6 +140,7 @@
         <div class="col-sm-5">
             <?=$form->checkbox($model->settings, "newsletter", array(
                 "class"=>"form-control",
+                "uncheckValue"=>null
             ))?>
             <span class="help-block">
                 <p>
@@ -174,6 +159,7 @@
         <div class="col-sm-5">
             <?=$form->checkbox($model->settings, "showEmail", array(
                 "class"=>"form-control",
+                "uncheckValue"=>null
             ))?>
         </div>
     </div>

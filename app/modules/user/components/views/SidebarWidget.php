@@ -17,7 +17,7 @@
                     ["class"=>"btn btn-default"]
                 )?>
                 <?=CHtml::link(
-                    "Profile Picture", ["/user/changeAvatar"],
+                    "Avatar", ["/user/changeAvatar"],
                     ["class"=>"btn btn-default"]
                 )?>
             </div>

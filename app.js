@@ -81,6 +81,7 @@ var house = PowerHouse({
                         cb(err);
                     } else {
                         log.info("MySQL works.");
+                        conn.end();
                         cb();
                     }
                 });
@@ -90,7 +91,8 @@ var house = PowerHouse({
                 var client = redis.createClient();
                 client.on("ready", function(){
                     log.info("Redis works.");
-                    cb(null, client);
+                    client.end();
+                    cb();
                 });
                 client.on("error", function(err){
                     log.error("Redis failed.");
@@ -151,7 +153,7 @@ var house = PowerHouse({
                 require("./node-lib/error_handler.js")();
                 mylog.info("Starting: BIRD@"+config.version);
                 var sub = redis.createClient();
-                var redisClient = res.redis;
+                var redisClient = redis.createClient();
                 sub.on("error", function(e){
                     console.error(e.stack);
                     process.exit(1);
@@ -159,12 +161,20 @@ var house = PowerHouse({
                 sub.subscribe("BIRD3");
                 sub.on("message", function(ch, data){
                     if(ch=="BIRD3") {
-                        var o = JSON.parse(data);
-                        if(o.name=="bird3.exit") {
-                            mylog.error("Shutting down the entire server.");
-                            process.exit(1);
+                        try {
+                            var o = JSON.parse(data);
+                            if(o.name=="bird3.exit") {
+                                mylog.error("Shutting down the entire server.");
+                                process.exit(1);
+                            }
+                        } catch(e) {
+                            mylog.notice("Received empty string ("+e+")");
                         }
                     }
+                });
+                // One basic thing to look for. Servely useful.
+                BIRD3.onRedis("rpc.log", function(o){
+                    BIRD3[o.method].apply(BIRD3, o.args);
                 });
                 getports(6, function(err, ports){
                     if(err) {

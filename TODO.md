@@ -7,16 +7,17 @@
         * User must agree to ToS, provide valid email and acrivate.
         * Consider using OpenID?
             - Nope. Thats a thing for later.
+        * [ ] Activation per E-Mail
+        * [ ] Password Reset
+        * [X] md5 -> bcrypt (through Password.(php|js))
+        * [X] Automatically convert BIRD2 password.
     * [X] Settings panel
-        * [-] Let user upload an avatar.
-            - FIXME: `connect-yii`'s file uploading is NOT to be considered stable!!
-            - Almost fixed: the new service will handle it.
-            - New service needs testing. :)
+        * [X] Let user upload an avatar.
         * [X] Edit User, UserProfile and Usersettings.
     * [X] Using/Updating `last_visited` and `create_at`
         - Damn, a typo im not gonna get rid of. Should be `created_at`...
     * [X] Avatar support
-    * [X] Cacheable avatars
+        * [X] Cacheable avatars
     * [X] Correct User DB relationships
     * [X] Private Messaging
         * [X] Add models

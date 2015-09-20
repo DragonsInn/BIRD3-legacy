@@ -174,7 +174,12 @@ var purifyPlugin = new purify({
         "app/modules/chat/js/*.js",
         //"app/modules/chat/lib/template/*.html",
         //"app/modules/chat/lib/template/*.php",
-        "app/modules/chat/views/*/*.php"
+        "app/modules/chat/views/*/*.php",
+        // Ladda
+        "node_modules/ladda/js/*.js",
+        "node_modules/ladda/node_modules/spin.js/spin.js",
+        // bootstrap.native
+        "bower_components/bootstrap.native/lib/*.js"
     ]
 });
 
@@ -305,7 +310,7 @@ module.exports = {
                     theme,
                     path.join(base, "web_modules/frameworks"),
                 ],
-                defines: {}
+                defines: {},
             }
         }
     },

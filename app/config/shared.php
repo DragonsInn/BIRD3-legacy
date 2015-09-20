@@ -9,6 +9,7 @@ Yii::setPathOfAlias('composer',$base.'/php_modules');
 Yii::setPathOfAlias('bower',$base.'/bower_components');
 Yii::setPathOfAlias('npm',$base.'/node_modules');
 Yii::setPathOfAlias('cache',$base.'/cache');
+Yii::setPathOfAlias('app',$base.'/app');
 
 if(!isset($_SERVER["SERVER_VERSION"])) {
     $package = file_get_contents("$base/package.json");
@@ -27,7 +28,7 @@ return array(
 	'name'=>'BIRD3',
 
 	// preloading 'log' component
-	'preload'=>array('log'),
+	'preload'=>array('log', 'session', 'user'),
 
 	// autoloading model and component classes
 	'import'=>array(
@@ -122,6 +123,7 @@ return array(
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
 			'errorAction'=>'site/error',
+            'discardOutput'=>true
 		),
 		'log'=>array(
 			'class'=>'CLogRouter',
@@ -129,13 +131,9 @@ return array(
 				array(
 					'class'=>'CFileLogRoute',
 					'levels'=>'error, warning',
+                    'logPath'=>"$base/log/",
+                    'logFile'=>'yii.log'
 				),
-				// uncomment the following to show log messages on web pages
-				/*
-				array(
-					'class'=>'CWebLogRoute',
-				),
-				*/
 			),
 		),
 	),

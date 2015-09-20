@@ -25,9 +25,14 @@ module.exports.run = function (worker) {
     var scServer = worker.getSCServer();
     // Initialize the BIRD3 connector
     global.BIRD3 = require("../communicator.js")(scServer);
-    var rpc = BIRD3.rpc;
-    rpc.addSync("foo", function(){
-        return arguments;
+    require("glob")(path.join(__dirname, "api", "*.js"), function(err, files){
+        files.forEach(function(file){
+            try {
+                require(file)(BIRD3);
+            } catch(e) {
+                BIRD3.error(e);
+            }
+        });
     });
 
     /*

@@ -38,7 +38,7 @@ module.exports = function() {
                 function(step) {
                     if(hprosePort == null) {
                         redis.get("bird3.hprosePort", function(err, portnr){
-                            if(err) step(err);
+                            if(err) return step(err);
                             hprosePort=Number(portnr);
                             step();
                         });
@@ -78,8 +78,15 @@ module.exports = function() {
                             },
                             _COOKIE: {},
                             _GET: req.query,
-                            _POST: (req.method=="POST"?req.body:{}),
-                            _FILES: (req.method=="POST"?req.files:{}),
+                            _POST: (function(){
+                                if(req.method != "POST") return {};
+                                if(typeof req.body == "object" && !Buffer.isBuffer(req.body)) {
+                                    return req.body
+                                } else {
+                                    return {};
+                                }
+                            })(),
+                            _FILES: {}, // Handled in preprocessor
                             _REQUEST: {}
                         },
                         headers: req.headers
@@ -104,9 +111,6 @@ module.exports = function() {
                         }
                         arg.request._COOKIE[k]=ct;
                     }
-                    if(req.method=="POST") {
-                        for(var k in req.body) arg.request._REQUEST[k]=req.body[v];
-                    }
 
                     // We _need_ webpack.
                     redis.get("BIRD3.webpack",function(err,chunk){
@@ -128,6 +132,7 @@ module.exports = function() {
             var req = ctx.req;
             var res = ctx.res;
             ware.preprocess(ctx,function(pp_err, pp_res){
+                if(pp_err) return done(pp_err);
                 ctx.client.invoke("yii_run", [ctx.arg, ctx.opt], function(obj){
                     var status = obj.status || 200;
                     res.status(status);
@@ -141,8 +146,12 @@ module.exports = function() {
                     }
                     ctx.php = obj;
                     ware.postprocess(ctx,function(ps_err,ps_res){
-                        res.end(obj.body);
-                        done();
+                        if(ps_err) {
+                            return done(ps_err);
+                        } else {
+                            res.end(obj.body);
+                            return done();
+                        }
                     });
                 }, function() {
                     console.log(arguments);

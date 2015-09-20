@@ -20,3 +20,6 @@
 [submodule "web_modules/behave.js"]
 	path = web_modules/behave.js
 	url = https://github.com/jakiestfu/Behave.js.git
+[submodule "web_modules/jsCaret"]
+	path = web_modules/jsCaret
+	url = https://github.com/schovi/jsCaret.git

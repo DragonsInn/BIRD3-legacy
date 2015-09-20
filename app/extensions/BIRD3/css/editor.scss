@@ -63,9 +63,25 @@
     /* Sizing... */
     $size: 100px;
     height: $size;
-    /*
-    .form-control, textarea {
-        height: $size;
-    }
-    */
+}
+
+// Color picker
+.color-picker {
+    background: rgba(0, 0, 0, 0.75);
+    padding: 5px;
+    border: 1px solid rgba(203, 203, 203, 0.6);
+    border-radius: 2px;
+}
+
+.color-picker > div {
+    width: 20px;
+    display: inline-block;
+    height: 20px;
+    margin: 5px;
+    border-radius: 100%;
+    opacity: 0.7;
+}
+
+.color-picker > div:hover {
+    opacity: 1;
 }

@@ -26,6 +26,6 @@
             "data-placeholder"=>htmlspecialchars($this->placeholder),
             "data-placement"=>htmlspecialchars($this->placement),
             "data-editor-placement"=>htmlspecialchars($this->editorPlacement)
-        ], "");
+        ], $this->model->{$this->attribute});
     }
 }

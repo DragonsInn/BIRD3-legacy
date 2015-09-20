@@ -16,7 +16,9 @@ module.exports.run = function(conf, house) {
             phpBin = "php-cli";
 
         var args = [
-            config.base+"/php-lib/request_handler.php",
+            // Bring up the Workerman app. It's a subserver, so it deserves the name "app.php"
+            // Besides, it can be ran independently, technically! (:
+            config.base+"/app.php",
             // Tell workerman to go up
             "start",
             // We only want this service localy

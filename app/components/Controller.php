@@ -31,8 +31,16 @@
 			"entries"=>array(
 				array("Home", "icon"=>"fa fa-home", "url"=>"/"),
 				array("Rules & TOS", "icon"=>"fa fa-legal", "url"=>array("/docs/Rules_and_TOS")),
-				array("Roleplaying etiquette", "icon"=>"fa fa-info-circle", "url"=>array("/docs/Roleplaying_Etiquette")),
-				array("Staff", "icon"=>"glyphicon glyphicon-certificate", "url"=>array("/home/staff")),
+				array(
+					"Roleplaying etiquette",
+					"icon"=>"fa fa-info-circle",
+					"url"=>array("/docs/Roleplaying_Etiquette")
+				),
+				array(
+					"Staff",
+					"icon"=>"glyphicon glyphicon-certificate",
+					"url"=>array("/home/staff")
+				),
 			)
 		),
 		"Community"=>array(
@@ -63,7 +71,11 @@
 			"entries"=>array(
 				array("Latest", "icon"=>"fa fa-list","url"=>array("/chars/latest")),
 				array("All", "icon"=>"fa fa-database","url"=>array("/chars/all")),
-				array("Families &amp; Clans", "icon"=>"fa fa-child","url"=>array("/chars/associations")),
+				array(
+					"Families &amp; Clans",
+					"icon"=>"fa fa-child",
+					"url"=>array("/chars/associations")
+				),
 			),
 		),
 		"Media"=>array(
@@ -73,7 +85,7 @@
 				array("Latest", "icon"=>"fa fa-list","url"=>array("/media/all/latest")),
 				array("All", "icon"=>"fa fa-folder","url"=>array("/media/all/list")),
 				array("Art", "icon"=>"fa fa-paint-brush","url"=>array("/media/art")),
-				array("Music", "icon"=>"glyphicon glyphicon-headphones","url"=>array("/media/audio")),
+				array("Music","icon"=>"glyphicon glyphicon-headphones","url"=>array("/media/audio")),
 				array("Essay", "icon"=>"glyphicon glyphicon-bookmark","url"=>array("/media/story"))
 			)
 		),
@@ -157,35 +169,7 @@
 			$ljs = file_get_contents("$bower/scriptinclude/include.min.js");
 			$cache->set($key, $ljs);
 		}
-		$cs->registerScript("js.run","/* js runner */
-			var sys = {
-				baseUrl: $escYiiUrl,
-				cdnUrl: $escCdnApp,
-				webpackHash: '$hash',
-				module: '{$this->module}',
-				hash: function(f){return BIRD3.cdnUrl+'/'+BIRD3.webpackHash+'-'+f;},
-				useBottomPanel: $use,
-			};
-			// Holy shit this is SO SO SO SO hacky. But it works XD
-			sys.include = (function(){ var $ljs; return include; })();
-			// Modularize
-			sys.modules = {
-				main: sys.hash('main.js'),
-				chat: sys.hash('chat.js'),
-				compatibility: sys.hash('compatibility.js'),
-				upload: sys.hash('upload.js')
-			};
-			sys.load = function(m){
-				console.log('Loading',m);
-				sys.include.call(sys.include, sys.modules[m]);
-			};
-			// Load the library
-			sys.include(sys.hash('libwebpack.js'), function(){
-				console.log('BIRD3 runtime initialized');
-				sys.load(sys.module);
-			});
-			// Export
-			window.BIRD3 = sys;
+		$cs->registerScript("google.analytics.js","/* Google */
 			// Google Analytics
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -193,7 +177,16 @@
 			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 			ga('create', 'UA-58656116-1', 'auto');
 			ga('send', 'pageview');
-		/* js runner end */", CClientScript::POS_HEAD);
+		/* Google end */", CClientScript::POS_HEAD);
+		$cs->registerScript("bird3.js",
+			$this->renderPartial("app.components.views.BIRD3js", [
+				"hash"=>$hash,
+				"module"=>$this->module,
+				"use"=>$use,
+				"escYiiUrl"=>$escYiiUrl,
+				"escCdnApp"=>$escCdnApp
+			], true),
+		CClientScript::POS_HEAD);
 
 		// The design.
 		$cs->registerCssFile("$cdnApp/$hash-libwebpack.css");

@@ -59,7 +59,7 @@ $.ready(function(){
 
     // Finalize
     $("body").click(function(e) {
-        console.trace("doc click");
+        //console.trace("doc click");
         pLeft.removeClass("panel-side-active");
         pRight.removeClass("panel-side-active");
         //pTop.removeClass("panel-top-active");

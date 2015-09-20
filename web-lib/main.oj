@@ -1,3 +1,6 @@
+#include <application.oj>
+#include <dialog.oj>
+
 // Commons
 require("./misc/common");
 
@@ -17,46 +20,43 @@ function makeFooter() {
     }
 }
 window.addEventListener("resize", makeFooter);
-$.ready(makeFooter);
-
-// Dialogs!
-#include <application.oj>
-#include <dialog.oj>
 
 // Introduce a convenience method.
-window.alert = function(msg) {
-    [Dialog alert:msg];
-};
+[Dialog installOn:window];
 
 @implementation BIRD3App {
-    var socket, rpc, rpcr;
+    var sc, rpc, rpcr, args;
 }
--(void)appIsPreparingWithArguments:(object)args {
-    console.log("args", args);
+-(void)appIsPreparingWithArguments:(object)args amount:(integer)argc {
+    //console.log("args", args);
+    self.args = args;
 }
 -(bool)appIsLaunching {
+    // Design! o.o
+    makeFooter();
+
     // Talk to the backend
     require(
-        ["socketcluster-client/index", "avs-rpc", "nanoajax/index"],
-        function(sc, avs, nanoajax){
-            socket = sc.connect();
-            rpc = new avs.scRpc(socket);
-            socket.on('error', function (err){ console.log("Error:", err); });
-            socket.on('connect', function() {
-                socket.on("rpc_init_data", function(methods){
-                    console.log("Methods:",methods);
+        ["socketcluster-client/index", "avs-rpc"],
+        function(socketcluster, avs){
+            sc = socketcluster.connect();
+            rpc = new avs.scRpc(sc);
+            sc.on('error', function (err){ console.log("Error:", err); });
+            sc.on('connect', function() {
+                // Logging
+                sc.on("client_log", function(msg){ console.log("REMOTE>", msg); });
+
+                // RPC
+                sc.on("rpc_init_data", function(methods){
+                    //console.log("Methods:",methods);
                     rpcr = rpc.remote.call(rpc, methods);
                     // rpcr.foo({baz:"bar"}, console.log); // func(err, res)
                 }).emit("rpc_init");
-            });
 
-            // Do an AJAX request to Yii to update the user. Easy.
-            // FIXME: Do it via SC?
-            nanoajax.ajax(window.location.pathname+"?"+[
-                "ajax=true", "via=bird3",
-                "action="+encodeURIComponent("user:update_visit")
-            ].join("&"), function(code, res, req){
-                console.log("AJAX",code,res);
+                // Save the ajax. Update visit time.
+                // FIXME: No dupes! In fact, maybe PHP itself could emit this.
+                sc.emit("update_user_visit", document.cookie);
+                console.log(sc);
             });
         }
     );
@@ -64,20 +64,20 @@ window.alert = function(msg) {
     return true;
 }
 -(void)run {
-    console.log("Running main logic...");
+    //console.log("Running main logic...");
 }
 
 -(id)appIsClosing:(Event)e {
-    console.log("Closing...", e);
+    //console.log("Closing...", e);
 }
 
 -(BIRD3App)emit:(string)name data:(id)obj {
-    io.emit(name, obj);
+    sc.emit(name, obj);
     return self;
 }
 
 -(BIRD3App)on:(string)name callback:(callable)cb {
-    io.on(name, cb);
+    sc.on(name, cb);
     return self;
 }
 @end

@@ -56,24 +56,15 @@ module.exports = function(io, redis) {
             if(o.name == "rpc.log") return;
             obj.info("BIRD3 Events (Redis: "+ch+"): "+o.name+'('+JSON.stringify(o.data)+')');
         });
-
-        // One basic thing to look for. Servely useful.
-        obj.onRedis("rpc.log", function(o){
-            obj[o.method].apply(obj, o.args);
-        });
     }
 
     function makeIo() {
         // Mixed-matter
-        //obj.onIO = io_router.on;
+        obj.onIO = io.on;
         obj.emitIO = io.emit;
 
-        // Add the router
-        //io.use(io_router);
-
         // Make it public:
-        //obj.io = io;
-        //obj.ior = io_router;
+        obj.io = io;
 
         // Create a function and run it - private/public can work that way.
         obj.rpc = (function(){
@@ -110,14 +101,6 @@ module.exports = function(io, redis) {
                 sock.emit("rpc_init_data", obj.rpc.methodNames());
             });
         });
-
-        // Add the basics
-        /*io_router.on("*", function(sock, args, next){
-            //console.log("*: ", arguments);
-            var name = args[0], msg = args[1];
-            obj.info("BIRD3 Events (Socket.IO): "+name+"("+msg+")");
-            return next();
-        });*/
     }
 
     debug("BIRD3 Events: Initializing...");

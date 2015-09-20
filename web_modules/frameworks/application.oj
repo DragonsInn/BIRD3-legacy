@@ -7,7 +7,7 @@
 @protocol Application
 @required
 // Parses the URL into useful information, given as arguments.
--(void)appIsPreparingWithArguments:(object)args;
+-(void)appIsPreparingWithArguments:(object)args amount:(integer)argc;
 
 // The first is called right away, whilst the latter is called as an onLoad method.
 -(bool)appIsLaunching;
@@ -18,6 +18,25 @@
 // if we can, we run this as the user leaves the page.
 -(void)appIsClosing:(Object)e;
 @end
+
+/*!
+ *  uQuery - A minimal URL parameter parsing library.
+ *  v0.1.2
+ *  (c) 2015 Aaron Harvey - aaron.harvey@fairchildsemi.com
+ *  MIT License
+ */
+// This is a modified version.
+function uQuery(target, lookFor) {
+    lookFor = lookFor || "?";
+    var regex = /([^&=]+)=?([^&]*)/g;
+    var match, store = {};
+    var haystack = target || window.location.hash || window.location.search;
+    haystack = haystack.substring(haystack.indexOf(lookFor) + 1, haystack.length);
+    while ((match = regex.exec(haystack))) {
+        store[decodeURIComponent(match[1])] = decodeURIComponent(match[2]);
+    }
+    return store;
+}
 
 function StartApplication(ClassName) {
     if(ClassName instanceof String) {
@@ -42,14 +61,17 @@ function StartApplication(ClassName) {
     }
 
     // Grab the URL and argumentize it...
-    var argv = {0:""};
+    var argv = {0:location.href}, i=1;
     var miuri = require("miuri.js").miuri;
-    var url = new miuri(location.hash);
-    argv[0] = location.href;
     if(location.hash.substr(0,2) == "#!") {
-        for(var x in url.query) argv[x] = url.query[x];
+        var q = uQuery(window.hash, "!");
+        for(var name in q) {
+            argv[i]={ name : q[name] };
+            argv[name] = q[name];
+            i++;
+        }
     }
-    [inst appIsPreparingWithArguments:argv];
+    [inst appIsPreparingWithArguments:argv amount:i];
 
     // This should launch right away.
     [inst appIsLaunching];

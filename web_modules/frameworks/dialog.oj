@@ -1,5 +1,6 @@
 var template = require("frameworks/Dialog/template.ejs");
 var Modal = require("bootstrap.native/lib/modal-native");
+var merge = require("merge");
 require("frameworks/onEnter");
 
 // From: http://stackoverflow.com/questions/6860853/generate-random-string-for-div-id
@@ -74,6 +75,32 @@ function render(obj, modify) {
     });
 }
 
++(void)confirm:(string)message options:(object)options onResult:(callable)cb {
+    var okId = guidGenerator();
+    var nopeId = guidGenerator();
+    return render({
+        title: options.title || "Question",
+        size: question.size || "lg",
+        type: question.type || "warning",
+        body: message,
+        footer: [
+            '<button id="'+okId+'-ok" class="btn btn-warning">Yep</button>',
+            '<button id="'+nopeId+'-nope" class="btn btn-default">Nope</button>'
+        ].join(" "),
+    }, function(modal, id, node){
+        var $modal = $("#"+id);
+        // Set up the triggers
+        $modal.find("#"+okId+"-ok").click(function(){
+            modal.close();
+            cb(true);
+        });
+        $modal.find("#"+nopeId+"-nope").click(function(){
+            modal.close();
+            cb(false);
+        });
+    });
+}
+
 +(void)info:(string)message {
     return render({
         title: "Information",
@@ -84,4 +111,26 @@ function render(obj, modify) {
     });
 }
 +(void)error:(string)message {}
+
++(id)installOn:(Object)target {
+    var d = [Dialog class];
+    var prompter = function(m,c){
+        [d prompt:window.title withMessage:m withResult:c];
+    };
+    var oPrompt = target.prompt || prompter;
+    var conv = {
+        alert: function(msg) { [d alert:msg]; },
+        errorAlert: function(msg) { [d error:msg]; },
+        infoAlert: function(msg) { [d info:msg]; },
+        question: function(m, o, cb) { [d confirm:m options:o onResult:cb]; },
+        prompt: function(q, cb) {
+            if(typeof cb != "function") {
+                return oPrompt.apply(target, arguments);
+            } else {
+                return prompter(q, cb);
+            }
+        }
+    };
+    for(var fn in conv) target[fn]=conv[fn];
+}
 @end

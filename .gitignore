@@ -10,7 +10,6 @@ config/BIRD3.ini
 .tmp
 *.rdb
 *.dump
-cdn/oj/*.js
 cache/*
 *.lock
 php_modules/*
@@ -20,3 +19,8 @@ tmp/
 *.hpr
 Thumbs.db
 php.out
+cdn/content/avatars/*.png
+cdn/content/avatars/*.gif
+cdn/content/avatars/*.jpg
+cdn/content/avatars/*.jpeg
+index.html

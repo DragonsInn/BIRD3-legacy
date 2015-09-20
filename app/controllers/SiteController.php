@@ -6,13 +6,18 @@
 		$this->render('index');
 	}
 
-	public function actionError() {
-		if($error=Yii::app()->errorHandler->error) {
-			if(Yii::app()->request->isAjaxRequest)
-				echo $error['message'];
-			else
-				$this->render('error', $error);
+	public function actionError($e=null) {
+		if($e!=null) {
+			$error = $e;
+		} else {
+			$error = Yii::app()->errorHandler->error;
 		}
+		if(Yii::app()->request->isAjaxRequest) {
+			echo $error['message'];
+		} else {
+			$this->render('error', $error);
+		}
+		Yii::app()->end();
 	}
 	public function actionFail() {
 		throw new CException("Failing on purpose.");

@@ -7,7 +7,6 @@ $this->breadcrumbs=array(
 	'Error',
 );
 ?>
-
 <div id="speechbubble">
 	<h1>Sorry my dear. I can't help you with this...</h1>
 	<div class="error">

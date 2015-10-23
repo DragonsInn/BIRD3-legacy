@@ -1,8 +1,8 @@
 <?php
 // A totally polite NOOOOOOPE..
 // Because it annoys me on CLI.
-runkit_function_redefine("headers_sent", '', 'return false;');
 // Header.
+runkit_function_redefine("headers_sent", '', 'return false;');
 runkit_function_redefine(
     "header", '$to,$replace=false,$status=200',
     'return HttpResponse::header($to);'

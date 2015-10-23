@@ -46,15 +46,6 @@
     * [X] Optimize sent cache headers
         - Etag? Cache-control? Which one to use at what?
         - ETag on JS, Cache-Control + Expires on anything else.
-- [X] `bird3-hprose`
-    * [X] Implement basic structure
-        - [X] Workerman
-        - [X] Hprose
-        - [X] Workerman + Hprose = `hprose-workerman`!
-    * [X] Fine-tuned error handling
-    * [X] PHP logs to parent
-        - Probably gonna do it via Redis after all...
-        - Using REDIS indeed. Workerman forbids STDOUT usage.
 - [ ] In-Site docs
     * [ ] Proxy the Wiki into a /docs module
         * [ ] Map the URL
@@ -62,8 +53,6 @@
     * [ ] Write a proper credits page.
     * [ ] Terms of Service
     * [X] Roleplaying book/guide (Mostly done by Rayth)
-- [ ] Front-end refactor
-    - [ ] Finalize Preprocessor component for OJ (OhSoJuicy)
 - [ ] Chat
     * [ ] Authentification through `BIRD3User`
     * [ ] Move message passing to NodeJS/Socket.IO
@@ -134,6 +123,57 @@
         - Posting
         - Rendering
         - Searching
+- [ ] Migrating Yii1 to Laravel
+    - [ ] Install modularization
+    - [ ] Integrate `hprose-workerman` with the Illuminate Router
+    - [ ] Transist from CACtiveRecord to Eloquent
+- [ ] Migrate from OJ+EJS to UniterPHP
+- [ ] Namespace code (PHP and possibly JS)
+    * Vendor: `BIRD3`
+    * App: `BIRD3\App`
+    * Common: `BIRD3\Common`
+    * Backend/Server: `BIRD3\Backend`, Logger, Password, ...
+    * Widgets: `BIRD3\Widgets`
+    * Front-end: `BIRD3\Frontend`, Webpacked stuff
+    * Examples:
+        * `BIRD3\App\BaseController`
+        * `BIRD3\App\Modules\CharaBase\Models\Character`
+        * `BIRD3\Backend\Executor`
+        * `BIRD3\Backend\Common`
+        * `BIRD3\Common\Password`
+        * `BIRD3\Widgets\Dialog`
+        * `BIRD3\Frontend\Compatibility`
+    * For NodejS, use: https://github.com/jrf0110/alias-module
+    * For WebPack, use `resolve.alias: { "BIRD3$": "app" }`
+        * JS Example: `import Dialog from "BIRD3/Widgets/Dialog"`
+    * For PHP use composer `"psr-4": {"BIRD3\\": "app"}`
+        * PHP Example: `use BIRD3\Common\Password;`
+        * or `namespace BIRD3\App\Controllers\BaseController`
+- [ ] Laravel customization
+    - [ ] Session
+        * Handle Session via Redis, use module.
+        * Namespace: `BIRD3\Backend\Session`
+    - [ ] Override response/request stuff
+        * Get/Set headers
+        * Get/Set cookies
+        * Namespace: `BIRD3\Backend\Http\{Message, Cookie}`
+    - [ ] Synchronize Express and Laravel routers
+        * Failure router should return error to Express
+    - [ ] Facade to talk with hprose
+        * `RPC::get($nameWithDotNotation)`
+        * `RPC::set($nameWithDotNotation, $value)`
+    - [ ] Override caffeinated/modules:
+        * Allow the usage of `composer.json` inside the module.
+        * Pick up modules by their base name.
+    - [ ] Override `Illuminate\Foundation\Application`
+        * Name: `BIRD3\Foundation\Application`
+        * Override the functions that return paths to match new structure.
+        * Override `regusterCoreContainerAliases()` and replace with self.
+    - [ ] Override `Symfony\Component\HttpKernel,Request,Response`
+        * Make hprose aware.
+        * Return to hprose instead of browser
+        * Extract request vars from arguments
+        * Provide access to files, request bodies and alike.
 
 ## Notes... Scribbles...
 (23:04:14) Sapphy: (whispers) -Birth and Death Tab-

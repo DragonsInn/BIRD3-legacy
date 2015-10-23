@@ -1,6 +1,7 @@
 // core
 var path = require("path");
 var merge = require("merge");
+var a_merge = require("array-merger").merge;
 var glob = require("glob");
 var fs = require("fs");
 
@@ -103,6 +104,8 @@ var sassq = [
     "includePaths[]="+path.join(config.base, "themes"),
     "sourceMap"
 ].join("&");
+// SASS vars
+var sassVars = JSON.stringify(config);
 // Progress output
 var logger = require(config.base+"/node-lib/logger")(config.base);
 var progress = new webpack.ProgressPlugin(function(p, msg){
@@ -150,7 +153,7 @@ var clear = new cleanPlugin(["cdn/app"], config.base);
 // PurifyCSS
 var purifyPlugin = new purify({
     basePath: config.base,
-    paths: [
+    paths: a_merge([
         // Yii views
         "app/views/*/*.php",
         "app/components/views/*.php",
@@ -179,8 +182,17 @@ var purifyPlugin = new purify({
         "node_modules/ladda/js/*.js",
         "node_modules/ladda/node_modules/spin.js/spin.js",
         // bootstrap.native
-        "bower_components/bootstrap.native/lib/*.js"
-    ]
+        // "bower_components/bootstrap.native/lib/*.js"
+    ], (function(){
+        var bnm = [];
+        [
+            "modal","tooltip","popover",
+            "dropdown","button"
+        ].forEach(function(entry){
+            bnm.push(entry);
+        });
+        return bnm;
+    })())
 });
 
 // Return the config
@@ -253,7 +265,12 @@ module.exports = {
                 test: /\.scss$/,
                 loader: extractText.extract(
                     "style",
-                    "css?"+cssq+"!postcss?"+cssq+"!sass?"+sassq
+                    [
+                        "css?"+cssq,
+                        "postcss?"+cssq,
+                        "sass?"+sassq,
+                        //"jsontosass?"+sassVars
+                    ].join("!")
                 )
             },{ // WingStyle -> CSS
                 test: /\.ws\.php$/,
@@ -327,6 +344,6 @@ module.exports = {
         // CSS
         extractor, purifyPlugin,
         // JavaScript
-        uglify
+        //uglify
     ]
 };

@@ -2,11 +2,10 @@
 var $ = require("./jquery");
 
 // Bootstrap.Native
-require("./bootstrapper.scss");
 require("./bootstrapper.js");
 // Theme
 require("dragonsinn/css/bs-extra.css");
-require("dragonsinn/css/main.ws.php");
+require("dragonsinn/css/main.scss");
 //require("dragonsinn/Birdcons/Birdcons.font.js");
 // Syntax highlighting
 require("highlight.js/styles/hybrid.css");

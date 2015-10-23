@@ -68,13 +68,13 @@
                     <div id="banner"></div>
                     <?php endif; ?>
                     <!-- Panels -->
-                    <div id="Ptop" class="panel-default panel-top">
+                    <div id="Ptop" class="panel top">
                     </div>
-                    <div id="Pleft" class="panel-default panel-side panel-left container">
+                    <div id="Pleft" class="panel side left container">
                         <p>This search will look for Characters, Media and Forum entries.</p>
                         <div><input type="text" id="allSearch" class="form-control white-box"></div>
                     </div>
-                    <div id="Pright" class="panel-default panel-side panel-right">
+                    <div id="Pright" class="panel side right">
                         <?php
                             if(Yii::app()->user->isGuest)
                                 $this->widget("BIRD3LoginWidget");
@@ -83,7 +83,7 @@
                         ?>
                     </div>
                     <?php if($this->panelBottom != false) { ?>
-                    <div id="Pbottom" class="panel-default panel-bottom">
+                    <div id="Pbottom" class="panel bottom">
                         <?=$this->panelBottom?>
                     </div>
                     <?php } ?>

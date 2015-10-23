@@ -1,0 +1,74 @@
+/**
+ * Dragon's Inn: Panels
+ * In here, we're going to set up variables and CSS for the panels.
+ */
+$panel_side_width    : 240px;
+$panel_top_height    : 130px;
+$panel_bottom_height : 150px;
+$sides               : left, right;
+$sides-y             : top, bottom;
+
+.panel-pusher {
+    // Main
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    // bottom: 0;
+
+    // Pushes
+    &.from-left    { left: $panel_side_width;      }
+    &.from-right   { left: -$panel_side_width;     }
+    &.from-bottom  { bottom: $panel_bottom_height; }
+    &.from-top     { top: $panel_top_height;       }
+
+    .panel {
+        position: fixed;
+        background: rgba(0,0,0, 0.5);
+        visibility: hidden;
+
+        &.side {
+            width: $panel_side_width;
+            height: 100%;
+            top: 0;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        &.top, &.bottom {
+            width: 100%;
+            left: 0;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        &.top    { height: $panel_top_height;    }
+        &.bottom { height: $panel_bottom_height; }
+
+        @each $side in $sides {
+            &.side.#{$side} {
+                #{$side}: -$panel_side_width;
+                &.active-pane {
+                    visibility: visible;
+                    #{$side}: 0;
+                }
+            }
+        }
+        @each $side in $sides-y {
+            &.#{$side} {
+                &.active-pane {
+                    visibility: visible;
+                    #{$side}: 0;
+                }
+            }
+        }
+    }
+
+    .panel, & {
+        transition: all 0.3s ease;
+    }
+}

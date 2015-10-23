@@ -2,91 +2,71 @@ $.ready(function(){
     console.log("Setting up panels...");
     // Panel vars
     var useBottomPanel = BIRD3.useBottomPanel,
-        pLeft = $("#Pleft"),
-        pRight = $("#Pright"),
-        pTop = $("#Ptop"),
-        // Panel triggers
-        tLeft = $("#trigger-left"),
-        tRight = $("#trigger-right"),
-        tTop = $("#trigger-top"),
-        everything = $(".panel-pusher");
+        everything = $(".panel-pusher"),
+        // Panes
+        _panels = {
+            top: $("#Ptop"),
+            left: $("#Pleft"),
+            right: $("#Pright")
+        },
+        // Trigger
+        _triggers = {
+            top: $("#trigger-top"),
+            left: $("#trigger-left"),
+            right: $("#trigger-right")
+        },
+        // Which ones to use
+        sides = ["top", "left", "right"];
 
     if(useBottomPanel) {
-        var pBottom = $("#Pbottom");
-        var tBottom = $("#trigger-bottom");
+        _triggers.bottom = $("#trigger-bottom");
+        _panels.bottom = $("#Pbottom");
+        sides.push("bottom");
     }
 
-    tLeft.click(function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        removePushers("left");
-        disableOthers("left");
-        pLeft.toggleClass("panel-side-active");
-        everything.toggleClass("panel-pusher-toright");
-    });
-    tRight.click(function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        console.log("o.o")
-        disableOthers("right");
-        removePushers("right");
-        pRight.toggleClass("panel-side-active");
-        everything.toggleClass("panel-pusher-toleft");
-    });
-    tTop.click(function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        disableOthers("top");
-        removePushers("top");
-        pTop.toggleClass("panel-top-active");
-        everything.toggleClass("panel-pusher-fromtop");
-    });
+    // Tiny callback
+    function eachSide(cb) {
+        for(var i in sides) {
+            cb(sides[i], i);
+        }
+    }
+    function trigger(side) {
+        if(_triggers[side][0] != null)
+            return _triggers[side];
+        else
+            return null;
+    }
+    function panel(side) {
+        if(_panels[side][0] != null)
+            return _panels[side];
+        else
+            return null;
+    }
 
-    // Now assign event stopper on bars.
-    $(pLeft).click(function(e){ e.stopPropagation(); });
-    $(pRight).click(function(e){ e.stopPropagation(); });
-    $(pTop).click(function(e){ e.stopPropagation(); });
 
-    if(useBottomPanel) {
-        tBottom.click(function(e) {
+    eachSide(function(side, i){
+        console.log(side, trigger(side))
+        trigger(side) != null && trigger(side).on("click",function(e){
+            console.log("o.o! "+side);
             e.stopPropagation();
-            disableOthers("bottom");
-            removePushers("bottom");
-            pBottom.toggleClass("panel-bottom-active");
+            e.preventDefault();
+            disableAndRemovePushers(side);
+            panel(side) != null && panel(side).toggleClass("active-pane");
+            everything.toggleClass("from-"+side);
         });
-        $(pBottom).click(function(e){ e.stopPropagation(); });
-    }
+    });
 
     // Finalize
-    $("body").click(function(e) {
-        //console.trace("doc click");
-        pLeft.removeClass("panel-side-active");
-        pRight.removeClass("panel-side-active");
-        //pTop.removeClass("panel-top-active");
-        //everything.removeClass("panel-pusher-fromtop");
-        everything.removeClass("panel-pusher-toleft");
-        everything.removeClass("panel-pusher-toright");
-        if(useBottomPanel) {
-            tBottom.removeClass("panel-bottom-active");
-            everything.removeClass("panel-pusher-frombottom");
-        }
+    $("body").on("click",function(e) {
+        disableAndRemovePushers(null);
     });
 
-    function disableOthers(panel) {
-        if(panel != "left") pLeft.removeClass("panel-side-active");
-        if(panel != "right") pRight.removeClass("panel-side-active");
-        //if(panel != "top") pTop.removeClass("panel-top-active");
-        if(useBottomPanel) {
-            if(panel != "bottom") tBottom.removeClass("panel-bottom-active");
-        }
-    }
-
-    function removePushers(panel) {
-        if(panel != "left") everything.removeClass("panel-pusher-toright");
-        if(panel != "right") everything.removeClass("panel-pusher-toleft");
-        //if(panel != "top") everything.removeClass("panel-pusher-fromtop");
-        if(useBottomPanel) {
-            if(panel != "bottom") everything.removeClass("panel-pusher-frombottom");
-        }
+    function disableAndRemovePushers(pane) {
+        eachSide(function(side){
+            if(pane != side) {
+                everything.removeClass("from-"+side);
+                panel(side) != null && panel(side).removeClass("active-pane");
+            }
+        });
     }
 });

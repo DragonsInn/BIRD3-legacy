@@ -6,8 +6,6 @@
 use \Illuminate\Foundation\Application as LaravelApplication;
 use Illuminate\Events\EventServiceProvider;
 
-use BIRD3\Foundation\WebDriver\Providers\WebDriverServiceProvider;
-
 abstract class BaseApplication extends LaravelApplication {
     // Holds all the paths
     protected $_paths;
@@ -36,20 +34,7 @@ abstract class BaseApplication extends LaravelApplication {
     public function __construct($basePath, $configPath = null) {
         $this->_paths = $this->loadConfig($configPath);
         require_once __DIR__."/../Support/Helpers.php";
-
-        // Register providers
-        $this->registerBaseBindings();
-        $this->registerSpecificProviders(); # Replaced
-        $this->registerCoreContainerAliases();
-
-        // Set path
-        if($basePath) { $this->setBasePath($basePath); }
-    }
-
-    // Register our special router profider
-    public function registerSpecificProviders() {
-        $this->register(new EventServiceProvider($this));
-        $this->register(new WebDriverServiceProvider($this));
+        parent::__construct($basePath);
     }
 
     /**

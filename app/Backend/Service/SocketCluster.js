@@ -1,10 +1,10 @@
 Error.stackTraceLimit = Infinity;
 
-var express = require("express"),
-    SocketCluster = require('socketcluster').SocketCluster,
-    BIRD3 = require("BIRD3/Support/GlobalConfig");
-
 module.exports.run = function(workerConf, house) {
+    var express = require("express"),
+        SocketCluster = require('socketcluster').SocketCluster,
+        BIRD3 = require("BIRD3/Support/GlobalConfig");
+
     var config = BIRD3.config;
     var socketCluster = new SocketCluster({
         workers: config.maxWorkers || 4,
@@ -22,10 +22,12 @@ module.exports.run = function(workerConf, house) {
         socketChannelLimit: 100,
         rebootWorkerOnCrash: config.debug || false
     });
-    process.on("exit",function(){
+    house.addShutdownHandler(function(ctx, next){
+        if(ctx.event != "exit") return next();
+        BIRD3.log.info("Shutting down SocketCluster");
         socketCluster.killWorkers();
         socketCluster.killBrokers();
+        next();
     });
 }
-
 require("powerhouse")();

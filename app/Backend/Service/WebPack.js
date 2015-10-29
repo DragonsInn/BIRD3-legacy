@@ -1,15 +1,14 @@
-var redisP = require("redis");
-var redis = redisP.createClient();
-var house = require("powerhouse")();
-var webpack = require("webpack");
-var path = require("path");
-var BIRD3 = require("BIRD3/Support/GlobalConfig");
-var log = BIRD3.log;
-var config = require(path.resolve(BIRD3.root, "util/webpack.config"));
-var fs = require("fs");
-var async = require("async");
+module.exports.run = function(workerConf, house) {
+    var redisP = require("redis");
+    var redis = redisP.createClient();
+    var webpack = require("webpack");
+    var path = require("path");
+    var BIRD3 = require("BIRD3/Support/GlobalConfig");
+    var log = BIRD3.log;
+    var config = require(path.resolve(BIRD3.root, "util/webpack.config"));
+    var fs = require("fs");
+    var async = require("async");
 
-var WebPackWorker = function(conf) {
     log.info("BIRD3 WebPack: Starting compiler...");
     async.parallel([
         function(step) {
@@ -28,7 +27,7 @@ var WebPackWorker = function(conf) {
         if(err) {
             log.error("There was an error within WebPack.");
             log.error(err);
-            process.exit(1);
+            BIRD3.emitRedis("bird3.exit", err);
         } else {
             var compiler = webpack(config);
             var watcher = compiler.watch({
@@ -63,5 +62,4 @@ var WebPackWorker = function(conf) {
         }
     })
 }
-
-WebPackWorker(JSON.parse(process.env.POWERHOUSE_CONFIG).config);
+require("powerhouse")();

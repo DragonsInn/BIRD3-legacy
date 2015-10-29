@@ -25,3 +25,4 @@ cdn/content/avatars/*.jpg
 cdn/content/avatars/*.jpeg
 index.html
 .vscode/
+vendor

@@ -1,3 +1,6 @@
+// Global
+require("../app/bootstrap/autoload")
+
 // core
 var path = require("path");
 var merge = require("merge");
@@ -11,19 +14,11 @@ var app = path.join(cdn,"app");
 var theme = path.join(__dirname,"..","app/App/Frontend/");
 var cache = path.join(__dirname,"..","cache");
 
-// Config stuff
-if(typeof global.config == "undefined") {
-    var ini = require("multilevel-ini");
-    var me = require("package")(path.join(__dirname,".."));
-    var config = ini.getSync(path.join(__dirname, "..", "config/BIRD3.ini"));
-    config.base = path.join(__dirname,"..");
-    config.version = me.version;
-    config.package = me;
-} else {
-    var config = global.config;
-}
-var base = config.base;
+// Config
+var BIRD3 = require("BIRD3/Support/GlobalConfig")
+var config = BIRD3.config;
 config.maxFileSize = 1024*10;
+config.base = BIRD3.root;
 
 var __debug = global.__debug || process.env["BIRD3_DEBUG"]==true || false;
 var _jquery = path.join( config.base, "app/App/Entry/Browser/Support/jQueryize.js" );
@@ -105,11 +100,10 @@ var sassq = [
     "sourceMap"
 ].join("&");
 // Progress output
-var logger = require(config.base+"/app/Backend/logger")(config.base);
 var progress = new webpack.ProgressPlugin(function(p, msg){
     if(p===0) msg = "Starting compilation...";
     if(p===1) msg = "Done!";
-    logger.update("WebPack => [%s%%]: %s", p.toFixed(2)*100, msg);
+    BIRD3.log.update("WebPack => [%s%%]: %s", p.toFixed(2)*100, msg);
 });
 // Try to press down further
 var dedupe = new webpack.optimize.DedupePlugin();
@@ -306,7 +300,7 @@ module.exports = {
             preprocessor: {
                 include_path: [
                     theme,
-                    path.join(base, "App/Frontend/Frameworks"),
+                    path.join(config.base, "app/Frontend/Frameworks"),
                 ],
                 defines: {},
             }

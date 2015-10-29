@@ -1,0 +1,7 @@
+{
+	"name": "Forum",
+	"slug": "forum",
+	"version": "1.0",
+	"description": "This is the description for the Forum module.",
+	"enabled": true
+}

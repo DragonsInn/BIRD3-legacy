@@ -1,0 +1,6 @@
+{
+	"name": "frug/ajax-chat",
+	"version": "0.9.7",
+	"description": "The AJAXChat within the BIRD3 source tree",
+	"enabled": true
+}

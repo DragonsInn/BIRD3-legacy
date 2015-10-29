@@ -1,0 +1,103 @@
+/*
+    BIRD3 Bootstrap enhancements.
+*/
+
+/* navbar */
+.navbar {
+    margin-bottom: 0 !important;
+}
+.navbar-soft, .navbar-nav {
+    background-color: rgba(0,0,0,0.3);
+    border-color: transparent;
+    margin-bottom: 0;
+}
+/* title */
+.navbar-soft .navbar-brand {
+    color: white;
+}
+.navbar-soft .navbar-brand:hover,
+.navbar-soft .navbar-brand:focus {
+    color: white;
+}
+/* link */
+.navbar-soft .navbar-nav > li > a {
+    color: #FCFCFC;
+}
+.navbar-soft .navbar-nav > li > a:hover,
+.navbar-soft .navbar-nav > li > a:focus {
+    color: #E0E0E0;
+}
+.navbar-soft .navbar-nav > .active > a,
+.navbar-soft .navbar-nav > .active > a:hover,
+.navbar-soft .navbar-nav > .active > a:focus {
+    color: white;
+    background-color: #303030;
+}
+
+.navbar-soft .navbar-nav > .open > a,
+.navbar-soft .navbar-nav > .open > a:hover,
+.navbar-soft .navbar-nav > .open > a:focus {
+    color: white;
+    background-color: rgba(48,48,48,0.8);
+}
+/* caret */
+.navbar-soft .navbar-nav > .dropdown > a .caret {
+    border-top-color: #777;
+    border-bottom-color: #777;
+}
+.navbar-soft .navbar-nav > .dropdown > a:hover .caret,
+.navbar-soft .navbar-nav > .dropdown > a:focus .caret {
+    border-top-color: #333;
+    border-bottom-color: #333;
+}
+.navbar-soft .navbar-nav > .open > a .caret,
+.navbar-soft .navbar-nav > .open > a:hover .caret,
+.navbar-soft .navbar-nav > .open > a:focus .caret {
+    border-top-color: #555;
+    border-bottom-color: #555;
+}
+/* mobile version */
+.navbar-soft .navbar-toggle {
+    border-color: #DDD;
+}
+.navbar-soft .navbar-toggle:hover,
+.navbar-soft .navbar-toggle:focus {
+    background-color: #DDD;
+}
+.navbar-soft .navbar-toggle .icon-bar {
+    background-color: #CCC;
+}
+@media (max-width: 767px) {
+    .navbar-soft .navbar-nav .open .dropdown-menu > li > a {
+        color: white;
+    }
+    .navbar-soft .navbar-nav .open .dropdown-menu > li > a:hover,
+    .navbar-soft .navbar-nav .open .dropdown-menu > li > a:focus {
+        color: #333;
+    }
+}
+@media only screen
+and (max-width : 768px)
+and (orientation : portrait) {
+    /* BIRD3's menu is too big for an iPad. Sadface. */
+    .nav > li > a {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+}
+
+/* Form controlz */
+.form-control {
+    background: black !important;
+    color: white !important;
+}
+
+/* Thumbnail elements */
+.thumbnail.thumbnail-soft {
+    background: rgba(40,40,40, 0.5);
+}
+
+/* Tooltip */
+div.tooltip-inner {
+    background: #282828;
+}

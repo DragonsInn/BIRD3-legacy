@@ -168,10 +168,18 @@ class Frontend {
                     ]
                 ];
             }
+
+            // # Status
+            if($responseCtx instanceof Request) {
+                $statusText = $responseCtx->getStatusText();
+            } else {
+                $statusText = null;
+            }
+
             return [
                 "status"        => $responseCtx->getStatusCode(),
                 #"statusText"    => $responseCtx->getStatusText(),
-                "statusText" => "OK",
+                "statusText" => $statusText,
                 "headers"       => $headers,
                 "cookies"       => $cookies,
                 "body"          => $responseCtx->getContent(),

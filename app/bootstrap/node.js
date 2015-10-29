@@ -175,10 +175,10 @@ var house = PowerHouse({
                             if(o.name=="bird3.exit") {
                                 log.error("Shutting down the entire server.");
                                 if(o.data) console.log(o.data);
-                                process.exit(1);
+                                house.kill();
                             }
                         } catch(e) {
-                            log.notice("Received empty string ("+e+")");
+                            log.notice("Received empty string: "+e.stack);
                         }
                     }
                 });

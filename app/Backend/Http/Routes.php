@@ -12,5 +12,5 @@
 */
 
 Route::get('/', function () {
-    return "Hello, world! The migrated BIRD3 chirpin' here!";
+    return view("test");
 });

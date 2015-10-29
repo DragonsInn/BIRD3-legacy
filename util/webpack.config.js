@@ -8,7 +8,7 @@ var fs = require("fs");
 // Paths
 var cdn = path.join(__dirname,"..","cdn");
 var app = path.join(cdn,"app");
-var theme = path.join(__dirname,"..","themes","dragonsinn");
+var theme = path.join(__dirname,"..","app/App/Frontend/");
 var cache = path.join(__dirname,"..","cache");
 
 // Config stuff
@@ -26,7 +26,7 @@ var base = config.base;
 config.maxFileSize = 1024*10;
 
 var __debug = global.__debug || process.env["BIRD3_DEBUG"]==true || false;
-var _jquery = path.join( config.base, "web-lib/misc/jquery" );
+var _jquery = path.join( config.base, "app/App/Entry/Browser/Support/jQueryize.js" );
 var _ojr = require.resolve("ojc/src/runtime");
 
 // Webpack: Load plugins
@@ -104,10 +104,8 @@ var sassq = [
     "includePaths[]="+path.join(config.base, "themes"),
     "sourceMap"
 ].join("&");
-// SASS vars
-var sassVars = JSON.stringify(config);
 // Progress output
-var logger = require(config.base+"/node-lib/logger")(config.base);
+var logger = require(config.base+"/app/Backend/logger")(config.base);
 var progress = new webpack.ProgressPlugin(function(p, msg){
     if(p===0) msg = "Starting compilation...";
     if(p===1) msg = "Done!";
@@ -115,24 +113,6 @@ var progress = new webpack.ProgressPlugin(function(p, msg){
 });
 // Try to press down further
 var dedupe = new webpack.optimize.DedupePlugin();
-
-// Generate entries
-var libs = require("array-merger").merge(
-    glob.sync(path.join(__dirname, "../web-lib/*.js")),
-    glob.sync(path.join(__dirname, "../web-lib/*.oj"))
-);
-var entry = {
-    libwebpack: [
-        "domready", _jquery, _ojr,
-        path.join(config.base, "web-lib/misc/common.js"),
-        path.join(config.base, "web-lib/misc/bootstrapper.js"),
-        "dragonsinn/js/panels.js"
-    ]
-};
-libs.forEach(function(file){
-    var name = path.basename(file, path.extname(file));
-    entry[name] = file;
-});
 
 // Banner
 var bannerPlugin = new webpack.BannerPlugin((function(){
@@ -155,29 +135,26 @@ var purifyPlugin = new purify({
     basePath: config.base,
     paths: a_merge([
         // Yii views
-        "app/views/*/*.php",
-        "app/components/views/*.php",
-        "app/modules/*/views/*/*.php",
-        "app/modules/*/components/views/*.php",
-        "app/extensions/*/components/views/*.php",
-        "themes/*/views/layouts/*.php",
+        "app/App/Views/*/*.php",
+        "app/App/Modules/*/Views/*/*.php",
+        "app/Extensions/*/Views/*.php",
+        "app/Frontend/Design/Layouts/*.php",
         // JavaScript + OJ
-        "web-lib/*.js",
-        "web-lib/*.oj",
-        "web_modules/frameworks/*.js",
-        "web_modules/frameworks/*.oj",
-        "web_modules/frameworks/*/*.js",
-        "web_modules/frameworks/*/*.oj",
-        "app/extensions/*/js/*.js",
-        "themes/*/js/*.js",
+        "app/App/Entry/Browser/*.oj",
+        "app/App/Entry/Browser/*.js",
+        "app/App/Entry/Browser/Support/*.oj",
+        "app/App/Entry/Browser/Support/*.js",
+        "app/Frontend/*.oj",
+        "app/Frontend/*.js",
+        "app/Frontend/Frameworks/*.js",
+        "app/Frontend/Frameworks/*.oj",
         // EJS
-        "web_modules/frameworks/*/*.ejs",
-        "app/extensions/*/js/*/*.ejs",
+        //"web_modules/frameworks/*/*.ejs",
+        //"app/extensions/*/js/*/*.ejs",
         // Specific
-        "app/modules/chat/js/*.js",
+        "app/App/Modules/Chat/js/*.js",
         //"app/modules/chat/lib/template/*.html",
         //"app/modules/chat/lib/template/*.php",
-        "app/modules/chat/views/*/*.php",
         // Ladda
         "node_modules/ladda/js/*.js",
         "node_modules/ladda/node_modules/spin.js/spin.js",
@@ -202,7 +179,15 @@ module.exports = {
     debug: __debug,
     watchDelay: 1000*5,
     //devtool: "#source-map",
-    entry: entry,
+    entry: {
+        libwebpack: [
+            "domready", _jquery, _ojr,
+            "BIRD3/App/Entry/Browser/Support/Common",
+            "BIRD3/App/Entry/Browser/Support/BootstrapNative",
+            "BIRD3/Frontend/Design/panels.js"
+        ],
+        main: "BIRD3/App/Entry/Browser/Main"
+    },
     output: {
         // to cdn/app/
         path: app,
@@ -221,10 +206,8 @@ module.exports = {
         ],
         root: [
             config.base,
-            // Yii
-            path.join(config.base,"app/modules"),
-            path.join(config.base,"app/extensions"),
-            path.join(config.base,"themes")
+            path.join(config.base,"app/App/Modules"),
+            path.join(config.base,"app/Extensions"),
         ],
         modulesDirectories: [
             // Bower, NPM, Composer, Web
@@ -234,11 +217,10 @@ module.exports = {
             'web_modules'
         ],
         alias: {
+            // This is sooooo cool!
+            BIRD3: path.join(config.base, "app"),
             // Ensure compatibility to original bootstrap
-            bootstrap: path.join(
-                config.base,
-                "web-lib/bootstrapper.js"
-            ),
+            bootstrap: "BIRD3/App/Entry/Browser/Support/BootstrapNative.js",
             "a11y.bs": path.join(
                 config.base,
                 "bower_components",
@@ -268,8 +250,7 @@ module.exports = {
                     [
                         "css?"+cssq,
                         "postcss?"+cssq,
-                        "sass?"+sassq,
-                        //"jsontosass?"+sassVars
+                        "sassport?"+sassq
                     ].join("!")
                 )
             },{ // WingStyle -> CSS
@@ -325,7 +306,7 @@ module.exports = {
             preprocessor: {
                 include_path: [
                     theme,
-                    path.join(base, "web_modules/frameworks"),
+                    path.join(base, "App/Frontend/Frameworks"),
                 ],
                 defines: {},
             }
@@ -338,7 +319,7 @@ module.exports = {
         // Cosmetics
         clear, bannerPlugin,
         // Chunking
-        dedupe, commonsPlugin,
+        commonsPlugin, dedupe,
         // Module enhancements
         defines, provider, bowerProvider,
         // CSS

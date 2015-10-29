@@ -55,7 +55,8 @@ return [
         Spatie\Backup\BackupServiceProvider::class,
 
         // Ext
-        BIRD3\Extensions\FlipFlop\Providers\FlipFlopServiceProvider::class
+        BIRD3\Extensions\FlipFlop\Providers\FlipFlopServiceProvider::class,
+        BIRD3\Foundation\WebDriver\Providers\WebDriverServiceProvider::class
     ],
 
     'aliases' => [

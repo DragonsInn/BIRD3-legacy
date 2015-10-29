@@ -1,6 +1,7 @@
 {
     "name": "ingwiephoenix/bird3-php",
     "description": "The PHP backend to the Dragon's Inn runtime, BIRD3.",
+    "license": "MIT",
     "require": {
         "php": ">=5.5.4",
         "ext-pcntl": "*",
@@ -8,12 +9,11 @@
         "ext-sockets": "*",
         "ext-runkit": "^1.0.4",
         "ext-sysvmsg": "*",
-        "yiisoft/yii": "1.1.*",
         "predis/predis": "0.8.*",
         "okwinza/cloudflare-api": "dev-master",
         "erusev/parsedown-extra": "^0.7.0",
         "evenement/evenement": "^2.0.0",
-        "walkor/workerman": "^3.1.0",
+        "walkor/workerman": "^3.2.0",
         "pagon/childprocess": "*",
         "corneltek/cliframework": "*",
         "voodoophp/paginator": "2.*",
@@ -21,14 +21,20 @@
         "querypath/QueryPath": "~3.0",
         "phine/path": "~1.0",
         "kohkimakimoto/earray": "~2.2",
-        "anahkiasen/html-object": "~1.4",
-        "css-crush/css-crush": "dev-master",
         "timetoogo/pinq": "^3.2",
-        "yiiext/migrate-command": "^0.8.0",
         "robmorgan/phinx": "^0.4.4",
         "jdorn/sql-formatter": "^1.2",
         "ircmaxell/password-compat": "^1.0",
-        "hprose/hprose": "^1.5"
+        "hprose/hprose": "^1.5",
+        "laravel/laravel": "^5.1",
+        "caffeinated/modules": "^2.1",
+        "caffeinated/SEO": "^2.0",
+        "laravel/framework": "^5.1",
+        "pingpong/widget": "^2.1",
+        "wikimedia/composer-merge-plugin": "^1.2",
+        "spatie/laravel-backup": "^2.7",
+        "florianwolters/component-util-singleton": "^0.3.2",
+        "ingwiephoenix/hprose-workerman": "^1.0"
     },
     "config": {
         "vendor-dir": "php_modules/"
@@ -39,6 +45,14 @@
         }
     },
     "extra": {
-        "foo": "bar"
+        "merge-plugin": {
+            "include": [
+                "app/Extensions/*/composer.json",
+                "app/App/Modules/*/composer.json"
+            ],
+            "recurse": true,
+            "replace": true,
+            "merge-extra": true
+        }
     }
 }

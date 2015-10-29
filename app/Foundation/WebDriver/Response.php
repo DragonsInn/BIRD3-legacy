@@ -1,6 +1,7 @@
 <?php namespace BIRD3\Foundation\WebDriver;
 
 use Illuminate\Http\Response as LaravelResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class Response extends LaravelResponse {
 
@@ -19,6 +20,18 @@ class Response extends LaravelResponse {
     // Ugh, i dont get why this is not possible.
     public function getStatusText() {
         return $this->statsText;
+    }
+
+    // Allow the morphing of data
+    public function __construct($content = "", $status = 200, $headers = array()) {
+        if($headers instanceof ResponseHeaderBag) {
+            $this->headers = $headers;
+        } else {
+            $this->headers = new ResponseHeaderBag($headers);
+        }
+        $this->setContent($content);
+        $this->setStatusCode($status);
+        $this->setProtocolVersion('1.1'); # We are modern, yo.
     }
 
 }

@@ -1,4 +1,8 @@
-<?php class BIRD3MarkdownEditor extends CWidget {
+<?php
+
+namespace BIRD3\Extensions\Editor;
+
+class MarkdownEditor {
     public $placement="bottom";
     public $taClass = "";
     public $context;

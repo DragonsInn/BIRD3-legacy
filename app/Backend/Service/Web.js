@@ -122,10 +122,13 @@ module.exports = function(app, hprosePort) {
         // Host config for HTTP headers and alike
         {
             port: BIRD3.config.BIRD3.http_port,
-            url: BIRD3.config.BIRD3.url
+            url: BIRD3.config.BIRD3.url,
+            host: BIRD3.config.BIRD3.host || "localhost"
         },
-        // Optional data.
-        {}
+        // Optional infos
+        {
+            version: BIRD3.package.version
+        }
     );
     require("BIRD3/Backend/Handlers/Php")(wd);
     app.use("/", wd.getMiddleware());

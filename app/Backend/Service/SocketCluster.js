@@ -12,6 +12,7 @@ module.exports.run = function(workerConf, house) {
         port: config.BIRD3.http_port,
         host: config.BIRD3.host,
         appName: config.app.name,
+        initController: require.resolve("BIRD3/Backend/SocketCluster/Init"),
         workerController: require.resolve("BIRD3/Backend/SocketCluster/Worker"),
         brokerController: require.resolve("BIRD3/Backend/SocketCluster/Broker"),
         brokerOptions: {

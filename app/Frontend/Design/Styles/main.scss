@@ -178,21 +178,6 @@ $in_marg: 80px;
         width: 100%;
     }
 
-    #footer {
-        display: block;
-        position: relative;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        text-align: center;
-        background: rgba(0,0,0,0.4);
-        padding-top: 7px;
-        padding-left: 2px;
-        padding-right: 2px;
-        padding-bottom: 10px;
-        width: 100%;
-    }
-
     #leftSide, #rightSide {
         // FIXME: Re-implementation
         background: rgba(0,0,0, 0.8);
@@ -220,10 +205,23 @@ $in_marg: 80px;
         padding-right: 5px;
         border: 1px;
         background: black;
-
     }
 }
 
+#footer {
+    display: block;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background: rgba(0,0,0,0.4);
+    padding-top: 7px;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-bottom: 10px;
+    width: 100%;
+}
 
 // Customs
 .iconblock {

@@ -5,7 +5,10 @@ use \BIRD3\Support\GlobalConfig;
 return [
 
     'debug' => env('APP_DEBUG', false),
-    'url' => GlobalConfig::get("app.url"),
+    'url' => implode(":",[
+        "http://".GlobalConfig::get("BIRD3.url"),
+        GlobalConfig::get("BIRD3.http_port")
+    ]),
 
     // Date and time
     'timezone' => 'UTC',
@@ -53,6 +56,7 @@ return [
         // Modules
         Caffeinated\Modules\ModulesServiceProvider::class,
         Spatie\Backup\BackupServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
 
         // Ext
         BIRD3\Extensions\FlipFlop\Providers\FlipFlopServiceProvider::class,
@@ -96,7 +100,13 @@ return [
 
         // Modules
         'Module' => Caffeinated\Modules\Facades\Module::class,
-        'Resolver' => BIRD3\Support\Facades\Resolver::class
+        'Resolver' => BIRD3\Support\Facades\Resolver::class,
+        'Hprose' => BIRD3\Support\Facades\Hprose::class,
+        "BIRD3" => BIRD3\Support\Facades\BIRD3::class,
+
+        // External
+        'HTML' => Collective\Html\HtmlFacade::class,
+        'Form' => Collective\Html\FormFacade::class
     ],
 
 ];

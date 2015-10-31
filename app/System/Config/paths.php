@@ -28,6 +28,12 @@
         "widgets" => BIRD3_APP."/Frontend/Widgets",
         "cdn" => APP_ROOT."/cdn",
         "logs" => APP_ROOT."/logs",
-        "docs" => APP_ROOT."/docs"
+        "docs" => APP_ROOT."/docs",
+
+        // package managers
+        "bower" => APP_ROOT."/bower_components",
+        "npm" => APP_ROOT."/node_modules",
+        "composer" => APP_ROOT."/php_modules",
+        "web" => APP_ROOT."/web_modules"
     ]
 ];

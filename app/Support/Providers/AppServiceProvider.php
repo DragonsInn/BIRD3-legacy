@@ -2,6 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 use BIRD3\Support\Resolver;
+use BIRD3\Support\BIRD3Helper;
 
 use View;
 use App;
@@ -35,6 +36,11 @@ class AppServiceProvider extends ServiceProvider {
         });
         App::singleton("resolver", function() use($resolver){
             return $resolver;
+        });
+
+        // BIRD3 helper
+        App::singleton(BIRD3Helper::class, function(){
+            return new BIRD3Helper;
         });
     }
 }

@@ -11,7 +11,7 @@ class RouteServiceProvider extends ServiceProvider {
      *
      * @var string
      */
-    protected $namespace = 'BIRD3\Backend\Controllers';
+    protected $namespace = 'BIRD3\App\Controllers';
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -31,7 +31,7 @@ class RouteServiceProvider extends ServiceProvider {
      */
     public function map(Router $router) {
         $router->group(['namespace' => $this->namespace], function ($router) {
-            require app_path('Backend/Http/routes.php');
+            require app_path('Backend/Http/Routes.php');
         });
     }
 }

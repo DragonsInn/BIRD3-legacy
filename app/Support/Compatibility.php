@@ -1,18 +1,29 @@
 <?php namespace BIRD3\Support;
 
+// Vendor
+use Ikimea\Browser\Browser;
+use Request;
+use Exception;
+
 class Compatibility {
+    // Little helper function
+    private static function makeBrowser() {
+        return new Browser(Request::server("HTTP_USER_AGENT"));
+    }
+
+    // General check-call
     public static function check($feature) {
         $mtm = "check_".$feature;
         if(method_exists(get_class(), $mtm)) {
             return self::{$mtm}();
         } else {
             // Not implemented, is always true.
-            throw new CException("Browser check for feature '$feature' is not implemented!");
+            throw new Exception("Browser check for feature '$feature' is not implemented!");
         }
     }
 
     public static function check_blur_bg() {
-        $b = Yii::app()->browser;
+        $b = self::makeBrowser();
         if($b->getBrowser() == Browser::BROWSER_SAFARI) {
             $v = explode(".", $b->getVersion());
             if($v[0] == 8) {

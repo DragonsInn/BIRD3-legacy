@@ -11,16 +11,10 @@ use BIRD3\Backend\Log;
 use BIRD3\Backend\Http\Kernel as HttpKernel;
 use BIRD3\Foundation\WebDriver\Request;
 use BIRD3\Foundation\WebDriver\Response;
+use BIRD3\Support\HproseHolder;
 
 // Facades
 use \App;
-
-// ...hacky.
-function exception_error_handler($severity, $message, $file, $line) {
-    $output = "$message ($file : $line)";
-    Log::error($output);
-    throw new ErrorException($message, 0, $severity, $file, $line);
-}
 
 function objectToArray($d) {
     if (is_object($d)) {
@@ -88,6 +82,13 @@ class Frontend {
     static function handle($ctx) {
         ini_set("session.serialize_handler", "php_serialize");
 
+        set_error_handler(function($severity, $message, $file, $line) {
+            $e = new ErrorException($message, 0, $severity, $file, $line);
+            $output = "$message ($file : $line)".PHP_EOL.$e->getTraceAsString();
+            Log::error($output);
+            throw $e;
+        });
+
         // Dump the context into the current scope.
         foreach($ctx as $name=>$data) {
             ${$name} = (object)$data;
@@ -114,79 +115,79 @@ class Frontend {
                 - Reponse body and headers must be separated.
         */
 
-        try {
-            // Create a kernel with a WebApplication class instead of Server.
-            $router = App::make(Router::class);
-            #$app = require_once(APP_ROOT."/app/bootstrap/app.php");
-            $app = App::getInstance();
-            $kernel = new HttpKernel($app, $router);
+        // Create a kernel with a WebApplication class instead of Server.
+        $app = App::getInstance();
+        $router = $app["router"];
 
-            // Create a request off the hprose parameters
-            # create($uri, $method = 'GET', $parameters = array(), $cookies = array(), $files = array(), $server = array(), $content = null)
-            $requestCtx = Request::create(
-                $request->url,
-                $request->method,
-                $request->postData,
-                $request->cookies,
-                $request->files,
-                $request->server
-            );
+        // Obtain a kernel instance that we can use to handle the request.
+        $kernel = new HttpKernel($app, $router);
 
-            // If we have a request body, set it.
-            if(isset($request->body)) {
-                $request->setRawBody($request->body);
-            }
+        // Store the hprose parameters, the optional ones.
+        $app->instance(HproseHolder::class, new HproseHolder($ctx["optional"]));
 
-            // Obtain a response.
-            // Sigh, I want this to be a REAL WebDriver response...
-            $responseCtx = $kernel->handle($requestCtx);
+        // Create a request off the hprose parameters
+        # create($uri, $method = 'GET', $parameters = array(), $cookies = array(), $files = array(), $server = array(), $content = null)
+        $requestCtx = Request::create(
+            $request->url,
+            $request->method,
+            $request->postData,
+            $request->cookies,
+            $request->files,
+            $request->server
+        );
 
-            // Handle remaining things
-            $kernel->terminate($requestCtx, $responseCtx);
-
-            // The request is done, so convert and return it.
-            // # Headers
-            $headers = [];
-            foreach($responseCtx->headers->allPreserveCase() as $name=>$values) {
-                foreach($values as $value) {
-                    $headers[] = [$name, $value];
-                }
-            }
-
-            // # Cookies
-            $cookies = [];
-            foreach($responseCtx->headers->getCookies() as $cookie) {
-                $cookies[] = [
-                    "name"      => $cookie->getName(),
-                    "value"     => $cookie->getValue(),
-                    "options"   => [
-                        "expires"   => $cookie->getExpiresTime(),
-                        "path"      => $cookie->getPath(),
-                        "domain"    => $cookie->getDomain(),
-                        "secure"    => $cookie->isSecure(),
-                        "httpOnly"  => $cookie->isHttpOnly()
-                    ]
-                ];
-            }
-
-            // # Status
-            if($responseCtx instanceof Request) {
-                $statusText = $responseCtx->getStatusText();
-            } else {
-                $statusText = null;
-            }
-
-            return [
-                "status"        => $responseCtx->getStatusCode(),
-                #"statusText"    => $responseCtx->getStatusText(),
-                "statusText" => $statusText,
-                "headers"       => $headers,
-                "cookies"       => $cookies,
-                "body"          => $responseCtx->getContent(),
-            ];
-        } catch(\Exception $e) {
-            Log::error(var_export($e->stack, true));
+        // If we have a request body, set it.
+        if(isset($request->body)) {
+            $request->setRawBody($request->body);
         }
+
+        // Obtain a response.
+        // Sigh, I want this to be a REAL WebDriver response...
+        $responseCtx = $kernel->handle($requestCtx);
+
+        // Handle remaining things
+        $kernel->terminate($requestCtx, $responseCtx);
+
+        // The request is done, so convert and return it.
+        // # Headers
+        $headers = [];
+        foreach($responseCtx->headers->allPreserveCase() as $name=>$values) {
+            foreach($values as $value) {
+                $headers[] = [$name, $value];
+            }
+        }
+
+        // # Cookies
+        $cookies = [];
+        foreach($responseCtx->headers->getCookies() as $cookie) {
+            $cookies[] = [
+                "name"      => $cookie->getName(),
+                "value"     => $cookie->getValue(),
+                "options"   => [
+                    "expires"   => $cookie->getExpiresTime(),
+                    "path"      => $cookie->getPath(),
+                    "domain"    => $cookie->getDomain(),
+                    "secure"    => $cookie->isSecure(),
+                    "httpOnly"  => $cookie->isHttpOnly()
+                ]
+            ];
+        }
+
+        // # Status
+        if($responseCtx instanceof Request) {
+            $statusText = $responseCtx->getStatusText();
+        } else {
+            $statusText = null;
+        }
+
+        return [
+            "status"        => $responseCtx->getStatusCode(),
+            #"statusText"    => $responseCtx->getStatusText(),
+            "statusText" => $statusText,
+            "headers"       => $headers,
+            "cookies"       => $cookies,
+            "body"          => $responseCtx->getContent(),
+        ];
     }
 }
 

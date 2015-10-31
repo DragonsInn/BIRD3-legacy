@@ -1,9 +1,6 @@
 // Just a small thing to do.
 Error.stackTraceLimit = Infinity;
 
-// Link in the BIRD3 module
-require("./autoload.js");
-
 // Require BIRD3's config
 var BIRD3 = require("BIRD3/Support/GlobalConfig");
 

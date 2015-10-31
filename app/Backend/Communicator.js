@@ -2,6 +2,7 @@
 var events = require("events").EventEmitter;
 var avs = require("avs-rpc");
 var util = require("util");
+var merge = require("merge");
 var debug = require("debug")("bird3:events");
 var BIRD3 = require("BIRD3/Support/GlobalConfig");
 
@@ -76,12 +77,12 @@ function Communicator(io, redis) {
             };
 
             this.methodNames = function() {
-                return Object.keys(extend(sync_methods, async_methods));
+                return Object.keys(merge(sync_methods, async_methods));
             };
 
             this.implementTo = function(rpcObj) {
-                rpcself.implement(sync_methods);
-                rpcself.implementAsync(async_methods);
+                rpcObj.implement(sync_methods);
+                rpcObj.implementAsync(async_methods);
             };
 
             return this;

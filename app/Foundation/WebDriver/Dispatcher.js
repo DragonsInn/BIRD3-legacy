@@ -76,16 +76,24 @@ function Dispatcher(uri, requestClass, hostConfig, optional) {
 
     // This function translates a normal request object into something that PHP could understand.
     var transformHeaders = function(req) {
+        var rq_url = url.parse(req.url);
         var headers = {
+            // The HTTP method
             REQUEST_METHOD: req.method,
-            QUERY_STRING: url.parse(req.url).query,
-            PHP_SELF: req.url,
-            SCRIPT_FILENAME: req.url,
-            SCRIPT_NAME: req.url,
-            REQUEST_URI: req.url,
+            // The query string. In this case: foo=bar&baz=qox
+            QUERY_STRING: rq_url.query,
+            // The full path to the requested PHP file
+            SCRIPT_FILENAME: "/",
+            // The url-relative path to the requested PHP file
+            SCRIPT_NAME: "/",
+            // Holds the URI path and query string. I.e.: /index.php?foo=bar or /foo?herp=derp
+            REQUEST_URI: rq_url.path,
+            // Equals to SCRIPT_NAME.
             DOCUMENT_URI: req.url,
+            // Remote informations
             REMOTE_ADDR: req.ip,
             REMOTE_PORT: req.connection.remotePort,
+            // Server informations
             SERVER_ADDR: this.host,
             SERVER_PORT: this.port,
             SERVER_NAME: this.url,
@@ -95,7 +103,7 @@ function Dispatcher(uri, requestClass, hostConfig, optional) {
         };
 
         for(var name in req.headers) {
-            var headerName = name.toUpperCase().replace("-","_");
+            var headerName = "HTTP_"+name.toUpperCase().replace(/\-/g,"_");
             headers[headerName] = req.headers[name];
         }
 

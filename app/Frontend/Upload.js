@@ -1,6 +1,6 @@
 // Fancy buttons
 var ladda = require("ladda/js/ladda");
-require("dragonsinn/css/ladda.scss");
+require("BIRD3/Frontend/Design/Styles/ladda.scss");
 
 // Upload
 var filedrop = window.fd = require("legacy!filedrop").fd;

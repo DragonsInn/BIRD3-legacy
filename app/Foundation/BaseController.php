@@ -1,14 +1,31 @@
 <?php namespace BIRD3\Foundation;
 
-use Illuminate\Routing\Controller;
+// Laravel
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Routing\Controller as LaravelController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+#use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
+// Vendor
+use Ikimea\Browser\Browser;
+
+// BIRD3
 use BIRD3\Support\GlobalConfig;
 use BIRD3\Support\Compatibility;
 
+// Facades
 use Cache;
+use View;
+use Hprose;
+use HTML;
+use Request;
 
 // I need...a base controller. o.o;
-abstract class BaseController {
-	public $layout='@theme/Layouts/main ';
+abstract class BaseController extends LaravelController {
+
+    use DispatchesJobs, ValidatesRequests; #AuthorizesRequests
+
+	public $layout='@theme/Layouts/main.php';
 	public $breadcrumbs=array();
 	public $showingBan=false;
 
@@ -33,22 +50,32 @@ abstract class BaseController {
 	// Determine which module should be loaded in JavaScript.
 	public $module = "main";
 
+    // Used as a transparency value
+    private $fbAlpha = 0.3;
+
+    // Scripts
+    private $cssTags = [];
+    private $jsTags = [
+        "top" => [],
+        "bottom" => []
+    ];
+
 	// Menu
 	public $navEntries = array(
 		"Dragon's Inn"=>array(
 			"href"=>"#",
 			"entries"=>array(
 				array("Home", "icon"=>"fa fa-home", "url"=>"/"),
-				array("Rules & TOS", "icon"=>"fa fa-legal", "url"=>array("/docs/Rules_and_TOS")),
+				array("Rules & TOS", "icon"=>"fa fa-legal", "url"=>"/docs/Rules_and_TOS"),
 				array(
 					"Roleplaying etiquette",
 					"icon"=>"fa fa-info-circle",
-					"url"=>array("/docs/Roleplaying_Etiquette")
+					"url"=>"/docs/Roleplaying_Etiquette"
 				),
 				array(
 					"Staff",
 					"icon"=>"glyphicon glyphicon-certificate",
-					"url"=>array("/home/staff")
+					"url"=>"/home/staff"
 				),
 			)
 		),
@@ -56,34 +83,34 @@ abstract class BaseController {
 			"href"=>"#",
 			"icon"=>"fa fa-users",
 			"entries"=>array(
-				array("Users", "icon"=>"fa fa-users","url"=>array("/user/list")),
+				array("Users", "icon"=>"fa fa-users","url"=>"/user/list"),
 				array("Chat <font color=\"lime\">NN</font>",
-					"url"=>array("/chat"),
+					"url"=>"/chat",
 					"icon"=>"fa fa-comments"
 				),
-				array("Forum", "icon"=>"fa fa-comment","url"=>array("/form")),
-				array("Blogs", "icon"=>"glyphicon glyphicon-list-alt","url"=>array("/blog"))
+				array("Forum", "icon"=>"fa fa-comment","url"=>"/form"),
+				array("Blogs", "icon"=>"glyphicon glyphicon-list-alt","url"=>"/blog")
 			)
 		),
 		"Story"=>array(
 			"href"=>"#",
 			"icon"=>"fa fa-globe",
 			"entries"=>array(
-				array("Storyline", "icon"=>"fa fa-file-text","url"=>array("/hotel/story")),
-				array("Places", "icon"=>"fa fa-compass","url"=>array("/hotel/places")),
-				array("Jobs", "icon"=>"fa fa-building","url"=>array("/hotel/jobs"))
+				array("Storyline", "icon"=>"fa fa-file-text","url"=>"/hotel/story"),
+				array("Places", "icon"=>"fa fa-compass","url"=>"/hotel/places"),
+				array("Jobs", "icon"=>"fa fa-building","url"=>"/hotel/jobs")
 			),
 		),
 		"Characters"=>array(
 			"href"=>"#",
 			"icon"=>"fa fa-book",
 			"entries"=>array(
-				array("Latest", "icon"=>"fa fa-list","url"=>array("/chars/latest")),
-				array("All", "icon"=>"fa fa-database","url"=>array("/chars/all")),
+				array("Latest", "icon"=>"fa fa-list","url"=>"/chars/latest"),
+				array("All", "icon"=>"fa fa-database","url"=>"/chars/all"),
 				array(
 					"Families &amp; Clans",
 					"icon"=>"fa fa-child",
-					"url"=>array("/chars/associations")
+					"url"=>"/chars/associations"
 				),
 			),
 		),
@@ -91,11 +118,11 @@ abstract class BaseController {
 			"href"=>"#",
 			"icon"=>"glyphicon glyphicon-eye-open",
 			"entries"=>array(
-				array("Latest", "icon"=>"fa fa-list","url"=>array("/media/all/latest")),
-				array("All", "icon"=>"fa fa-folder","url"=>array("/media/all/list")),
-				array("Art", "icon"=>"fa fa-paint-brush","url"=>array("/media/art")),
-				array("Music","icon"=>"glyphicon glyphicon-headphones","url"=>array("/media/audio")),
-				array("Essay", "icon"=>"glyphicon glyphicon-bookmark","url"=>array("/media/story"))
+				array("Latest", "icon"=>"fa fa-list","url"=>"/media/all/latest"),
+				array("All", "icon"=>"fa fa-folder","url"=>"/media/all/list"),
+				array("Art", "icon"=>"fa fa-paint-brush","url"=>"/media/art"),
+				array("Music","icon"=>"glyphicon glyphicon-headphones","url"=>"/media/audio"),
+				array("Essay", "icon"=>"glyphicon glyphicon-bookmark","url"=>"/media/story")
 			)
 		),
 	);
@@ -123,10 +150,10 @@ abstract class BaseController {
 			return $this->redirect("/banned");
 		}*/
 
-		if(isset($_GET['ajax']) && $_GET['via']=="bird3") {
+		if(Request::ajax() && Request::get("via")=="bird3") {
 			// There is an action that we, and no other service, wants.
 			$msg=["status"=>"ok","error"=>"none"];
-			switch($_GET['action']) {
+			switch(Request::get("action")) {
 				case "user:update_visit":
 					/*if(!Yii::app()->user->isGuest) {
 						// Long statement made easy thanks to Duder.
@@ -142,101 +169,105 @@ abstract class BaseController {
 		}
 	}
 
-	// TODO: Make it work in L5
-	public function registerScripts() {
-		$cs = Yii::app()->clientScript;
-
+	public function makeTopScripts() {
+        // Pick up CDN info
 		$cdnUrl = GlobalConfig::get("CDN.baseurl");
 		$url = config("app.url");
 		$escYiiUrl = json_encode($url);
 
 		// Load webpack stuff
-		global $opt; // FIXME: Globally access hprose stuff.
-		$hash = $opt["userData"]["webpackHash"];
+		$hash = Hprose::get("wpHash");
 		$bower = resolve("@bower");
 		$cdnApp = GlobalConfig::get("CDN.baseUrl")."/app";
 		$escCdnApp = json_encode($cdnApp);
 		$use = json_encode($this->panelBottom);
 
-		// Load the loader
-		$ljs = ""; $key = "include.js";
-		$ljs = Cache::get($key, function(){
-			return file_get_contents("$bower/scriptinclude/include.min.js");
-		});
-
 		// Register scripts
-		// # Google Analytics
-		$cs->registerScript("google.analytics.js","/* Google */
-			// Google Analytics
-			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-			ga('create', 'UA-58656116-1', 'auto');
-			ga('send', 'pageview');
-		/* Google end */", CClientScript::POS_HEAD);
-
 		// # BIRD3 JavaScript. Yes, it's a view. xD
-		$cs->registerScript("bird3.js", View::makePartial(
-			resolve("@theme/Templates/InlineJavaScript"), [
+		$inlineScript = $this->renderPartial(
+			resolve("@theme/Templates/InlineJavaScript.php"),
+			[
 				"hash"=>$hash,
 				"module"=>$this->module,
 				"use"=>$use,
 				"escYiiUrl"=>$escYiiUrl,
 				"escCdnApp"=>$escCdnApp
-			], true
-		));
+			]
+		);
+		$this->jsTags["top"][] = '<script type="text/javascript">'.$inlineScript.'</script>';
 
 		// The design.
-		$cs->registerCssFile("$cdnApp/$hash-libwebpack.css");
-
-		// Special script for index.
-		$fbAlpha = 0.3;
-		if($this->isIndex && Yii::app()->user->isGuest) {
-			if(Compatibility::check("blur_bg")) {
-				// Do the blur! hur hur hur.
-				// FIXME: Did I spell "blur" right? o.o
-				$cs->registerScript("fracs+intro",
-					"window.addEventListener('scroll', function(){
-						$('#blurr-bg').css({opacity: (1-$('#intro').visibility())});
-					});",
-				CClientScript::POS_END);
-			} else {
-				// Since the blur effect would cause issues, let's just darken the BG more.
-				$cs->registerScript("fracs+intro",
-					"window.addEventListener('scroll', function(){
-						$('#outerContent').css({
-							background: 'rgba(0,0,0,'+(
-								$fbAlpha-($fbAlpha*$('#intro').visibility())
-							)+')'
-						});
-					});",
-				CClientScript::POS_END);
-			}
-		}
+		$this->cssTags[] = HTML::style("$cdnApp/$hash-libwebpack.css");
 
 		// For browsers that are NOT compatible with the blurr effect
 		if(!Compatibility::check("blur_bg")) {
 			// This will cause an rgba() overlay, keeping the blurr hidden.
 			$this->bg_class = "fallback";
-			$cs->registerCss("blur-fallback","#outerContent {
+			$style =
+            "#outerContent {
 				background: rgba(0,0,0, $fbAlpha);
-			}");
+			}";
+            $this->cssTags[] = "<style>$style</style>";
 		}
 
 		// Mobile browsers cant center the bg properly. So we need to use "scroll".
-		$browser = Yii::app()->browser;
+		$browser = new Browser(Request::server("HTTP_USER_AGENT"));
 		if(
 		    $browser->getBrowser() == Browser::BROWSER_IPHONE
 		    || $browser->getBrowser() == Browser::BROWSER_IPAD
 		    || $browser->getBrowser() == Browser::BROWSER_ANDROID
 		) {
-			$cs->registerCss("mobile-bg-fix", "/* Mobile browser fixture... */
-				#blurr-bg, #bg {
-				    /* Makes the backround fixed on mobile devices... wut? Logic? >.> */
-				    background-attachment: scroll;
-				}
-			/* End fixture */");
+			// Mobile browser fixture...
+			// Makes the backround fixed on mobile devices... wut? Logic? >.>
+			$bstyle =
+            "#blurr-bg, #bg {
+			    background-attachment: scroll;
+			}";
+            $this->cssTags[] = "<style>$bstyle</style>";
 		}
+
+		return implode(PHP_EOL, [
+            implode(PHP_EOL, $this->cssTags),
+            implode(PHP_EOL, $this->jsTags["top"])
+        ]);
+	}
+
+    public function makeBottomScripts() {
+        // Special script for index.
+        $fbAlpha = $this->fbAlpha;
+        if($this->isIndex) {
+            if(Compatibility::check("blur_bg")) {
+                // Do the blur! hur hur hur.
+                // FIXME: Did I spell "blur" right? o.o
+                $script =
+                "window.addEventListener('scroll', function(){
+                        $('#blurr-bg').css({opacity: (1-$('#intro').visibility())});
+                });";
+            } else {
+                // Since the blur effect would cause issues, let's just darken the BG more.
+                $script =
+                "window.addEventListener('scroll', function(){
+                    $('#outerContent').css({
+                        background: 'rgba(0,0,0,'+(
+                            $fbAlpha-($fbAlpha*$('#intro').visibility())
+                        )+')'
+                    });
+                });";
+            }
+            $this->jsTags["bottom"][] = '<script type="text/javascript">'.$script.'</script>';
+        }
+        return implode(PHP_EOL, $this->jsTags["bottom"]);
+    }
+
+	public function render($name, array $args = []) {
+		try {
+	 		return View::make($name, $args, [], resolve($this->layout), $this);
+		} catch(\Exception $e) {
+			return $e->getMessage();
+		}
+	}
+
+	public function renderPartial($name, array $args = []) {
+		return View::makePartial($name, $args, $this);
 	}
 }

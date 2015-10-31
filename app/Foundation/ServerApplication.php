@@ -48,9 +48,10 @@ class ServerApplication extends BaseApplication implements WebDriverContract {
     // Enable eventing and prevent public instantiation.
     private $ee;
     public function __construct($host, $port, $worker = 2, $name = "hprose (WebDriver)") {
-        # Import
-        require_once("./bootstrap/paths.php");
-        $configure = require_once("./bootstrap/configure.php");
+        # Import.
+        $appDir = __DIR__."/..";
+        require_once("$appDir/bootstrap/php/paths.php");
+        $configure = require_once("$appDir/bootstrap/php/configure.php");
         # Construct
         parent::__construct(APP_ROOT, CONFIG_ROOT);
         $configure($this);
@@ -76,7 +77,7 @@ class ServerApplication extends BaseApplication implements WebDriverContract {
         ] as $event) {
             $prop = "on".$event;
             $self = $this;
-            Log::info("Registering $prop event...");
+            #Log::info("Registering $prop event...");
             self::$_worker->{$prop} = function() use($event, $self) {
                 $self->emit($event, func_get_args());
             };
@@ -97,9 +98,9 @@ class ServerApplication extends BaseApplication implements WebDriverContract {
 
         // Search and activate allt he other entries.
         // I totally love my resolver. Period.
-        $entries = glob(resolve("@app/Entry/Server/*.php"));
+        $entries = glob(resolve("@app/Entry/PhpServer/*.php"));
         foreach($entries as $entry) {
-            echo "Including: $entry\n";
+            #echo "Including: $entry\n";
             require_once($entry);
         }
     }

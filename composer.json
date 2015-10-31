@@ -26,15 +26,17 @@
         "jdorn/sql-formatter": "^1.2",
         "ircmaxell/password-compat": "^1.0",
         "hprose/hprose": "^1.5",
-        "laravel/laravel": "^5.1",
+        "laravel/laravel": "5.1.*",
         "caffeinated/modules": "^2.1",
         "caffeinated/SEO": "^2.0",
-        "laravel/framework": "^5.1",
+        "laravel/framework": "5.1.*",
         "pingpong/widget": "^2.1",
         "wikimedia/composer-merge-plugin": "^1.2",
         "spatie/laravel-backup": "^2.7",
         "florianwolters/component-util-singleton": "^0.3.2",
-        "ingwiephoenix/hprose-workerman": "^1.0"
+        "ingwiephoenix/hprose-workerman": "^1.0",
+        "laravelcollective/html": "^5.1",
+        "ikimea/browser": "^1.12"
     },
     "config": {
         "vendor-dir": "php_modules/"

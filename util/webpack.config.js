@@ -1,5 +1,5 @@
 // Global
-require("../app/bootstrap/autoload")
+require("../app/bootstrap/nodejs/autoload")
 
 // core
 var path = require("path");
@@ -75,7 +75,7 @@ var provider = new webpack.ProvidePlugin({
     "window.$": _jquery
 });
 // Generate bundled CSS. (id, fileName)
-var extractor = new extractText("style","[hash]-[name].css");
+var extractor = new extractText("style","[hash]-[name].css",{allChunks:true});
 // Compress and press down our JS.
 var uglify = new webpack.optimize.UglifyJsPlugin(require("./uglifyjs.config.js"));
 // Querystring for the CSS Loader
@@ -129,8 +129,10 @@ var purifyPlugin = new purify({
     basePath: config.base,
     paths: a_merge([
         // Yii views
-        "app/App/Views/*/*.php",
-        "app/App/Modules/*/Views/*/*.php",
+        "app/App/Resources/Views/*/*.php",
+        "app/App/Resources/Views/*.php",
+        "app/App/Modules/*/Resources/Views/*/*.php",
+        "app/App/Modules/*/Resources/Views/*.php",
         "app/Extensions/*/Views/*.php",
         "app/Frontend/Design/Layouts/*.php",
         // JavaScript + OJ
@@ -142,13 +144,11 @@ var purifyPlugin = new purify({
         "app/Frontend/*.js",
         "app/Frontend/Frameworks/*.js",
         "app/Frontend/Frameworks/*.oj",
-        // EJS
-        //"web_modules/frameworks/*/*.ejs",
-        //"app/extensions/*/js/*/*.ejs",
         // Specific
         "app/App/Modules/Chat/js/*.js",
         //"app/modules/chat/lib/template/*.html",
         //"app/modules/chat/lib/template/*.php",
+        "app/Frameworks/Dialog/*.ejs",
         // Ladda
         "node_modules/ladda/js/*.js",
         "node_modules/ladda/node_modules/spin.js/spin.js",
@@ -180,7 +180,8 @@ module.exports = {
             "BIRD3/App/Entry/Browser/Support/BootstrapNative",
             "BIRD3/Frontend/Design/panels.js"
         ],
-        main: "BIRD3/App/Entry/Browser/Main"
+        main: "BIRD3/App/Entry/Browser/Main",
+        upload: "BIRD3/Frontend/Upload"
     },
     output: {
         // to cdn/app/

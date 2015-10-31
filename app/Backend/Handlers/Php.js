@@ -6,6 +6,7 @@ var temp = require("temp");
 var mime = require("mime");
 var fs = require("fs");
 var BIRD3 = require("BIRD3/Support/GlobalConfig");
+var redis = require("redis").createClient();
 
 hljs.configure({
     tabReplace: Array(5).join(" ")
@@ -15,6 +16,22 @@ module.exports = function(php) {
     // # Request procession
 
     // # Pre-Processor
+
+    // Fetch WebPack key and insert
+    php.use("preprocess", function GetWebPackHash(wareCtx, next){
+        redis.get(BIRD3.WebPackKey, function(err, res){
+            if(err) {
+                BIRD3.log.notice("Unable to get WebPack hash.");
+                return next(err);
+            }
+            //BIRD3.log.info("Hash: "+res);
+            wareCtx.ctx.optional.wpHash = res;
+            next();
+        });
+    });
+
+    // Convert input files.
+    // FIXME: Do we still need this? o.o
     php.use("preprocess", function ConvertFilesData(wareCtx, next){
         var ctx = wareCtx.ctx;
         /*

@@ -13,7 +13,7 @@ $this->isIndex=true;
     <div class="col-md-12">
         <div class="well well-lg">
             <div><h5>Pseudo news</h5></div>
-            <div><i>By <?=User::getHtml(1)?></i></div>
+            <div><i>By <?="User::getHtml(1)"?></i></div>
             <p>
                 This is a pseudo news entry that you can imagine containing some super special contest
                 announcement, for instance!

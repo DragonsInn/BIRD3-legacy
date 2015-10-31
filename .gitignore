@@ -26,3 +26,4 @@ cdn/content/avatars/*.jpeg
 index.html
 .vscode/
 vendor
+app/bootstrap/cache/compiled.php

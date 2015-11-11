@@ -1,9 +1,17 @@
 // For Laravel migration
-Modules: https://github.com/caffeinated/modules
 SEO: https://github.com/caffeinated/SEO
-Structural: https://github.com/caffeinated/beverage
 Custom User (BIRD3 User): http://laravel.io/forum/11-04-2014-laravel-5-how-do-i-create-a-custom-auth-in-laravel-5?page=1#reply-28232
-Sub composer modules: https://github.com/wikimedia/composer-merge-plugin
+
+// Testing
+Real PHP:
+    - https://github.com/crysalead/kahlan
+    - https://github.com/peridot-php/peridot
+Uniter PHP: -
+NodeJS:
+
+// Error handling
+Node: http://jgable.github.io/errorface/example.html
+PHP: http://phperror.net/
 
 // Good things to look at
 http://labs.mintchaos.com/flippant.js/

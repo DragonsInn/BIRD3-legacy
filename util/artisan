@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-require_once __DIR__.'/../app/bootstrap/autoload.php';
-$app = require_once __DIR__.'/../app/bootstrap/app.php';
+require_once __DIR__.'/../app/bootstrap/php/autoload.php';
+$app = require_once __DIR__.'/../app/bootstrap/php/app.php';
 
 // Prepare the command line
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);

@@ -114,14 +114,11 @@ var house = PowerHouse({
                     var modules = require("ini").parse(stdout);
                     var pm = modules["PHP Modules"];
                     var reqs = [
-                        // hprose
-                        "hprose","sockets",
                         // For workerman
-                        "sysvmsg","sysvsem","sysvshm","pcntl",
+                        "sysvmsg","sysvsem","sysvshm",
+                        "pcntl","sockets",
                         // BIRD3
-                        "mysql","PDO",
-                        // FIXME: We may no longer need these
-                        "runkit","redis"
+                        "PDO",
                     ];
                     var is_working = false;
                     reqs.forEach(function(v,i){

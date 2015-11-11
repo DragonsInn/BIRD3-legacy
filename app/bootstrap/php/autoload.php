@@ -2,7 +2,12 @@
 
 define('LARAVEL_START', microtime(true));
 
-require_once __DIR__.'/../../php_modules/autoload.php';
+// Search root...
+$path = __DIR__;
+while(!file_exists("$path/composer.json")) {
+    $path .= "/..";
+}
+require_once "$path/php_modules/autoload.php";
 
 $compiledPath = __DIR__.'/cache/compiled.php';
 

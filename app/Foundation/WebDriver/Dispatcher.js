@@ -87,7 +87,7 @@ function Dispatcher(uri, requestClass, hostConfig, optional) {
             // The url-relative path to the requested PHP file
             SCRIPT_NAME: "/",
             // Holds the URI path and query string. I.e.: /index.php?foo=bar or /foo?herp=derp
-            REQUEST_URI: rq_url.path,
+            REQUEST_URI: req.url,
             // Equals to SCRIPT_NAME.
             DOCUMENT_URI: req.url,
             // Remote informations

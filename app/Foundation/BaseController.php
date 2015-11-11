@@ -4,7 +4,7 @@
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as LaravelController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-#use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 // Vendor
 use Ikimea\Browser\Browser;
@@ -23,7 +23,7 @@ use Request;
 // I need...a base controller. o.o;
 abstract class BaseController extends LaravelController {
 
-    use DispatchesJobs, ValidatesRequests; #AuthorizesRequests
+    use DispatchesJobs, ValidatesRequests, AuthorizesRequests;
 
 	public $layout='@theme/Layouts/main.php';
 	public $breadcrumbs=array();

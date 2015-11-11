@@ -1,17 +1,10 @@
 <?php
 
 return [
-
     // The driver to use to log users in
-    // FIXME: Implement BIRD3User driver
-    'driver' => 'eloquent',
+    'driver' => 'BIRD3User',
 
     // Model to use
-    'model' => BIRD3\User::class,
+    'model' => BIRD3\Foundation\User\Entity::class,
     'table' => 'users',
-    'password' => [
-        'email' => 'emails.password',
-        'table' => 'password_resets',
-        'expire' => 60,
-    ],
 ];

@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => "mysql",
 
     /*
     |--------------------------------------------------------------------------
@@ -49,10 +49,10 @@ return [
     'connections' => [
         'mysql' => [
             'driver'    => 'mysql',
-            'host'      => env('DB_HOST', 'localhost'),
-            'database'  => env('DB_DATABASE', GlobalConfig::get("DB.mydb")),
-            'username'  => env('DB_USERNAME', GlobalConfig::get("DB.user")),
-            'password'  => env('DB_PASSWORD', GlobalConfig::get("DB.pass")),
+            'host'      => 'localhost',
+            'database'  => GlobalConfig::get("DB.mydb"),
+            'username'  => GlobalConfig::get("DB.user"),
+            'password'  => GlobalConfig::get("DB.pass"),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',

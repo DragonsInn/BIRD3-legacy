@@ -60,7 +60,8 @@ return [
 
         // Ext
         BIRD3\Extensions\FlipFlop\Providers\FlipFlopServiceProvider::class,
-        BIRD3\Foundation\WebDriver\Providers\WebDriverServiceProvider::class
+        BIRD3\Foundation\WebDriver\Providers\WebDriverServiceProvider::class,
+        BIRD3\Foundation\User\Providers\UserServiceProvider::class
     ],
 
     'aliases' => [

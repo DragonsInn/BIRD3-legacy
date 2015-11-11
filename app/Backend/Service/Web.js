@@ -131,7 +131,11 @@ module.exports = function(app, hprosePort) {
         }
     );
     require("BIRD3/Backend/Handlers/Php")(wd);
-    app.use("/", wd.getMiddleware());
+    app.use("/", function HashBanger(req, res, next) {
+        var url = req._parsedUrl;
+        console.log(url)
+        next();
+    }, wd.getMiddleware());
 
     debug("BIRD3 WebService: Running.");
 }

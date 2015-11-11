@@ -154,7 +154,7 @@ module.exports = function(php) {
                 removeAttributeQuotes: true,
                 removeRedundantAttributes: true,
                 removeScriptTypeAttributes: true,
-                minifyJS: require(path.join(BIRD3.root, "util/uglifyjs.config.js")),
+                minifyJS: require("BIRD3/System/Config/uglifyjs"),
                 minifyCSS: true
             });
         }

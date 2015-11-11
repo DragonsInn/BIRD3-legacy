@@ -5,7 +5,7 @@ module.exports.run = function(workerConf, house) {
     var path = require("path");
     var BIRD3 = require("BIRD3/Support/GlobalConfig");
     var log = BIRD3.log;
-    var config = require(path.resolve(BIRD3.root, "util/webpack.config"));
+    var config = require("BIRD3/System/Config/webpack");
     var fs = require("fs");
     var async = require("async");
 

@@ -1,6 +1,4 @@
-<?php
-
-namespace BIRD3\Backend\Middleware;
+<?php namespace BIRD3\Backend\Http\Middleware;
 
 use Illuminate\Cookie\Middleware\EncryptCookies as BaseEncrypter;
 

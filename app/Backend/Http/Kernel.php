@@ -1,11 +1,8 @@
-<?php
-
-namespace BIRD3\Backend\Http;
+<?php namespace BIRD3\Backend\Http;
 
 use BIRD3\Foundation\WebDriver\Kernel as HttpKernel;
 
-class Kernel extends HttpKernel
-{
+class Kernel extends HttpKernel {
     /**
      * The application's global HTTP middleware stack.
      *
@@ -13,11 +10,11 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
-        \App\Http\Middleware\EncryptCookies::class,
+        \BIRD3\Backend\Http\Middleware\EncryptCookies::class,
         \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        \App\Http\Middleware\VerifyCsrfToken::class,
+        \BIRD3\Backend\Http\Middleware\VerifyCsrfToken::class,
 
         // Modules
     ];

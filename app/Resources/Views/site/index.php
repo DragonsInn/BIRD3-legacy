@@ -8,7 +8,7 @@ $this->isIndex=true;
 ?>
 
 <h5>Friendly reminder: <small>This is a demo page.</small></h5>
-
+<h6>Carbon: <?=Carbon\Carbon::now()->addMinutes(config("session.lifetime"))?></h6>
 <div class="row">
     <div class="col-md-12">
         <div class="well well-lg">

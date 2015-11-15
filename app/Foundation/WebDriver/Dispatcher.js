@@ -190,7 +190,7 @@ function Dispatcher(uri, requestClass, hostConfig, optional) {
 
                                 // Set cookies
                                 response.cookies.forEach(function(cookie){
-                                    cookie.options.expires = new Date(cookie.options.expires);
+                                    cookie.options.expires = new Date(cookie.options.expires*1000);
                                     res.cookie(cookie.name, cookie.value, cookie.options);
                                 });
 

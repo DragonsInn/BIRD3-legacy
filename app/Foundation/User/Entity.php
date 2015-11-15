@@ -28,6 +28,7 @@ implements
 
     // Make this class a validatable, authorizable thing.
     use Authenticatable, Authorizable, CanResetPassword;
+    use Validatable;
 
     /**
      * Database Structure
@@ -79,7 +80,7 @@ implements
         "password" => "required|min:6|max:40"
     ];
 
-    public function profile()           { return $this->hasOne(Profile::class, "id"); }
+    public function profile()           { return $this->hasOne(Profile::class, "uID"); }
     public function permissions()       { return $this->hasOne(Permissions::class, "id"); }
     public function settings()          { return $this->hasOne(Settings::class, "id"); }
     public function updates()           { return $this->hasMany(Update::class, "id"); }

@@ -10,23 +10,6 @@ class UserController extends BaseController {
 
     protected $redirectPath = "/";
 
-    /* FIXME: Rewrite login logic.
-    public function __getLogin() {
-        $this->pageTitle = "User login";
-        $user = new User("login");
-        if(Request::input('User')) {
-            $user->attributes=$_POST['User'];
-            if($user->validate()) {
-                if($user->login()) {
-                    $ru = Yii::app()->user->returnUrl;
-                    $this->redirect($ru);
-                } else throw new CException("Login noped.");
-            }
-        }
-        $this->render("loginForm",array("model"=>$user));
-    }
-    */
-
     public function getLogin() {
         return $this->render("User::login");
     }
@@ -44,73 +27,76 @@ class UserController extends BaseController {
     }
 
     public function getLogout() {
+        $this->middleware("auth");
         Auth::logout();
         return redirect("/");
     }
 
     // Do the registration and validation
     // Generate activation key and email it.
-    public function actionRegister() {
-        $user = new User("register");
-        if(!isset($_POST["User"])) {
+    public function postRegister() {
+        $user->attributes=$_POST["User"];
+        $user->activkey = md5($user->email)."-".uniqid();
+        if(!$user->save()) {
             $this->render("register",["model"=>$user]);
         } else {
-            $user->attributes=$_POST["User"];
-            $user->activkey = md5($user->email)."-".uniqid();
-            if(!$user->save()) {
-                $this->render("register",["model"=>$user]);
-            } else {
-                $this->render("register_success",["model"=>$user]);
-            }
+            $this->render("register_success",["model"=>$user]);
         }
+    }
+    public function getRegister() {
+        if(Auth::check()) return redirect("/");
+        return $this->render("User::register");
     }
 
     // Check the activation key and activate the user.
-    public function actionActivate($key) {
+    public function getActivate($key) {
         $this->pageTitle = "Account activation";
         // Look for $key in the DB. If exists, show success and set user to STATUS_ACTIVE.
         // Else, error. o.o
+        // FIXME: Do it, actually.
         $this->render("activate");
     }
 
     // let the user change some settings
-    public function actionSettings() {
+    public function getSettings() {
+        $this->middleware("auth");
         $this->pageTitle = "Settings";
-        $model = User::me();
+        $model = Auth::user();
+        return $this->render("User::settings", ["model"=>$model]);
+    }
+    public function postSettings() {
+        $this->middleware("auth");
+        $this->pageTitle = "Settings";
+        $user = Auth::user();
         if(
-            isset($_POST["User"])
-            && isset($_POST["UserSettings"])
-            && isset($_POST["UserProfile"])
+            Request::has("User")
+            && Request::has("UserSettings")
+            && Request::has("UserProfile")
         ) {
-            $profile = $model->profile;
-            $settings = $model->settings;
-            $user = $model;
+            $user->fill(Request::input("User"));
+            $user->profile->fill(Request::input("UserProfile"));
+            $user->settings->fill(Request::input("UserSettings"));
 
-            // Set all to "update"
-            $user->scenario = "update";
-            $profile->scenario = "update";
-            $settings->scenario = "update";
-
-            // Assign
-            $user->attributes = $_POST["User"];
-            $profile->attributes = $_POST["UserProfile"];
-            $settings->attributes = $_POST["UserSettings"];
-            if($user->validate() && $profile->validate() && $settings->validate()) {
-                $user->update();
-                $profile->update();
-                $settings->update();
+            if(
+                $user->update()
+                && $profile->update()
+                && $settings->update()
+            ) {
+                return redirect("/user/profile");
             }
         }
-        $this->render("settings", ["model"=>$model]);
+        return $this->render("User::settings",["model"=>$user]);
     }
 
     // Because it happens.
-    public function actionForgot_password() {
+    public function getForgotPassword() {
+        if(Auth::check()) return redirect("/");
         $this->pageTitle = "Forgot password";
         $this->render("forgot_password");
     }
 
-    public function actionList($page=1,$q=false) {
+    // FIXME: Eloquent has pagination o.o
+    public function getList($page=1,$q=false) {
         $this->pageTitle = "Show all users";
         $perPage = 50;
         $limitBegin = $perPage*($page-1);
@@ -151,7 +137,8 @@ class UserController extends BaseController {
         ]);
     }
 
-    public function actionChangeAvatar() {
+    public function getChangeAvatar() {
+        $this->middleware("auth");
         $this->pageTitle = "Change profile picture";
         $avvieUrl = "/content/avatars";
         $avviePath = Yii::app()->cdn->getBasePath().$avvieUrl;
@@ -237,5 +224,24 @@ class UserController extends BaseController {
             echo json_encode($res);
             Yii::app()->end();
         } else $this->render("change_avatar");
+    }
+
+    public function getProfile($id=null) {
+        $user = null;
+        if(is_null($id)) {
+            if(Auth::check()) {
+                $user = Auth::user();
+            } else {
+                return redirect("/user/login");
+            }
+        } else if(is_numeric($id)) {
+            $user = User::with("profile")->findOrFail($id);
+        } else {
+            $user = User::with("profile")->where("username", $id)->findOrFail();
+        }
+        return $this->render("User::profile",[
+            "user"=>$user,
+            "profile"=>$user->profile
+        ]);
     }
 }

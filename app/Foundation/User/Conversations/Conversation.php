@@ -6,12 +6,13 @@ use BIRD3\Foundation\User\Entity as User;
 #use Message;
 
 class Conversation extends Eloquent {
-    private $table = "user_pm_conv";
+    protected $table = "user_pm_conv";
 
     /**
-     *  @int PK id      | Conversation ID
-     *  @int FK owner_id| The one who made this
-     *  @string subject | Conversation subject
+     *  @int PK id            | Conversation ID
+     *  @int FK owner_id      | The one who made this
+     *  @string subject       | Conversation subject
+     *  @timestamp created_at | The date of creation.
      */
 
     public function messages() {

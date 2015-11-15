@@ -1,67 +1,55 @@
-<?php class PmController extends Controller {
+<?php namespace BIRD3\Foundation\User\Controllers;
 
-    use UserFilters;
-    public function filters() {
-        return [
-            "must_be_logged_in + box, compose, show"
-        ];
+use BIRD3\Foundation\BaseController;
+
+use BIRD3\Foundation\User\Conversations\Conversation;
+use BIRD3\Foundation\User\Conversations\Message;
+
+use Auth;
+use Request;
+use User;
+
+class PmController extends BaseController {
+
+    public function __construct() {
+        parent::__construct();
+        $this->middleware("auth");
     }
 
-    public function actionBox($page=1) {
-        $convoRelations = PrivateConversationMembers::model()->findAllByAttributes([
-            "user_id" => User::me()->id
-        ]);
-        if($convoRelations == NULL) {
-            # Short circuit this.
-            return $this->render("emptyBox");
-        }
-        $convos = [];
-        foreach($convoRelations as $rel) {
-            $convos[] = $rel->convo;
-        }
-        $pg = new Voodoo\Paginator();
-        #$pg->setUrl($_SERVER["REQUEST_URI"], "/user/pm/box/page/{:num}");
-        $pg->setPage($page);
-        $count = count($convos);
-        $pg->setItems($count, 20);
-        $pg->setPrevNextTitle(
-            '<i class="fa fa-caret-left" aria-hidden="true"></i> Prev',
-            'Next <i class="fa fa-caret-right" aria-hidden="true"></i>'
-        );
-        $limit = $pg->getPerPage();
-        $offset = $pg->getStart();
-        $myConvos = PrivateConversation::model()->findAll([
-            "limit"=>$limit,
-            "offset"=>$offset
-        ]);
-        $pages = $pg->toArray();
-        $this->render("box", ["pages"=>$pages, "convos"=>$myConvos]);
+    public function getBox() {
+        $user = Auth::user();
+        $convos = $user->conversationMemberships;
+        return $this->render("User::pm.box",["convos"=>$convos]);
     }
 
-    public function actionCompose($to=null) {
+    public function anyCompose($to=null) {
+        $user = Auth::user();
         # Store errors here...
         $errors = [];
 
-        // The conversation
-        $convo = new PrivateConversation;
-        $convo->owner_id = User::me()->id;
-        $members = []; # N instances of PrivateConversationMembers + 1 UserUpdate
+        // Prepare models.
+        $convo = new Conversation;
+        $convo->owner_id = $user->id;
+
+        // N instances of PrivateConversationMembers + 1 UserUpdate
+        $members = [];
 
         // A new message
-        $msg = new PrivateMessage;
-        $msg->from_id = User::me()->id;
+        $msg = new Message;
+        $msg->from_id = $user->id;
 
-        if(isset($_POST["PrivateMessage"]) && isset($_POST["PrivateConversation"])) {
-            $msg->attributes = $_POST["PrivateMessage"];
-            $convo->subject = $_POST["PrivateConversation"]["subject"];
+        // Handle POST
+        if(Request::has("to") && Request::has("subject") && Request::has("body")) {
+            $msg->body = Request::input("body");
+            $convo->subject = Request::input("subject");
 
             # Pick up the user names
-            $members = explode(",",$_POST["to"]);
+            $members = explode(",",Request::input("to"));
             foreach($members as $i=>$v) $members[$i]=trim($v);
             # Get the user id's.
             $realmembers = [];
             foreach($members as $m) {
-                $u = User::model()->findByAttributes(["username"=>$m]);
+                $u = User::where("username", $m)->first();
                 if(!is_null($u)) $realmembers[] = $u;
                 else $errors["To"] = "Username '$m' not found.";
             }
@@ -71,46 +59,45 @@
                 $msg->conv_id = $convo->id;
                 if($msg->save()) {
                     # Add memberships. Add ourselves, too.
-                    $realmembers[] = User::me();
-                    $worked = true;
+                    $realmembers[] = $user;
                     foreach($realmembers as $target) {
-                        $membership = new PrivateConversationMembers();
-                        $membership->conv_id=$convo->id;
-                        $membership->user_id=$target->id;
-                        if(!$membership->save()) {
-                            $errors["Other"] =
-                                "Unable to assign {$target->username} to this conversation.";
-                            $worked = false;
-                            break;
-                        }
+                        // Attach the members...
+                        $target
+                            ->conversationMemberships()
+                            ->attach($convo->id);
                     }
-                    if($worked) {
-                        die("worked");
-                    }
+                    return redirect("/user/pm/box");
                 }
             }
         }
-        $this->render("compose",[
+
+        return $this->render("User::pm.compose",[
             "convo"=>$convo,
             "msg"=>$msg,
             "to"=>$to,
             "errors"=>array_merge_recursive(
-                $errors,
-                $convo->getErrors(),
-                $msg->getErrors()
+                $errors, []
+                #$convo->getErrors(),
+                #$msg->getErrors()
             )
         ]);
     }
 
-    public function actionShow($conv_id) {
+    public function anyConvo($conv_id) {
         $errors = [];
-        $convo = PrivateConversation::model()->findByPk($conv_id);
-        $msg = new PrivateMessage();
-        if(isset($_POST["PrivateMessage"])) {
-            # User has sent a reply, so put it through.
-            $scm = Yii::app()->securityManager;
-            $to_conv_id = $scm->validateData($_POST["conv_id"]);
-            if(!$to_conv_id) {
+        $user = Auth::user();
+        $convo = Conversation::findOrFail($conv_id);
+        $msg = new Message();
+        if(Request::has("pmReply")) {
+            /*
+                We need to make sure that the user that sends his message,
+                isn't actually spoofing their destination conv_id.
+
+                In Yii we used a HMAC. Wonder if Laravel has that too.
+            */
+            $to_conv_id = Request::input("pmReply.conv_id");
+            $is_member = $user->conversationMemberships()->contains($to_conv_id);
+            if(!$is_member) {
                 $errors["Validation"][]= "There was an error during transmission. Please try again.";
             } else {
                 if($to_conv_id !== $conv_id) {
@@ -118,20 +105,18 @@
                 } else {
                     $msg->conv_id = $to_conv_id;
                     $msg->from_id = User::me()->id;
-                    $msg->body = $_POST["PrivateMessage"]["body"];
+                    $msg->body = Request::input("pmReply.body");
                     if(!$msg->save()) {
                         $errors = array_merge_recursive($errors, $msg->getErrors());
                     }
                 }
             }
         }
-        // Find and back-travel all messages
-        $crit = new CDbCriteria;
-        $crit->order = "id DESC";
-        $messages = PrivateMessage::model()->findAllByAttributes([
-            "conv_id"=>$conv_id
-        ], $crit);
-        $this->render("show",[
+        // Find and backtrack all the messages, the laraway.
+        $messages = Message::where("conv_id", $conv_id)
+                           ->orderBy("id","DESC")
+                           ->get();
+        $this->render("User::pm.convo",[
             "messages"=>$messages,
             "convo"=>$convo,
             "newMsg"=>$msg,
@@ -139,47 +124,26 @@
         ]);
     }
 
-    // These methods should become AJAX enabled in the future.
-    // Idea: Overwrite CController:redirect and return json_encode(["status"=>"OK"]) instead.
+    // These methods should become AJAX methods.
+    // And, they should support DELETE and other methods.
 
-    public function actionDeleteMessage($message_id) {
-        $msg = PrivateMessage::model()->findByPk($message_id);
-        if($msg->from_id === User::me()->id) {
+    public function getDrop($message_id) {
+        $msg = Message::findOrFail($message_id);
+        if($msg->from_id === Auth::user()->id) {
             // We are permitted to delete.
+            // FIXME: More fine-grained check to utilize permissions.
+            // Perms: CanDeleteAllConvoMessages, CanDeleteAllMessages (+CanSeeAllConvo?)
             $msg->delete();
-            $this->redirect(Yii::app()->request->urlReferrer);
+            return redirect()->intended("/user/box");
         }
     }
 
     public function actionLeaveConvo($conv_id) {
-        $convo = PrivateConversation::model()->findByPk($conv_id);
-        $members = $convo->members;
-        $isMember = false;
-        foreach($members as $i=>$user) {
-            // make sure this user is a member.
-            if($user->id === User::me()->id) {
-                unset($members[$i]);
-                $isMember = true;
-                break;
-            }
+        $user = Auth::user();
+        $mship = $user->conversationMemberships();
+        if($mship->contains($conv_id)) {
+            $mship->detach($conv_id);
         }
-        if($isMember) {
-            // Load and kill that membership!
-            $membership = PrivateconversationMembers::model()->findByPk([
-                "user_id"=>User::me()->id,
-                "conv_id"=>$convo->id
-            ]);
-            if(!is_null($membership)) {
-                $membership->delete();
-            }
-        } else {
-            throw new CException("You are no member of this convo!");
-        }
-        // Wait! Is this convo empty now?
-        if(count($members) == 0) {
-            // Get rid of the convo entirely!
-            $convo->delete();
-        }
-        $this->redirect(Yii::app()->request->urlReferrer);
+        return redirect()->intended("/user/box");
     }
 }

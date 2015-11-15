@@ -5,6 +5,7 @@ use Illuminate\Support\ServiceProvider;
 
 // BIRD3
 use BIRD3\Foundation\User\Controllers\UserController;
+use BIRD3\Foundation\User\Controllers\PmController;
 use BIRD3\Foundation\User\Providers\BIRD3UserProvider;
 use BIRD3\Foundation\User\Entity as User;
 use BIRD3\Foundation\User\Profile;
@@ -22,6 +23,7 @@ use Route;
 
 class UserServiceProvider extends ServiceProvider {
     public function register() {
+        Route::controller("/user/pm", PmController::class);
         Route::controller("/user", UserController::class);
     }
     public function boot() {

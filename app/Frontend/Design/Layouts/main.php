@@ -264,7 +264,7 @@
 
             <?php if(!$this->allPage): ?>
             <!-- Copyright and the like. -->
-            <div class="clearfix" id="elementToExpand"></div>
+            <div class="clearfix"></div>
             <footer id="footer" class="container-fluid">
                 <div class="col-md-5">
                     <div>Dragon's Inn, BIRD3 and design "Exciting Night" by <a href="http://ingwie.me">Ingwie Phoenix</a></div>

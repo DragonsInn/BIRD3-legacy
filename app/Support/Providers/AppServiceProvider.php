@@ -3,10 +3,12 @@
 use Illuminate\Support\ServiceProvider;
 use BIRD3\Support\Resolver;
 use BIRD3\Support\BIRD3Helper;
+use BIRD3\Backend\Log;
 
 use View;
 use App;
 use Module;
+use FlipFlop;
 
 class AppServiceProvider extends ServiceProvider {
     /**
@@ -15,7 +17,9 @@ class AppServiceProvider extends ServiceProvider {
      * @return void
      */
     public function boot() {
-        View::addTemplatePath(app_path("Frontend/Design/Layouts"));
+        View::addNamespace("design", app_path("Frontend/Design/Layouts"));
+        View::addLocation(app_path("Resources/Views"));
+        FlipFlop::setDefaultLayout("design::main");
     }
 
     /**

@@ -82,7 +82,6 @@ class Resolver {
         # If path is not null, use path, else DIR
         $path = is_null($path) ?: getcwd();
         while(!file_exists("$path/$find")) {
-            echo "...".PHP_EOL;
             $path = "$path/..";
         }
         return realpath($path);

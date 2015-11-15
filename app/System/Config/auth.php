@@ -1,6 +1,4 @@
-<?php
-
-return [
+<?php return [
     // The driver to use to log users in
     'driver' => 'BIRD3User',
 

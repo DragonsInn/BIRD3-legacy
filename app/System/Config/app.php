@@ -47,21 +47,22 @@ return [
         Illuminate\Session\SessionServiceProvider::class,
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
+        Illuminate\View\ViewServiceProvider::class,
 
         // Application Service Providers...
         BIRD3\Support\Providers\AppServiceProvider::class,
         BIRD3\Support\Providers\EventServiceProvider::class,
         BIRD3\Support\Providers\RouteServiceProvider::class,
+        // Extensions
+        BIRD3\Extensions\FlipFlop\Providers\FlipFlopServiceProvider::class,
+        BIRD3\Foundation\WebDriver\Providers\WebDriverServiceProvider::class,
+        BIRD3\Foundation\User\Providers\UserServiceProvider::class,
 
         // Modules
         Caffeinated\Modules\ModulesServiceProvider::class,
         Spatie\Backup\BackupServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
-
-        // Ext
-        BIRD3\Extensions\FlipFlop\Providers\FlipFlopServiceProvider::class,
-        BIRD3\Foundation\WebDriver\Providers\WebDriverServiceProvider::class,
-        BIRD3\Foundation\User\Providers\UserServiceProvider::class
+        Pingpong\Widget\WidgetServiceProvider::class,
     ],
 
     'aliases' => [
@@ -104,10 +105,12 @@ return [
         'Resolver' => BIRD3\Support\Facades\Resolver::class,
         'Hprose' => BIRD3\Support\Facades\Hprose::class,
         "BIRD3" => BIRD3\Support\Facades\BIRD3::class,
+        "FlipFlop" => BIRD3\Extensions\FlipFlop\Facades\FlipFlop::class,
 
         // External
         'HTML' => Collective\Html\HtmlFacade::class,
-        'Form' => Collective\Html\FormFacade::class
+        'Form' => Collective\Html\FormFacade::class,
+        'Widget' => Pingpong\Widget\WidgetFacade::class,
     ],
 
 ];

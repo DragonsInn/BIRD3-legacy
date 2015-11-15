@@ -6,5 +6,5 @@
             'connection' => 'default',
         ],
     ],
-    'prefix' => 'BIRD3.Cache.',
+    'prefix' => 'BIRD3.Cache',
 ];

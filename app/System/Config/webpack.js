@@ -145,6 +145,9 @@ var purifyPlugin = new purify({
         "app/App/Modules/*/Resources/Views/*.php",
         "app/Extensions/*/Views/*.php",
         "app/Frontend/Design/Layouts/*.php",
+        // User
+        "app/Foundation/User/Views/*.php",
+        "app/Foundation/User/Views/*/*.php",
         // Chat
         //"app/modules/chat/lib/template/*.html",
         //"app/modules/chat/lib/template/*.php",

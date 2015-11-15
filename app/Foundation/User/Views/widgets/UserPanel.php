@@ -24,7 +24,7 @@
         </li>
         <li class="list-group-item list-group-item-soft">
             <span class="badge">
-                <?php #$this->roleToString()?>
+                <?=$this->roleToString()?>
             </span>
             You are
         </li>
@@ -38,12 +38,14 @@
             <span class="badge alert-info">0</span>
             <p>Private Messages</p>
             <div class="btn-group btn-group-xs">
-                <button type="button" class="btn btn-info">Compose</button>
                 <?=HTML::link(
-                    "/user/pm/box", "Inbox",
+                    "/user/pm/box", "Box",
                     ["class"=>"btn btn-info"]
                 )?>
-                <button type="button" class="btn btn-info">Outbox</button>
+                <?=HTML::link(
+                    "/user/pm/compose", "Compose",
+                    ["class"=>"btn btn-info"]
+                )?>
             </div>
         </li>
         <li class="list-group-item list-group-item-soft">

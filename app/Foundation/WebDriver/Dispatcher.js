@@ -141,7 +141,7 @@ function Dispatcher(uri, requestClass, hostConfig, optional) {
                     postData: req.body,
                     cookies: transformCookies(req),
                     body: req.rawBody,
-                    files: req.files,
+                    files: req.files || [],
                     server: transformHeaders(req),
 
                     // Additional request infos

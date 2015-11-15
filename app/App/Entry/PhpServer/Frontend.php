@@ -14,7 +14,7 @@ use BIRD3\Foundation\WebDriver\Response;
 use BIRD3\Support\HproseHolder;
 
 // Facades
-use \App;
+use App;
 
 function objectToArray($d) {
     if (is_object($d)) {
@@ -56,26 +56,6 @@ function int2err($ec) {
         default:                    return $ec;
     }
 }
-
-// Re-Creation
-// FIXME: Re-write the Session class instead.
-/* function bird3_session_regenerate_id($delold=false) {
-    Log::info("Regenerating PHP Session ID (deleteOld=".($delold ? "true":"false").")");
-    if(session_status() == PHP_SESSION_ACTIVE) {
-        // in session.c, I saw this:
-        // PS(id) = PS(mod)->s_create_sid(&PS(mod_data), NULL TSRMLS_CC);
-        // I dunno how to properly reproduce this...
-        if($delold || !isset($_COOKIE["PHPSESSID"])) {
-            $id = base64_encode(openssl_random_pseudo_bytes(20));
-            session_id($id);
-            HttpResponse::setcookie("PHPSESSID",$id,60*60*24*(30*6));
-            return true;
-        } else {
-            session_id($_COOKIE["PHPSESSID"]);
-            return true;
-        }
-    } else return false;
-} */
 
 // This app is exported to NodeJS.
 class Frontend {
@@ -182,8 +162,8 @@ class Frontend {
 
         return [
             "status"        => $responseCtx->getStatusCode(),
-            #"statusText"    => $responseCtx->getStatusText(),
-            "statusText" => $statusText,
+            "statusText"    => $statusText,
+            "statusText"    => $statusText,
             "headers"       => $headers,
             "cookies"       => $cookies,
             "body"          => $responseCtx->getContent(),

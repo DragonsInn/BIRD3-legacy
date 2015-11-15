@@ -3,7 +3,9 @@
 use BIRD3\Foundation\BaseController;
 
 class DocsController extends BaseController {
-    public function actionShow($name) {
-        $this->render("display", ["name"=>$name]);
+    public function getIndex() {
+        // This is actually a tiny SPA.
+        // PHP has almost nothing to do here.
+        return "Not implemented";
     }
 }

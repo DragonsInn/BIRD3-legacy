@@ -8,7 +8,4 @@ class MainController extends BaseController {
         $this->isIndex = true;
         return $this->render("site.index");
     }
-    public function getStat() {
-        return $this->render("test");
-    }
 }

@@ -62,7 +62,7 @@ module.exports = function(app, hprosePort) {
             expires: true,
             age: moment.duration(1, "day").asSeconds()
         },{
-            test: /.+/,
+            test: /.*/,
             etag: false,
             lastModified: false,
             cacheControl: false,
@@ -131,11 +131,7 @@ module.exports = function(app, hprosePort) {
         }
     );
     require("BIRD3/Backend/Handlers/Php")(wd);
-    app.use("/", function HashBanger(req, res, next) {
-        var url = req._parsedUrl;
-        console.log(url)
-        next();
-    }, wd.getMiddleware());
+    app.use("/", wd.getMiddleware());
 
     debug("BIRD3 WebService: Running.");
 }

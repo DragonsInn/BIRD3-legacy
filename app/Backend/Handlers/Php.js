@@ -32,38 +32,39 @@ module.exports = function(php) {
 
     // Convert input files.
     // FIXME: Do we still need this? o.o
+    /*
+        NodeJS files:
+        req.files = {
+            name: {
+                fieldName: '',
+                originalFilename: pathToTempFile,
+                headers: { name: value },
+                ws: { NodeJS WriteStream },
+                size: N,
+                name: '',
+                type: MimeType
+            }
+        }
+
+        FileZone uses these headers:
+        {
+
+        }
+
+        PHP $_FILES:
+        $_FILES = [
+            FieldName => [
+                name => "",
+                size => $n,
+                type => $MimeType,
+                tmp_name => $pathToTempFile,
+                error => 0
+            ]
+        ];
+    */
+    /*
     php.use("preprocess", function ConvertFilesData(wareCtx, next){
         var ctx = wareCtx.ctx;
-        /*
-            NodeJS files:
-            req.files = {
-                name: {
-                    fieldName: '',
-                    originalFilename: pathToTempFile,
-                    headers: { name: value },
-                    ws: { NodeJS WriteStream },
-                    size: N,
-                    name: '',
-                    type: MimeType
-                }
-            }
-
-            FileZone uses these headers:
-            {
-
-            }
-
-            PHP $_FILES:
-            $_FILES = [
-                FieldName => [
-                    name => "",
-                    size => $n,
-                    type => $MimeType,
-                    tmp_name => $pathToTempFile,
-                    error => 0
-                ]
-            ];
-        */
         // This implementation is incomplete.
         // FIXME: Multiple files, HTML array
 
@@ -115,10 +116,7 @@ module.exports = function(php) {
             }
         } else next();
     });
-    php.use("preprocess", function(ctx, next){
-        //console.log(ctx.req.body);
-        next();
-    });
+    */
 
     // # Post-Processor
 

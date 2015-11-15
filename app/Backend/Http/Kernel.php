@@ -15,8 +15,6 @@ class Kernel extends HttpKernel {
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
         \BIRD3\Backend\Http\Middleware\VerifyCsrfToken::class,
-
-        // Modules
     ];
 
     /**

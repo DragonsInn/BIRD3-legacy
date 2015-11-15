@@ -37,6 +37,7 @@ module.exports.run = function (worker) {
     */
 
     // Front-end specific
+    app.set('etag', false); // Because. Damn.
     require("BIRD3/Backend/Service/Web")(app, hprosePort);
 
     httpServer.on('request', app);
@@ -46,12 +47,11 @@ module.exports.run = function (worker) {
     */
     scServer.on('connection', function (socket) {
         socket.on('ping', function (data) {
-            console.log('PING', data);
-            scServer.global.publish('pong', data);
+            socket.emit('pong', data);
         });
 
         socket.on('disconnect', function () {
-            BIRD3.log.notice("Client disconnected.");
+            //BIRD3.log.notice("Client disconnected.");
         });
     });
 };

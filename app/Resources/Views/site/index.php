@@ -8,7 +8,8 @@ $this->isIndex=true;
 ?>
 
 <h5>Friendly reminder: <small>This is a demo page.</small></h5>
-<h6>Carbon: <?=Carbon\Carbon::now()->addMinutes(config("session.lifetime"))?></h6>
+<p>Current WebPack hash: <?=Hprose::get("wpHash")?></p>
+<p>Unique ID: <?=Hprose::get("unique")?></p>
 <div class="row">
     <div class="col-md-12">
         <div class="well well-lg">

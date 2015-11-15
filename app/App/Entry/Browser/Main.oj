@@ -8,15 +8,15 @@ function makeFooter() {
     var fullHeight = 0
         + $("#MainPage").height()
         + $("footer").height();
-    if(window.innerHeight < fullHeight) return $('footer').css('margin-top',"auto");
+    if(window.innerHeight < fullHeight) return $('#MainPage').css('margin-bottom',"auto");
     if($("body").height() > $("#MainPage").height()) {
-        $('footer').css('margin-top',(
+        $('#MainPage').css('margin-bottom',(
             window.innerHeight
             - $('#MainPage').height()
             - $('footer').height()
         )+"px");
     } else {
-        $('footer').css('margin-top',"auto");
+        $('#MainPage').css('margin-bottom',"auto");
     }
 }
 window.addEventListener("resize", makeFooter);

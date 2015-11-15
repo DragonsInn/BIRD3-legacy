@@ -103,6 +103,10 @@ class Frontend {
         $kernel = new HttpKernel($app, $router);
 
         // Store the hprose parameters, the optional ones.
+        $ctx["optional"]["unique"] = uniqid();
+        if($app->bound(HproseHolder::class)) {
+            $app->forgetInstance(HproseHolder::class);
+        }
         $app->instance(HproseHolder::class, new HproseHolder($ctx["optional"]));
 
         // Create a request off the hprose parameters

@@ -19,13 +19,14 @@ use View;
 use Hprose;
 use HTML;
 use Request;
+use Response;
+use FlipFlop;
 
 // I need...a base controller. o.o;
 abstract class BaseController extends LaravelController {
 
     use DispatchesJobs, ValidatesRequests, AuthorizesRequests;
 
-	public $layout='@theme/Layouts/main.php';
 	public $breadcrumbs=array();
 	public $showingBan=false;
 
@@ -184,7 +185,7 @@ abstract class BaseController extends LaravelController {
 
 		// Register scripts
 		// # BIRD3 JavaScript. Yes, it's a view. xD
-		$inlineScript = $this->renderPartial(
+		$inlineScript = $this->renderPartialFromFile(
 			resolve("@theme/Templates/InlineJavaScript.php"),
 			[
 				"hash"=>$hash,
@@ -261,13 +262,23 @@ abstract class BaseController extends LaravelController {
 
 	public function render($name, array $args = []) {
 		try {
-	 		return View::make($name, $args, [], resolve($this->layout), $this);
+	 		return FlipFlop::loadWithContext($name, $args, $this);
 		} catch(\Exception $e) {
 			return $e->getMessage();
 		}
 	}
 
 	public function renderPartial($name, array $args = []) {
-		return View::makePartial($name, $args, $this);
+        $args = array_merge($args, ["__partial__"=>true]);
+		$view = FlipFlop::loadWithContext($name, $args, $this);
+        return $view;
 	}
+
+    public function renderPartialFromFile($name, array $args = []) {
+        $args = array_merge($args, ["__partial__"=>true]);
+        $view = View::file($name, $args);
+        $view->getEngine()->setContext($this);
+        return $view;
+    }
+
 }

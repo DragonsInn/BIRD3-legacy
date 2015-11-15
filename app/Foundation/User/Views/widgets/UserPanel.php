@@ -1,49 +1,36 @@
 <div>
-    <?php $user = Yii::app()->user; ?>
     <ul class="list-group">
         <li class="list-group-item list-group-item-soft">
-            <span class="pull-right"><?=CHtml::link(
-                "Logout", ["/user/logout"],
+            <span class="pull-right"><?=HTML::link(
+                "/user/logout", "Logout",
                 ["class"=>"btn btn-danger btn-xs"]
             )?></span>
             <p>Yourself</p>
             <div class="btn-group btn-group-xs">
-                <?=CHtml::link(
-                    "Settings", ["/user/settings"],
+                <?=HTML::link(
+                    "/user/settings", "Settings",
                     ["class"=>"btn btn-default"]
                 )?>
-                <?=CHtml::link(
-                    "Profile", ["/user/profile/view", "name"=>Yii::app()->user->username],
+                <?=HTML::link(
+                    # FIXME: Link to own profile.
+                    "/user/profile", "Profile",
                     ["class"=>"btn btn-default"]
                 )?>
-                <?=CHtml::link(
-                    "Avatar", ["/user/changeAvatar"],
+                <?=HTML::link(
+                    "/user/change-avatar", "Avatar",
                     ["class"=>"btn btn-default"]
                 )?>
             </div>
         </li>
         <li class="list-group-item list-group-item-soft">
-            <span class="badge"><?php
-                switch(Yii::app()->user->getModel()->superuser) {
-                    case User::R_USER:
-                        echo "User";
-                        break;
-                    case User::R_VIP:
-                        echo "VIP";
-                        break;
-                    case User::R_MOD:
-                        echo "Moderator";
-                        break;
-                    case User::R_ADMIN:
-                        echo "Admin";
-                        break;
-                }
-            ?></span>
+            <span class="badge">
+                <?php #$this->roleToString()?>
+            </span>
             You are
         </li>
-        <?php if($user->developer): ?>
+        <?php if($this->developer): ?>
         <li class="list-group-item list-group-item-soft">
-            <span class="badge alert-warning"><?=($user->developer ? "Yes":"No")?></span>
+            <span class="badge alert-warning"><?=($this->developer ? "Yes":"No")?></span>
             Developer
         </li>
         <?php endif; ?>
@@ -52,8 +39,8 @@
             <p>Private Messages</p>
             <div class="btn-group btn-group-xs">
                 <button type="button" class="btn btn-info">Compose</button>
-                <?=CHtml::link(
-                    "Inbox", ["/user/pm/box"],
+                <?=HTML::link(
+                    "/user/pm/box", "Inbox",
                     ["class"=>"btn btn-info"]
                 )?>
                 <button type="button" class="btn btn-info">Outbox</button>

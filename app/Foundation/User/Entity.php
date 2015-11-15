@@ -1,19 +1,33 @@
 <?php namespace BIRD3\Foundation\User;
 
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Foundation\Auth\Access\Authorizable;
-use Eloquent;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+
 use BIRD3\Support\Model\Validatable;
 use BIRD3\Foundation\User\Conversations\Conversation;
+
+// Alias
+use Eloquent;
 
 // Other models are in current namespace.
 #use Profile, Settings, Permissions, ...;
 
 // A dude and his dudy things.
 // FIXME: Entity, user, or actually, Dude? Hrm...
-class Entity extends Eloquent {
+class Entity
+extends Eloquent
+implements
+    AuthenticatableContract,
+    AuthorizableContract,
+    CanResetPasswordContract
+{
 
     // Make this class a validatable, authorizable thing.
-    use Validatable, Authorizable;
+    use Authenticatable, Authorizable, CanResetPassword;
 
     /**
      * Database Structure
@@ -42,6 +56,7 @@ class Entity extends Eloquent {
     // Eloquent settings
     protected $table = "users";
     protected $dates = ["create_at", "lastvisit_at"];
+    public $timestamps = false;
 
     // Scopes
     // # Find by status: Active, Inactive, Banned
@@ -85,4 +100,19 @@ class Entity extends Eloquent {
             - Forum\Topic   : hasMany
             - Forum\Post    : hasMany
     */
+
+    // Authentificable utility function
+    public function getRememberTokenName() {
+        return "remember_me";
+    }
+
+    // Utility functions
+    public function roleToString() {
+        switch($this->superuser) {
+            case self::R_USER:  return "User";
+            case self::R_VIP:   return "VIP";
+            case self::R_MOD:   return "Mod";
+            case self::R_ADMIN: return "Admin";
+        }
+    }
 }

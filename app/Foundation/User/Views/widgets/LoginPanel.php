@@ -1,44 +1,40 @@
-<div id="login">
+<div id="login" class="fluid-container">
     <h3>Login</h3>
-    <?php $form = $this->beginWidget('CActiveForm', array(
+    <?=Form::open([
+        "url"=>"/user/login",
         'id'=>'bird3-login',
-        'enableAjaxValidation'=>false,
-        'enableClientValidation'=>true,
-        'action'=>$this->controller->createUrl("/user/user/login")
-    )); ?>
+        'class'=>'horizontal-form'
+    ])?>
     <div class="input-group">
-        <?=$form->textField($model, "username", array(
+        <?=Form::text("username", null, [
             "placeholder"=>"Username",
             "required"=>"required",
             "class"=>"form-control",
             "aria-label"=>"User name"
-        ))?>
+        ])?>
     </div>
     <div class="input-group">
-        <?=$form->passwordField($model, "password", array(
+        <?=Form::password("password", [
             "placeholder"=>"Password",
             "required"=>"required",
             "class"=>"form-control",
             "aria-label"=>"Password"
-        ))?>
+        ])?>
         <span class="input-group-btn">
             <button type="submit" class="btn btn-default">
-                <i class="fa fa-arrow-right"></i>
+                ->
             </button>
         </span>
     </div>
-    <?php $this->endWidget(); ?>
+    <?=Form::close()?>
 </div>
 <hr>
 <div>
     <div class="btn-group-vertical" role="group" aria-label="Register and password reset" style="width:100%">
-        <?php
-            $txt = '<p>Not registered yet?</p>'."\n";
-            $txt.= '<p>Create a new account now!</p>';
-        ?>
-        <?=CHtml::link($txt, ["/user/register"], [
-            "class"=>"btn btn-info"
-        ])?>
+        <a href="/user/register" class="btn btn-info">
+            <p>Not registered yet?</p>
+            <p>Create a new account now!</p>
+        </a>
         <button class="btn btn-default" style="width:100%">
             Forgot your password?
         </button>

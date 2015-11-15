@@ -4,18 +4,26 @@
 use Illuminate\Support\ServiceProvider;
 
 // BIRD3
+use BIRD3\Foundation\User\Controllers\UserController;
 use BIRD3\Foundation\User\Providers\BIRD3UserProvider;
 use BIRD3\Foundation\User\Entity as User;
 use BIRD3\Foundation\User\Profile;
 use BIRD3\Foundation\User\Settings;
 use BIRD3\Foundation\User\Permissions;
 use BIRD3\Foundation\User\Conversations\Message as ConvoMessage;
+use BIRD3\Foundation\User\Widgets\UserSidebar;
 use BIRD3\Support\Password;
 
 // Facades
 use Validator;
+use Widget;
+use View;
+use Route;
 
 class UserServiceProvider extends ServiceProvider {
+    public function register() {
+        Route::controller("/user", UserController::class);
+    }
     public function boot() {
         // Add the auth driver...
         $this->app["auth"]->extend("BIRD3User", function(){
@@ -26,6 +34,10 @@ class UserServiceProvider extends ServiceProvider {
         Validator::extend("equals", function($attr, $val, $args, $validator){
             return Input::get($args[0]) == $value;
         });
+
+        // View and widget stuff
+        View::addNamespace("User", app_path("Foundation/User/Views"));
+        Widget::register("UserSidebar", UserSidebar::class);
 
         // Attach events to the models
         // # User
@@ -47,10 +59,6 @@ class UserServiceProvider extends ServiceProvider {
         // # Conversations
         ConvoMessage::creating(function($model){
             $model->sent = time();
-    });
-    }
-
-    public function register() {
-
+        });
     }
 }

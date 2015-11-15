@@ -1,19 +1,20 @@
-<?php class UserController extends Controller {
+<?php namespace BIRD3\Foundation\User\Controllers;
 
-    // Access control.
-    use UserFilters;
-    public function filters() {
-        return [
-            "must_be_logged_in + logout, settings, changeAvatar",
-            "must_be_logged_out + register, forgot_password, activate, login"
-        ];
-    }
+use BIRD3\Foundation\BaseController;
+use BIRD3\Foundation\User\Entity as User;
 
+use Request;
+use Auth;
 
-    public function actionLogin() {
+class UserController extends BaseController {
+
+    protected $redirectPath = "/";
+
+    /* FIXME: Rewrite login logic.
+    public function __getLogin() {
         $this->pageTitle = "User login";
         $user = new User("login");
-        if(isset($_POST['User'])) {
+        if(Request::input('User')) {
             $user->attributes=$_POST['User'];
             if($user->validate()) {
                 if($user->login()) {
@@ -24,14 +25,27 @@
         }
         $this->render("loginForm",array("model"=>$user));
     }
+    */
 
-    public function actionLogout() {
-        // We don't need the user's data neither on the client or server.
-        Yii::app()->request->cookies->clear();
-        Yii::app()->session->clear();
-        Yii::app()->session->destroy();
-        Yii::app()->user->logout();
-        $this->redirect(Yii::app()->user->returnUrl);
+    public function getLogin() {
+        return $this->render("User::login");
+    }
+
+    public function postLogin() {
+        $creds = [
+            "username" => Request::input("username"),
+            "password" => Request::input("password")
+        ];
+        if(Auth::attempt($creds)) {
+            return redirect()->intended($this->redirectPath);
+        } else {
+            return response("Could not log in. ".var_export($creds,true));
+        }
+    }
+
+    public function getLogout() {
+        Auth::logout();
+        return redirect("/");
     }
 
     // Do the registration and validation

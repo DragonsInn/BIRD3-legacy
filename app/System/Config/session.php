@@ -32,7 +32,6 @@ return [
     */
 
     'lifetime' => 120,
-
     'expire_on_close' => false,
 
     /*
@@ -137,7 +136,7 @@ return [
     |
     */
 
-    'domain' => GlobalConfig::get("BIRD3.url"),
+    'domain' => false,
 
     /*
     |--------------------------------------------------------------------------

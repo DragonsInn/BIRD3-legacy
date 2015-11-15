@@ -57,6 +57,7 @@ return [
         BIRD3\Extensions\FlipFlop\Providers\FlipFlopServiceProvider::class,
         BIRD3\Foundation\WebDriver\Providers\WebDriverServiceProvider::class,
         BIRD3\Foundation\User\Providers\UserServiceProvider::class,
+        BIRD3\Extensions\Editor\Providers\EditorServiceProvider::class,
 
         // Modules
         Caffeinated\Modules\ModulesServiceProvider::class,
@@ -106,6 +107,7 @@ return [
         'Hprose' => BIRD3\Support\Facades\Hprose::class,
         "BIRD3" => BIRD3\Support\Facades\BIRD3::class,
         "FlipFlop" => BIRD3\Extensions\FlipFlop\Facades\FlipFlop::class,
+        "User" => BIRD3\Foundation\User\Entity::class,
 
         // External
         'HTML' => Collective\Html\HtmlFacade::class,

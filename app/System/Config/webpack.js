@@ -251,7 +251,7 @@ module.exports = {
                 loader: "file"
             },{ // Markdown
                 test: /\.md$/,
-                loader: "markdown"
+                loader: "markdown-it"
             },{ // Embedded JS templates
                 test: /\.ejs$/,
                 loader: "ejs-compiled?delimiter=?&+rmWhitespaces"
@@ -283,6 +283,12 @@ module.exports = {
                 defines: {},
             }
         }
+    },
+    // FIXME: Fork, and adjust.
+    "markdown-it": {
+        preset: "gfm",
+        typographer: true,
+        //use: []
     },
     plugins: [
         // Output

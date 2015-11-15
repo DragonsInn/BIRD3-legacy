@@ -3,7 +3,7 @@ var ladda = require("ladda/js/ladda");
 require("BIRD3/Frontend/Design/Styles/ladda.scss");
 
 // Upload
-var filedrop = require("legacy!filedrop").fd; // Breaks on uglifying...
+var filedrop = require("legacy!filedrop").fd;
 filedrop.logging = false;
 require("filedrop/filedrop.css");
 

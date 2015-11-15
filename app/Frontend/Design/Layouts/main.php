@@ -75,32 +75,28 @@
         <div id="blurr-bg" class="<?=($this->isIndex ? "onIndex":$this->bg_class)?>">
         </div>
         <!--<div id="app">-->
+            <div id="Panels">
+                <!-- Panels -->
+                <div id="Ptop" class="panel top">
+                </div>
+                <div id="Pleft" class="panel side left container">
+                    <p>This search will look for Characters, Media and Forum entries.</p>
+                    <div><input type="text" id="allSearch" class="form-control white-box"></div>
+                </div>
+                <div id="Pright" class="panel side right">
+                    <?=Widget::UserSidebar()?>
+                </div>
+                <?php if(isset($this->panelBottom)): ?>
+                <div id="Pbottom" class="panel bottom">
+                    <?=$this->panelBottom?>
+                </div>
+                <?php endif; ?>
+            </div>
             <div id="MainPage">
                 <div id="TopSection">
                     <!-- Banner: Not on front-page and chat, but everywhere else. -->
                     <?php if(!$this->allPage && !$this->isIndex): ?>
                     <div id="banner"></div>
-                    <?php endif; ?>
-                    <!-- Panels -->
-                    <div id="Ptop" class="panel top">
-                    </div>
-                    <div id="Pleft" class="panel side left container">
-                        <p>This search will look for Characters, Media and Forum entries.</p>
-                        <div><input type="text" id="allSearch" class="form-control white-box"></div>
-                    </div>
-                    <div id="Pright" class="panel side right">
-                        <p>o.o</p>
-                        <?php /*
-                            if(Yii::app()->user->isGuest)
-                                $this->widget("BIRD3LoginWidget");
-                            else
-                                $this->widget("BIRD3SidebarWidget");
-                        */ ?>
-                    </div>
-                    <?php if(isset($this->panelBottom)): ?>
-                    <div id="Pbottom" class="panel bottom">
-                        <?=$this->panelBottom?>
-                    </div>
                     <?php endif; ?>
 
                     <!-- Menu, bottom part -->
@@ -184,9 +180,9 @@
                                 <ul class="nav navbar-nav navbar-right">
                                     <li><a href="#Pright" id="trigger-right">
                                         <i class="fa fa-user"></i> <?=(
-                                            true // is user logged in?
-                                            ? "Login/Register"
-                                            : "Derphead"
+                                            Auth::check() // is user logged in?
+                                            ? Auth::user()->username
+                                            : "Login/Register"
                                         )?> <i class="fa fa-caret-right"></i>
                                     </a></li>
                                 </ul>
@@ -255,11 +251,6 @@
                             <?=$this->tabbar?>
                         </div>
                     <?php endif; ?>
-                    <?php if(!empty($this->leftSide)): ?>
-                    <div id="leftSide">
-                        <?=$this->leftSide?>
-                    </div>
-                    <?php endif; ?>
                     <div id="content" class="container-fluid <?=$acClass?>">
                         <!-- FIXME: HAX HAX HAX...hackfleisch. I need classes here. This is UGLY! -->
                         <div style="position:absolute;top:0;left:0;height:100%;width:100%;z-index:-1;" id="fogger"></div>
@@ -267,11 +258,6 @@
                             <?=$content?>
                         </div>
                     </div>
-                    <?php if(!empty($this->rightSide)): ?>
-                    <div id="rightSide">
-                        <?=$this->rightSide?>
-                    </div>
-                    <?php endif; ?>
                     <div class="clearfix"></div>
                 </div>
             </div>

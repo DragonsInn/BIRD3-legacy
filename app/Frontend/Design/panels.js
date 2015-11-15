@@ -26,9 +26,7 @@ $.ready(function(){
 
     // Tiny callback
     function eachSide(cb) {
-        for(var i in sides) {
-            cb(sides[i], i);
-        }
+        for(var i in sides) cb(sides[i], i);
     }
     function trigger(side) {
         if(_triggers[side][0] != null)
@@ -45,9 +43,7 @@ $.ready(function(){
 
 
     eachSide(function(side, i){
-        console.log(side, trigger(side))
         trigger(side) != null && trigger(side).on("click",function(e){
-            console.log("o.o! "+side);
             e.stopPropagation();
             e.preventDefault();
             disableAndRemovePushers(side);
@@ -57,7 +53,7 @@ $.ready(function(){
     });
 
     // Finalize
-    $("body").on("click",function(e) {
+    $("#MainPage").on("click",function(e) {
         disableAndRemovePushers(null);
     });
 

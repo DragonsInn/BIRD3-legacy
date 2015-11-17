@@ -8,6 +8,7 @@ class Message extends Eloquent {
     use Validatable;
 
     protected $table = "user_pm_msg";
+    public $timestamps = false;
 
     /**
      *  @int id PK          | Message ID
@@ -16,6 +17,7 @@ class Message extends Eloquent {
      *  @text body          | Message body
      *  @timestamp sent     | When was it sent
      */
+     // Should get: created_at
 
     public function sender() {
         return $this->belongsTo(User::class, "from_id");

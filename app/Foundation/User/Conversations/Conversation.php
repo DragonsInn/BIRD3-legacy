@@ -7,6 +7,7 @@ use BIRD3\Foundation\User\Entity as User;
 
 class Conversation extends Eloquent {
     protected $table = "user_pm_conv";
+    public $timestamps = false;
 
     /**
      *  @int PK id            | Conversation ID

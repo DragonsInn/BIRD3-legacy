@@ -10,13 +10,11 @@
     * Permissions: ?
     - Private Messages (Conversations)
         * Box: Somewhat.
-        * Send: No.
+        * Send: Yes
         * Receive: ?
         * Is read/unread: No
         * Leave convo: No
     * Send issue to staff: No
-    - Widgets
-        * Popup when hovering over user image: No
 - Characters (CharaBase)
     * Create: No
     * Private/community only/public, adult/clean: No
@@ -76,8 +74,7 @@
     * Use JSON instead of XML: No
     * Terminal mode: No
 - Help center (docs)
-    * Bridge the BIRD3 docs into site: No
-    * Markdown based docs: No
+    * SPA within MPA: use webpack to generate docs off markdown.
 - Story
     * Public story: No
     - Jobs
@@ -120,14 +117,13 @@
     * Code in ES6 or Uniter PHP
     * PHP backend is...in PHP.
 - Frontend
-    * Do not rely on PHP preprocessing, allowing plain webpack usage
     * Coding in OJ (ES6 support comming)
         - Maybe going to Uniter PHP
 
 # BIRD3: Modules
 - BIRD3 Markdown Editor
     * Make available on NPM: ?
-    * Uses: JS, EJS
+    * Uses: OJ, PHP (Laravel Widget)
 - PowerHouse: Open Sourced
 - AJAXChat modifications: Fork, open source
 - Birdcons
@@ -135,7 +131,7 @@
     * Currate list of icons and group them: Done
 - WebPack loaders/plugins
     * fontgen-loader: Actively being used by all but myself. xD
-    * PurifyCSS plugin: internal for now, need to externalize
+    * PurifyCSS plugin: Open sourced.
 - o.o
     * Write the o.o library: Not done yet
     * Should use: ES6
@@ -145,6 +141,7 @@
 - BIRD3 Web server
     * Find a way to externalize this beast. It rocks. People should be able ot have it.
     * Uses: JS, PHP, hprose
+    * Name: WebDriver. `BIRD3\Foundation\WebDriver`
 - BIRD3 Sounds for UI and chat (module has no name, should have one)
     * Poke jeje like crazy: not done yet.
 

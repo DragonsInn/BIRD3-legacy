@@ -41,6 +41,13 @@ var mergeRules = require('postcss-merge-rules');
 // OJ
 var juicy = require("oj-loader").juicy;
 
+// markdown-it
+var mdTitle = require("markdown-it-title");
+var mdToc = require("markdown-it-table-of-contents");
+var mdArrow = require("markdown-it-smartarrows");
+var mdAnchor = require("markdown-it-anchor");
+var mdAttrs = require("markdown-it-attrs");
+
 // Webpack: make instances
 // Generate the general webpack file - make it a lil' lib.
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin({
@@ -165,20 +172,22 @@ module.exports = {
     //devtool: "#source-map",
     entry: {
         libwebpack: [
-            "domready", _jquery, _ojr,
+            _jquery, _ojr,
             "BIRD3/App/Entry/Browser/Support/Common",
             "BIRD3/App/Entry/Browser/Support/BootstrapNative",
             "BIRD3/Frontend/Design/panels.js"
         ],
         main: "BIRD3/App/Entry/Browser/Main",
+        newMain: "BIRD3/App/Entry/Browser/NewMain",
         upload: "BIRD3/Frontend/Upload",
-        xynu: "BIRD3/Frontend/Design/Styles/xynu.scss"
+        xynu: "BIRD3/Frontend/Design/Styles/xynu.scss",
+        md: ["markdown-it","LDT","behave.js"]
     },
     output: {
         path: app,
         filename: "[hash]-[name].js",
-        chunkFilename: "[hash]-[name].[id].js",
-        sourceMapFilename: "[hash]-[name].[id].map",
+        chunkFilename: "c_[hash]-[name].js",
+        sourceMapFilename: "c_[hash]-[name].map",
         publicPath: "/cdn/app/",
         sourcePrefix: "    "
     },
@@ -197,7 +206,6 @@ module.exports = {
             path.join(config.base,"app/Extensions"),
         ],
         modulesDirectories: [
-            // Bower, NPM, Composer, Web
             'bower_components',
             'node_modules',
             'php_modules',
@@ -206,6 +214,8 @@ module.exports = {
         alias: {
             // This is sooooo cool!
             BIRD3: path.join(config.base, "app"),
+            // Link to the docs as a module.
+            "BIRD3.docs": path.join(config.base, "docs/loader.js"),
             // Ensure compatibility to original bootstrap
             bootstrap: "BIRD3/App/Entry/Browser/Support/BootstrapNative.js",
             "a11y.bs": path.join(
@@ -251,7 +261,7 @@ module.exports = {
                 loader: "file"
             },{ // Markdown
                 test: /\.md$/,
-                loader: "markdown-it"
+                loader: "markdown-it-plus"
             },{ // Embedded JS templates
                 test: /\.ejs$/,
                 loader: "ejs-compiled?delimiter=?&+rmWhitespaces"
@@ -284,11 +294,27 @@ module.exports = {
             }
         }
     },
-    // FIXME: Fork, and adjust.
     "markdown-it": {
-        preset: "gfm",
+        preset: "default",
         typographer: true,
-        //use: []
+        html: true,
+        linkify: true,
+        use: [
+            mdTitle,
+            mdArrow, mdAnchor,
+            mdAttrs, mdToc
+        ],
+        preprocess: function(parser, env, source) {
+            var fm = require("front-matter");
+            var _ = require("microdash");
+            if(fm.test(source)) {
+                var fmData = fm(source);
+                env = _.extend(env, fmData.attributes);
+                return fmData.body;
+            } else {
+                return source;
+            }
+        }
     },
     plugins: [
         // Output

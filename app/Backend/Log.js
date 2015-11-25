@@ -38,8 +38,5 @@ module.exports = function(base) {
     logger.setLevels(lc.levels);
     winston.addColors(lc.colors);
 
-    // Correct the level
-    logger.level="update";
-
     return logger;
 }

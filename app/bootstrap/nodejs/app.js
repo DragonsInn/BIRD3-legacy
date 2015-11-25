@@ -144,7 +144,8 @@ var house = PowerHouse({
                         // One way to get around butchered PHP version strings.
                         // like: 5.5.29~1.dotdeb+7.1
                         var myPhpVersion = stdout.match(/\d\.\d\.\d*/g)[0];
-                        if(semver.satisfies(stdout, phpVersion)) {
+                        log.info("PHP Version is: "+myPhpVersion);
+                        if(semver.satisfies(myPhpVersion, phpVersion)) {
                             log.info("PHP is version "+stdout);
                             step();
                         } else {

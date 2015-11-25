@@ -1,19 +1,34 @@
 #!/usr/bin/env node --harmony_proxies
 var hprose = require("hprose"),
     inspect = require("util").inspect,
-    opts = require("optimist").argv,
-    client = new HproseTcpClient(opts.addr),
-    proxy = client.useService();
+    opts = require("optimist").argv;
+
+if(typeof opts.addr == "undefined") {
+    console.error("Usage: "+argv[0]+" --addr=ADDRESS [--method=METHOD_NAME --args=foo;bar]");
+    process.exit(1);
+}
+
+var client = new HproseTcpClient(opts.addr, true);
 
 client.on("error", function(func, e) {
     console.log("Error: "+e.message);
 });
 
-var cargs = [];
-var fargs = (typeof opts.args != "undefined" ? opts.args.split(";") : []);
-cargs.push(opts.method);
-cargs.push(fargs);
-cargs.push(function(res){
-    console.log(opts.method+" returned:", res);
-});
-client.invoke.apply(client, cargs);
+if(typeof opts.method != "undefined") {
+    var cargs = [];
+    var fargs = (typeof opts.args != "undefined" ? opts.args.split(";") : []);
+    cargs.push(opts.method);
+    cargs.push(fargs);
+    cargs.push(function(res){
+        console.log(opts.method+" returned:", res);
+    });
+    client.invoke.apply(client, cargs);
+} else {
+    client.ready(function(stub){
+        console.log("Methods:");
+        var mtd = Object.keys(stub);
+        for(var i=0; i<mtd.length; i++) {
+            console.log("  - "+mtd[i]);
+        }
+    });
+}

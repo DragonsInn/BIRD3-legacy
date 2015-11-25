@@ -40,6 +40,7 @@
     "jsencrypt": "~2.1.0",
     "l.js": "~0.1.0",
     "metro-buttons": "css3-microsoft-metro-buttons#~1.2.1",
+    "normalize-css": "normalize.css#~3.0.3",
     "progressbar.js": "~0.8.1",
     "radialIndicator": "~1.2.0",
     "scriptinclude": "~1.0.0",

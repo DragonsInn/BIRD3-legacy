@@ -1,0 +1,31 @@
+var app = require("grapnel")();
+
+// We always include the main script.
+// require("main.oj") - actually copy the app content here.
+
+app.get("/chat", function(req){
+    /*
+        - Modernize the chat to work with WebPack
+        - Load the chat
+        - When the user leaves the page (aka. navigates away),
+          log the user out using chat.logout();
+        - chat.logout() should accept a callback, so that we can delay.
+    */
+    /*require(["BIRD3/App/Modules/Chat"], function(chat){
+        // Do something with chat.
+    });*/
+});
+
+app.get("/docs", function(req){
+    /*
+        - Grab all the markdown docs inside the docs folder.
+        - Read them and create a nice sidebar of them.
+        - Display the document currently selected.
+
+        Yup, this is an SPA inside a MPA. o.o
+    */
+    require.ensure([], function(require){
+        var docs = require("BIRD3.docs");
+        console.log(docs);
+    }, "docs");
+});

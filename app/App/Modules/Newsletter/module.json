@@ -1,0 +1,7 @@
+{
+	"name": "Newsletter",
+	"slug": "newsletter",
+	"version": "1.0",
+	"description": "This is the description for the Newsletter module.",
+	"enabled": true
+}

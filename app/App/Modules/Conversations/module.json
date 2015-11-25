@@ -1,0 +1,7 @@
+{
+	"name": "Conversations",
+	"slug": "conversations",
+	"version": "1.0",
+	"description": "This is the description for the Conversations module.",
+	"enabled": true
+}

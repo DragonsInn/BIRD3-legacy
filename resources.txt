@@ -1,13 +1,21 @@
 // For Laravel migration
-Modules: https://github.com/caffeinated/modules
 SEO: https://github.com/caffeinated/SEO
-Structural: https://github.com/caffeinated/beverage
-Custom User (BIRD3 User): http://laravel.io/forum/11-04-2014-laravel-5-how-do-i-create-a-custom-auth-in-laravel-5?page=1#reply-28232
+Forum system: https://github.com/cmgmyr/laravel-messenger
+DB seed from JSON: https://github.com/triasrahman/laravel-jsonseeder
+
+// Testing
+Real PHP:
+    - https://github.com/crysalead/kahlan
+    - https://github.com/peridot-php/peridot
+Uniter PHP: -
+NodeJS:
+
+// Error handling
+Node: http://jgable.github.io/errorface/example.html
+PHP: http://phperror.net/
 
 // Good things to look at
 http://labs.mintchaos.com/flippant.js/
-http://www.yiiframework.com/extension/rediscache/
-http://www.jasonbutz.info/bootstrap-lightbox/
 http://brianreavis.github.io/selectize.js/
 http://blueimp.github.io/Bootstrap-Image-Gallery/
 parse audio file time http://de1.php.net/sscanf
@@ -15,17 +23,9 @@ parse audio file time http://de1.php.net/sscanf
 // Want to add
 http://codepen.io/xixao/pen/jvxFc
 
-// In source tree
-https://octicons.github.com/
-http://noizwaves.github.io/bootstrap-social-buttons/
-https://www.npmjs.org/package/daemonize.redux
-https://github.com/zhdanovartur/yii-easyimage
-http://mimo84.github.io/bootstrap-maxlength/
-http://www.bootstrap-switch.org/
-
 // Important docs
+Laravel 5.1: http://laravel.com/api/5.1/index.html
 http://www.iacquire.com/blog/18-meta-tags-every-webpage-should-have-in-2013
-http://fortawesome.github.io/Font-Awesome/examples/
 
 // WAI-ARIA, accessibility
 http://zomigi.com/blog/videos-of-screen-readers-using-aria-updated/
@@ -41,46 +41,15 @@ Search box
     - https://github.com/twitter/typeahead.js/blob/master/doc/jquery_typeahead.md
 Intro to the page
     - http://clu3.github.io/bootstro.js/#
-Sidebar menus
-    - http://www.berriart.com/sidr/#usage
-    - jQuery.mmenu
 Progress bar
     - http://www.alessioatzeni.com/blog/css3-loading-animation/
 Circular progress bar
-    - http://codepen.io/jo-asakura/details/stFHi/
     - https://github.com/kimmobrunfeldt/progressbar.js/issues/64#issuecomment-98353013
-BIRD3 Markdown Editor ; Implemented!
-    - https://github.com/timdown/rangyinputs
-BIRD3 RPC ; Implemented!
-    - https://www.npmjs.com/package/avs-rpc
-AJAXChat
-    - -> nodejs -> ssh?
-        * https://github.com/mscdex/ssh2
-    - Data models https://www.npmjs.com/package/mysql-model
-Clustered application ; Implemented!
-    - Diverse clusters https://github.com/valiton/node-various-cluster
-    - Domain specific cluster https://github.com/jtblin/master-cluster
-PHP Workerman worker stuff
-    - Child Process https://github.com/hfcorriez/php-childprocess/blob/master/README_en.md
-    - PHPSandbox https://github.com/fieryprophet/php-sandbox
-        * Can OVERRIDE stuff!! No runkit...?
-        * Uses an AST. that might get lost over includes.
-Better pagination
-    - https://github.com/mardix/Paginator
-Better HTML rendering
-    - https://github.com/Anahkiasen/html-object
 CLI stuff
     - https://github.com/c9s/CLIFramework
     - https://github.com/kevinlebrun/colors.php
 Active Records made amazing
     - https://github.com/TimeToogo/Pinq
-child_process.fork and sockets
-    - http://www.wiredprairie.us/blog/index.php/archives/1930
-Better content caching
-    - https://github.com/taxilian/connect-dyncache/pull/2
-        * Waiting on merge..........
-Code editor for page CSS for users
-    - http://codemirror.net/doc/manual.html
 Better CDN
     - https://surge.sh/
 
@@ -100,17 +69,10 @@ Support for ie7+ browsers
         * Use as middleware over WebPack files.
 Flood-require soundpacks
     - https://github.com/webpack/webpack/issues/1065
-Middleware layer
-    - https://www.npmjs.com/package/ware
-
-// Backend stuff
-general templating
-    - https://www.npmjs.com/package/jsph
 
 // Database
 Migrations
     - https://github.com/robmorgan/phinx
-    - https://github.com/okv/east
 
 // Specials
 Taala:

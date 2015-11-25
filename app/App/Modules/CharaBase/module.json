@@ -1,0 +1,7 @@
+{
+	"name": "CharaBase",
+	"slug": "charabase",
+	"version": "1.0",
+	"description": "This is the description for the CharaBase module.",
+	"enabled": true
+}

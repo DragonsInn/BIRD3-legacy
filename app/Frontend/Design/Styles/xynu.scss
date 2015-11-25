@@ -1,0 +1,22 @@
+// Normalize...
+@import "~normalize-css/normalize.css";
+
+// Make this a pretty Xynu page!
+body {
+    background: url(~BIRD3/Frontend/Design/Images/xynu.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#page {
+    text-align: right;
+    margin-top: 20px;
+    margin-right: 20px;
+    color: white;
+}
+
+#speechbubble div.error {
+    font-size: 1em;
+}

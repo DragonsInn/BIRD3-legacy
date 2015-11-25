@@ -2,8 +2,8 @@
 - [X] Add functionality to ban system
 - [ ] User module
     * [X] Profile page
-    * [X] Associate User to permissions and settings
-    * [X] Registration
+    * [ ] Associate User to permissions and settings
+    * [ ] Registration
         * User must agree to ToS, provide valid email and acrivate.
         * Consider using OpenID?
             - Nope. Thats a thing for later.
@@ -16,25 +16,23 @@
         * [X] Edit User, UserProfile and Usersettings.
     * [X] Using/Updating `last_visited` and `create_at`
         - Damn, a typo im not gonna get rid of. Should be `created_at`...
-    * [X] Avatar support
-        * [X] Cacheable avatars
+    * [ ] Avatar support
+        * [ ] Cacheable avatars
     * [X] Correct User DB relationships
     * [X] Private Messaging
         * [X] Add models
-        * [X] Implement PM logic
+        * [ ] Implement PM logic
             - [X] Create conversation
-            - [X] View conversation
-            - [X] Reply to conversation
-            - [X] Opt-out of conversation (= Delete when 0 members)
+            - [ ] View conversation
+            - [ ] Reply to conversation
+            - [ ] Opt-out of conversation (= Delete when 0 members)
     * [X] E-Mail notifications
         * [X] NodeJS scheduler for notifications
-        * [X] Plant notifications via Yii.
-        * [X] Markdown support (Done via PHP.)
     * [X] Previleges
         * [X] User groups (Admin, Moderator, VIP, User, Banned)
-        * [X] Handle special previleges via DB (Blog to front-page, ...)
+        * [ ] Handle special previleges via DB (Blog to front-page, ...)
         * [X] Developer mode should show extra stuff and error messages are detailed.
-    * [X] Fill the User section in the Community menu.
+    * [ ] Fill the User section in the Community menu.
     * [ ] Generate HTML to
         - Show avatar
             * Shows a generic one if `avvie_ext==null`
@@ -42,17 +40,6 @@
         - View profile
         - See blog
         - See gallery
-- [X] Front-end caching, part 2
-    * [X] Optimize sent cache headers
-        - Etag? Cache-control? Which one to use at what?
-        - ETag on JS, Cache-Control + Expires on anything else.
-- [ ] In-Site docs
-    * [ ] Proxy the Wiki into a /docs module
-        * [ ] Map the URL
-    * [ ] Hotel>Story and Hotel>Places need docs too.
-    * [ ] Write a proper credits page.
-    * [ ] Terms of Service
-    * [X] Roleplaying book/guide (Mostly done by Rayth)
 - [ ] Chat
     * [ ] Authentification through `BIRD3User`
     * [ ] Move message passing to NodeJS/Socket.IO
@@ -149,31 +136,6 @@
     * For PHP use composer `"psr-4": {"BIRD3\\": "app"}`
         * PHP Example: `use BIRD3\Common\Password;`
         * or `namespace BIRD3\App\Controllers\BaseController`
-- [ ] Laravel customization
-    - [ ] Session
-        * Handle Session via Redis, use module.
-        * Namespace: `BIRD3\Backend\Session`
-    - [ ] Override response/request stuff
-        * Get/Set headers
-        * Get/Set cookies
-        * Namespace: `BIRD3\Backend\Http\{Message, Cookie}`
-    - [ ] Synchronize Express and Laravel routers
-        * Failure router should return error to Express
-    - [ ] Facade to talk with hprose
-        * `RPC::get($nameWithDotNotation)`
-        * `RPC::set($nameWithDotNotation, $value)`
-    - [ ] Override caffeinated/modules:
-        * Allow the usage of `composer.json` inside the module.
-        * Pick up modules by their base name.
-    - [ ] Override `Illuminate\Foundation\Application`
-        * Name: `BIRD3\Foundation\Application`
-        * Override the functions that return paths to match new structure.
-        * Override `regusterCoreContainerAliases()` and replace with self.
-    - [ ] Override `Symfony\Component\HttpKernel,Request,Response`
-        * Make hprose aware.
-        * Return to hprose instead of browser
-        * Extract request vars from arguments
-        * Provide access to files, request bodies and alike.
 
 ## Notes... Scribbles...
 (23:04:14) Sapphy: (whispers) -Birth and Death Tab-

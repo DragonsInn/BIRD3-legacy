@@ -1,0 +1,7 @@
+{
+	"name": "Staffboard",
+	"slug": "staffboard",
+	"version": "1.0",
+	"description": "This is the description for the Staffboard module.",
+	"enabled": true
+}

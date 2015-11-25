@@ -24,4 +24,8 @@ app.get("/docs", function(req){
 
         Yup, this is an SPA inside a MPA. o.o
     */
+    require.ensure([], function(require){
+        var docs = require("BIRD3.docs");
+        console.log(docs);
+    }, "docs");
 });

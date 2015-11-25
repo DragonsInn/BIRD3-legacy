@@ -1,5 +1,8 @@
 <?php
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\RedisHandler;
+
 // Add important interfaces into service container
 // Kernels serve to console and client
 return function($app) {
@@ -20,4 +23,8 @@ return function($app) {
 
     // Surge the global BIRD3 config in
     \BIRD3\Support\GlobalConfig::load(home_path("config/BIRD3.ini"));
+
+    $app->configureMonologUsing(function(\Monolog\Logger $monolog){
+        $monolog->pushHandler(new StreamHandler(APP_ROOT."/log/BIRD3.laravel.log"));
+    });
 };

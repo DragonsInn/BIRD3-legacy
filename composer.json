@@ -1,5 +1,5 @@
 {
-    "name": "ingwiephoenix/bird3-php",
+    "name": "ingwiephoenix/bird3",
     "description": "The PHP backend to the Dragon's Inn runtime, BIRD3.",
     "license": "MIT",
     "require": {
@@ -38,7 +38,8 @@
         "athari/yalinqo": "^2.3",
         "peridot-php/peridot": "^1.16",
         "peridot-php/peridot-httpkernel-plugin": "^1.1",
-        "expect/peridot-expect-plugin": "^3.0"
+        "expect/peridot-expect-plugin": "^3.0",
+        "zizaco/entrust": "dev-laravel-5"
     },
     "config": {
         "vendor-dir": "php_modules/"
@@ -52,6 +53,7 @@
         "merge-plugin": {
             "include": [
                 "app/Extensions/*/composer.json",
+                "app/Foundation/*/composer.json",
                 "app/App/Modules/*/composer.json"
             ],
             "recurse": true,

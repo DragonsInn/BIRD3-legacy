@@ -1,6 +1,7 @@
 // For Laravel migration
 SEO: https://github.com/caffeinated/SEO
-Custom User (BIRD3 User): http://laravel.io/forum/11-04-2014-laravel-5-how-do-i-create-a-custom-auth-in-laravel-5?page=1#reply-28232
+Forum system: https://github.com/cmgmyr/laravel-messenger
+DB seed from JSON: https://github.com/triasrahman/laravel-jsonseeder
 
 // Testing
 Real PHP:
@@ -15,8 +16,6 @@ PHP: http://phperror.net/
 
 // Good things to look at
 http://labs.mintchaos.com/flippant.js/
-http://www.yiiframework.com/extension/rediscache/
-http://www.jasonbutz.info/bootstrap-lightbox/
 http://brianreavis.github.io/selectize.js/
 http://blueimp.github.io/Bootstrap-Image-Gallery/
 parse audio file time http://de1.php.net/sscanf
@@ -46,10 +45,6 @@ Progress bar
     - http://www.alessioatzeni.com/blog/css3-loading-animation/
 Circular progress bar
     - https://github.com/kimmobrunfeldt/progressbar.js/issues/64#issuecomment-98353013
-AJAXChat
-    - -> nodejs -> ssh?
-        * https://github.com/mscdex/ssh2
-    - Data models https://www.npmjs.com/package/mysql-model
 CLI stuff
     - https://github.com/c9s/CLIFramework
     - https://github.com/kevinlebrun/colors.php

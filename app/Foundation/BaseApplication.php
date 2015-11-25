@@ -97,7 +97,7 @@ abstract class BaseApplication extends LaravelApplication {
      * @return string
      */
     public function getCachedServicesPath() {
-        return $this->path().'/bootstrap/cache/services.json';
+        return $this->path().'/../cache/services.json';
     }
 
     /**
@@ -106,7 +106,7 @@ abstract class BaseApplication extends LaravelApplication {
      * @return string
      */
     public function getCachedCompilePath() {
-        return $this->path().'/bootstrap/cache/compiled.php';
+        return $this->path().'/../cache/compiled.php';
     }
 
     /**

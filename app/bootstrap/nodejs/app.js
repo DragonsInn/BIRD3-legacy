@@ -140,12 +140,17 @@ var house = PowerHouse({
                 log.info("Testing PHP version ("+phpVersion+")");
                 child_process.exec('php -r "echo PHP_VERSION;"', function(err, stdout, stderr){
                     if(err) return step(err);
-                    if(semver.satisfies(stdout, phpVersion)) {
-                        log.info("PHP is version "+stdout);
-                        step();
-                    } else {
-                        step(new Error("PHP is not compatible! Found: "+stdout));
-                    }
+                    try {
+                        // One way to get around butchered PHP version strings.
+                        // like: 5.5.29~1.dotdeb+7.1
+                        var myPhpVersion = stdout.match(/\d\.\d\.\d*/g)[0];
+                        if(semver.satisfies(stdout, phpVersion)) {
+                            log.info("PHP is version "+stdout);
+                            step();
+                        } else {
+                            step(new Error("PHP is not compatible! Found: "+stdout));
+                        }
+                    } catch(e) { step(e); }
                 });
             }
         }, function(err, res){

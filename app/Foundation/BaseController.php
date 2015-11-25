@@ -262,7 +262,7 @@ abstract class BaseController extends LaravelController {
 
 	public function render($name, array $args = []) {
 		try {
-	 		return FlipFlop::loadWithContext($name, $args, $this);
+	 		return FlipFlop::loadWithContext($name, $args, $this)->render();
 		} catch(\Exception $e) {
 			return $e->getMessage();
 		}
@@ -271,7 +271,7 @@ abstract class BaseController extends LaravelController {
 	public function renderPartial($name, array $args = []) {
         $args = array_merge($args, ["__partial__"=>true]);
 		$view = FlipFlop::loadWithContext($name, $args, $this);
-        return $view;
+        return $view->render();
 	}
 
     public function renderPartialFromFile($name, array $args = []) {

@@ -131,8 +131,6 @@
   "devDependencies": {},
   "scripts": {
     "bower": "bower --allow-root",
-    "ojc": "ojc",
-    "shjs": "shjs",
     "compile": "webpack --config ./app/System/Config/webpack.js",
     "phinx": "php php_modules/bin/phinx --configuration=app/System/Config/phinx.php",
     "dbtool": "php util/dbtool.php",

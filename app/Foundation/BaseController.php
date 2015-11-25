@@ -278,7 +278,7 @@ abstract class BaseController extends LaravelController {
         $args = array_merge($args, ["__partial__"=>true]);
         $view = View::file($name, $args);
         $view->getEngine()->setContext($this);
-        return $view;
+        return $view();
     }
 
 }

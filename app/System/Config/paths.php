@@ -3,8 +3,8 @@
         // These paths are RELATIVE! to the app root defined through the app construct
         'app_path'      => "app",
         'config_path'   => "app/System/Config",
-        'database_path' => 'app/Database',
-        'lang_path'     => 'app/Languages',
+        'database_path' => 'app/System',
+        'lang_path'     => 'app/Foundation/Languages',
         'public_path'   => "cdn",
         'storage_path'  => "cache"
     ],

@@ -19,9 +19,6 @@ return [
     'key' => 'nCGwQBdnj9h5x2pyVCeZ80UHhUX8GUpo',
     'cipher' => 'AES-256-CBC',
 
-    // Log
-    'log' => 'single',
-
     // Providers
     'providers' => [
         // Laravel Framework Service Providers...
@@ -64,6 +61,8 @@ return [
         Spatie\Backup\BackupServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Pingpong\Widget\WidgetServiceProvider::class,
+        #Jlapp\SmartSeeder\SmartSeederServiceProvider::class, // "jlapp/smart-seeder": "dev-master"
+        Zizaco\Entrust\EntrustServiceProvider::class
     ],
 
     'aliases' => [
@@ -113,6 +112,7 @@ return [
         'HTML' => Collective\Html\HtmlFacade::class,
         'Form' => Collective\Html\FormFacade::class,
         'Widget' => Pingpong\Widget\WidgetFacade::class,
+        'Entrust' => Zizaco\Entrust\EntrustFacade::class,
     ],
 
 ];

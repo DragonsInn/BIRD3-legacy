@@ -8,6 +8,12 @@
     "async": "^1.3.0",
     "avs-rpc": "git://github.com/gigerlin/rpc.git",
     "awesomplete": "^1.0.0",
+    "babel-core": "^6.2.1",
+    "babel-loader": "^6.2.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.2.0",
+    "babel-plugin-transform-runtime": "^6.1.18",
+    "babel-preset-es2015": "^6.1.18",
+    "babel-preset-stage-1": "^6.1.18",
     "bcrypt": "^0.8.5",
     "bird3-purifycss-webpack-plugin": "^1.0.7",
     "body-parser": "^1.13.1",
@@ -126,7 +132,8 @@
     "which": "^1.2.0",
     "winston": "^2.1.1",
     "wrench": "^1.5.8",
-    "yargs": "^3.14.0"
+    "yargs": "^3.14.0",
+    "zest": "^0.1.3"
   },
   "devDependencies": {},
   "scripts": {

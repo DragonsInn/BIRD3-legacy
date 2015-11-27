@@ -41,13 +41,6 @@ var mergeRules = require('postcss-merge-rules');
 // OJ
 var juicy = require("oj-loader").juicy;
 
-// markdown-it
-var mdTitle = require("markdown-it-title");
-var mdToc = require("markdown-it-table-of-contents");
-var mdArrow = require("markdown-it-smartarrows");
-var mdAnchor = require("markdown-it-anchor");
-var mdAttrs = require("markdown-it-attrs");
-
 // Webpack: make instances
 // Generate the general webpack file - make it a lil' lib.
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin({
@@ -181,7 +174,7 @@ module.exports = {
         newMain: "BIRD3/App/Entry/Browser/NewMain",
         upload: "BIRD3/Frontend/Upload",
         xynu: "BIRD3/Frontend/Design/Styles/xynu.scss",
-        md: ["markdown-it","LDT","behave.js"]
+        sizeTest: "BIRD3/App/Entry/Browser/SizeTest"
     },
     output: {
         path: app,
@@ -271,6 +264,10 @@ module.exports = {
             },{ // OJ -> JS
                 test: /\.oj$/,
                 loader: "oj?-warn-unknown-ivars&-warn-unknown-selectors"
+            },{
+                test: /\.js$/,
+                loader: "babel",
+                exclude: /((runtime|miuri)\.js$|nanoajax|socketcluster|ws|circular-json)/,
             },{ // Webfont generator
                 test: /\.font\.(js|json)$/,
                 loader: "fontgen"
@@ -280,7 +277,15 @@ module.exports = {
             /\.(min|bundle|pack)\.js$/,
         ]
     },
-    postcss: [mergeRules()],
+    babel: {
+        presets: ['es2015', 'stage-1'],
+        plugins: [
+            ["transform-es2015-modules-commonjs", {
+                allowTopLevelThis: true
+            }]
+        ], //"transform-runtime"
+        cacheDirectory: path.join(config.base, "cache/babel"),
+    },
     oj: {
         runtime: _ojr,
         pre: [ juicy.preprocessor() ],
@@ -294,17 +299,10 @@ module.exports = {
             }
         }
     },
-    "markdown-it": {
-        preset: "default",
-        typographer: true,
-        html: true,
-        linkify: true,
-        use: [
-            mdTitle,
-            mdArrow, mdAnchor,
-            mdAttrs, mdToc
-        ],
-        preprocess: function(parser, env, source) {
+    postcss: [mergeRules()],
+    "markdown-it": (function(){
+        var mdOpt = require("./markdown-it");
+        mdOpt.preprocess = function(parser, env, source) {
             var fm = require("front-matter");
             var _ = require("microdash");
             if(fm.test(source)) {
@@ -315,7 +313,8 @@ module.exports = {
                 return source;
             }
         }
-    },
+        return mdOpt;
+    })(),
     plugins: [
         // Output
         //progress,
@@ -329,6 +328,6 @@ module.exports = {
         // CSS
         extractor, purifyPlugin,
         // JavaScript
-        uglify
+        //uglify
     ]
 };

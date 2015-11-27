@@ -2,6 +2,7 @@
 var behave = require("behave.js");
 var LDT = require("LDT");
 var jsCaret = require("legacy!jsCaret/jsCaret.js");
+var markdownIt = require("BIRD3/Support/MarkdownIt")();
 var piklor = window.piklor = require("piklor.js").Piklor;
 var Tooltip = require("bootstrap.native/lib/tooltip-native");
 var Popover = require("bootstrap.native/lib/popover-native");
@@ -74,25 +75,20 @@ module.exports = function(){
 
         // Give this text-area some super bird power!
         // LDT setup. A bit complicated but do-able.
-        var rules = {
-            //list: /[-\*]\s[^\n\r]*\n?|[0-9]\.\s[^\n\r]*\n?/,
-            list: /(\d\.|\*|\-)\s(.+)/,
-            header: /#+\s[^\n\r]*\n?/,
-            "bold fix": /[\*\_]{2}[^\_\*\r\n]*[\*\_]{2}?/,
-            "italic fix": /[\_\*][^\_\*\r\n]*[\_\*]?/,
-            strike: /-[^-]*-?/,
-            code: /```[\r\n].*[\r\n]```/,
-            quote: />\s[^\r\n]*\n?/,
-            mention: /@[^@\r\n]([a-z0-9\-\._]*)?/,
-            anchor: /\[[^\r\n\]\[]*\]?\([^\r\n\(\)]*\)?/,
-            url: require("url-regex")(), // Dink! :)
-            ip: require("ip-regex")(),
-            email: require("email-regex")(),
-            hashtag: /(#[a-z0-9][a-z0-9\-_]*)/,
-            whitespace: /\s+/,
-            other: /\S+/
+        var parser = {
+            add: function(){
+                throw new Error("Can't add dynamic rules. Yet.");
+            },
+            tokenize: function(input){
+                var mdAst = markdownIt.parse(input);
+                return mdAst;
+            },
+            identify: function(token){
+                // Identify a token... aha. o.o
+                // TODO: Investigate into this.
+                console.log("Token",token);
+            }
         };
-        var parser = new LDT.Parser(rules, true);
         var ta_l = new LDT($ta[0], parser);
         // jsCaret setup
         var caret = new jsCaret(ta_l.input);

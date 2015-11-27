@@ -1,9 +1,16 @@
-// Modules
+// Text editor behaviours
 var behave = require("behave.js");
 var LDT = require("LDT");
 var jsCaret = require("legacy!jsCaret/jsCaret.js");
+
+// Text parser
 var markdownIt = require("BIRD3/Support/MarkdownIt")();
+var transform = require("./lib/transform-md-ast");
+
+// Color picker
 var piklor = window.piklor = require("piklor.js").Piklor;
+
+// Bootstrap.native
 var Tooltip = require("bootstrap.native/lib/tooltip-native");
 var Popover = require("bootstrap.native/lib/popover-native");
 // CSS
@@ -80,14 +87,13 @@ module.exports = function(){
                 throw new Error("Can't add dynamic rules. Yet.");
             },
             tokenize: function(input){
-                var mdAst = markdownIt.parse(input);
-                return mdAst;
+                return transform(markdownIt.parse(input));
             },
             identify: function(token){
                 // Identify a token... aha. o.o
                 // TODO: Investigate into this.
-                console.log("Token",token);
-            }
+                return token.identify();
+            },
         };
         var ta_l = new LDT($ta[0], parser);
         // jsCaret setup
@@ -98,9 +104,9 @@ module.exports = function(){
             fence: "```"
         });
         // Re-Attach stuff
-        ta_l.input.addEventListener("keydown", ta_l.update);
         ta_l.input.addEventListener("keyup", ta_l.update);
-        ta_l.input.addEventListener("keypress", ta_l.update);
+        //ta_l.input.addEventListener("keydown", ta_l.update);
+        //ta_l.input.addEventListener("keypress", ta_l.update);
         // Auto-resize? Sure.
         var $ldt = $.grab(ta_l.input).parent().parent();
         $ta.data("origSize",$ldt.height());

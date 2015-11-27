@@ -2,6 +2,10 @@
 SEO: https://github.com/caffeinated/SEO
 Forum system: https://github.com/cmgmyr/laravel-messenger
 DB seed from JSON: https://github.com/triasrahman/laravel-jsonseeder
+AutoPolyfiller: Frustration-free coding.
+    - https://github.com/deepsweet/autopolyfiller-loader
+    - https://github.com/financial-times/polyfill-service
+    * Fork loader, be happy.
 
 // Testing
 Real PHP:

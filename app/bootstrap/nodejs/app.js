@@ -72,8 +72,7 @@ var house = PowerHouse({
         var log = BIRD3.log;
         var config = BIRD3.config;
         async.parallel({
-            mysql: function(cb) {
-                log.info("Testing MySQL...");
+            mysql: function(cb) { try{
                 var conn = require("mysql").createConnection({
                     host:       "localhost",
                     user:       config.DB.user,
@@ -81,6 +80,7 @@ var house = PowerHouse({
                     database:   config.DB.mydb
                 });
                 conn.connect(function(err){
+                    log.info("Testing MySQL...");
                     if(err) {
                         log.error("MySQL failed.");
                         cb(err);
@@ -90,8 +90,8 @@ var house = PowerHouse({
                         cb();
                     }
                 });
-            },
-            redis: function(cb) {
+            } catch(e){ cb(e); }},
+            redis: function(cb) { try {
                 log.info("Testing Redis...");
                 var client = redis.createClient();
                 client.on("ready", function(){
@@ -103,46 +103,52 @@ var house = PowerHouse({
                     log.error("Redis failed.");
                     cb(err);
                 });
-            },
-            php: function(cb) {
+            } catch(e) { cb(e); }},
+            php: function(cb) { try {
                 log.info("Testing PHP...");
                 child_process.exec("php -m", function(error, stdout, stderr){
                     if(error) {
                         log.error("PHP failed.");
                         return cb(error);
                     }
-                    var modules = require("ini").parse(stdout);
-                    var pm = modules["PHP Modules"];
-                    var reqs = [
-                        // For workerman
-                        "sysvmsg","sysvsem","sysvshm",
-                        "pcntl","sockets",
-                        // BIRD3
-                        "PDO",
-                    ];
-                    var is_working = false;
-                    reqs.forEach(function(v,i){
-                        if(!pm[v]) {
-                            log.error("PHP failed.");
-                            is_working = false;
-                            return cb(new Error("PHP extension '"+v+"' not found."));
-                        } else is_working = true;
-                    });
-                    if(is_working) {
-                        log.info("PHP works.");
-                        return cb();
+                    log.info("Got PHP modules...");
+                    try {
+                        var modules = require("ini").parse(stdout);
+                        var pm = modules["PHP Modules"];
+                        var reqs = [
+                            // For workerman
+                            "sysvmsg","sysvsem","sysvshm",
+                            "pcntl","sockets",
+                            // BIRD3
+                            "PDO",
+                        ];
+                        var is_working = false;
+                        for(var i=0; i<reqs.length; i++) {
+                            var v = reqs[i];
+                            if(!pm[v]) {
+                                log.error("PHP failed.");
+                                is_working = false;
+                                return cb(new Error("PHP extension '"+v+"' not found."));
+                            } else is_working = true;
+                        }
+                        if(is_working) {
+                            log.info("PHP works.");
+                            return cb();
+                        }
+                    } catch(e) {
+                        cb(e);
                     }
                 });
-            },
-            phpVersion: function(step) {
+            } catch(e) { cb(e); }},
+            phpVersion: function(step) { try {
                 var semver = require("semver");
                 var phpVersion = BIRD3.composer.require.php;
                 log.info("Testing PHP version ("+phpVersion+")");
                 child_process.exec('php -r "echo PHP_VERSION;"', function(err, stdout, stderr){
                     if(err) return step(err);
+                    // One way to get around butchered PHP version strings.
+                    // like: 5.5.29~1.dotdeb+7.1
                     try {
-                        // One way to get around butchered PHP version strings.
-                        // like: 5.5.29~1.dotdeb+7.1
                         var myPhpVersion = stdout.match(/\d\.\d\.\d*/g)[0];
                         log.info("PHP Version is: "+myPhpVersion);
                         if(semver.satisfies(myPhpVersion, phpVersion)) {
@@ -151,12 +157,15 @@ var house = PowerHouse({
                         } else {
                             step(new Error("PHP is not compatible! Found: "+stdout));
                         }
-                    } catch(e) { step(e); }
+                    } catch(e) {
+                        // Fatal failure.
+                        step(e);
+                    }
                 });
-            }
+            } catch(e) { step(e); }}
         }, function(err, res){
             if(err) {
-                log.error(err);
+                console.error(err.stack || err);
                 process.exit(1);
             } else {
                 var com = require("BIRD3/Backend/Communicator")(null, redis);

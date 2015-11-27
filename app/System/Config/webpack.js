@@ -264,10 +264,10 @@ module.exports = {
             },{ // OJ -> JS
                 test: /\.oj$/,
                 loader: "oj?-warn-unknown-ivars&-warn-unknown-selectors"
-            },{
+            },{ // ES6/7 -> ES5...hopefuly.
                 test: /\.js$/,
                 loader: "babel",
-                exclude: /((runtime|miuri)\.js$|nanoajax|socketcluster|ws|circular-json)/,
+                exclude: /(node_modules|bower_components|web_modules)/,
             },{ // Webfont generator
                 test: /\.font\.(js|json)$/,
                 loader: "fontgen"

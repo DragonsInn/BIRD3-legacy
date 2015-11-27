@@ -6,9 +6,10 @@ var mdAttrs = require("markdown-it-attrs");
 
 module.exports = {
     preset: "default",
-    typographer: true,
+    typographer: false,
     html: true,
     linkify: true,
+    breaks: true,
     use: [
         mdTitle,
         mdArrow, mdAnchor,

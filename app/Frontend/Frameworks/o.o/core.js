@@ -1,48 +1,43 @@
+var _ = require("microdash");
+
 // Shimming
-var oc = Object.create || function(proto) {
+Object.create = Object.create || (function(proto) {
     function f() {}
     f.prototype = proto;
     return new f;
-};
+});
 
-var oo = module.exports = function oo() {
+var oo = function() {
     if(!(this instanceof oo)) {
-        // Create instance
-        var obj = oc(oo.prototype);
-        return oo.apply(obj, arguments);
+        var inst = Object.create(oo.prototype);
+        return oo.apply(inst, arguments);
     }
-    if(arguments.length > 0) {
+    if(_.isFunction(this.__init)) {
         return this.__init.apply(this, arguments);
-    } else {
-        return this;
     }
 }
-
-// Override to change behaviour.
-oo.prototype.__init = function() {
-    // If a real initializer was supplied, use that.
-    if(oo.__init) {
-        return oo.__init.apply(this, arguments);
-    }
-    return this;
-};
 
 // Publish functions into an object.
-oo.publish = function(n,o) {
-    if(n.charAt(0) == ".") {
-        if(typeof o != "object") {
-            throw new TypeError("Prototypes can only be extended by objects. Got: "+typeof o);
-        }
-        // Edit the prototype
-        n = n.slice(1);
-        oo[n].prototype = require("merge").recursive(oo[n].prototype, o);
-    } else {
-        if(typeof o == "function") {
-            oo[n] = o;
-        } else if(typeof o == "object") {
-            oo[n] = require("merge").recursive(oo[n], o);
-        } else {
-            throw new TypeError("Can only create constructors or merge objects. Got: "+typeof o);
-        }
+// @param: publics -> Apply to oo itself.
+// @param: privates -> Apply to prototype
+oo.publish = function(publics, privates) {
+    function makeTypeError(target, desc) {
+        var targetType = typeof target;
+        throw new Error("Can only "+desc+" with object. Got <"+targetType+"> instead.");
     }
+    if(_.isPlainObject(publics) || _.isFunction(publics)) {
+        oo = _.extend(oo, publics);
+    } else throw makeTypeError(publics, "public members");
+    if(_.isPlainObject(privates) || _.isFunction(privates)) {
+        oo.prototype = _.extend(oo.prototype, privates);
+    } else throw makeTypeError(privates, "private members");
 }
+
+// Provide microdash right away
+oo.publish(_, {});
+
+// Cheesy (:
+// Allows: var o = require("o.o"); o.o(...);
+oo.o = oo;
+
+module.exports = oo;

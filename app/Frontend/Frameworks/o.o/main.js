@@ -1,10 +1,10 @@
 var oo = require("./core");
-var modules = {
-    dom: require("./dom"),
-    ajax: require("./ajax")
-};
-for(var mname in modules) {
-    var mod = modules[mname];
-    oo.publish( mname, mod );
-}
+var modules = [
+    require("./ajax"),
+    require("./dom"),
+    require("./events")
+];
+modules.forEach(function(mod){
+    oo.publish( mod, mod.prototype || {} );
+});
 module.exports = oo;

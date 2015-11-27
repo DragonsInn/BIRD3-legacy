@@ -1,13 +1,28 @@
-var ajax = module.exports = function AJAX(url, settings) {
-    // Grab XHR and do something according to settings.
+// We use the nanoajax library here.
+var nanoajax = require("nanoajax");
+var _ = require("microdash");
+
+// The base
+function AJAX() {
+    // Determine arguments
+    var args = Array.prototype.slice.call(arguments);
+    var o = {};
+    if(_.isPlainObject(args[0])) {
+        // f(Object) -> NanoAjax call
+        o = args[0];
+    } else if(_.isString(args[0])) {
+        o.url = args[0];
+        o = _.extend(o, args[1] || {});
+    } else if(_.isString(args[0]) && _.isString(args[1])) {
+        o.url = args[0];
+        o.method = args[1].toUpperCase();
+        o = _.extend(o, args[2] || {});
+    }
+    return nanoajax.ajax(o);
 }
 
-ajax._defaults = {
-    method: "get",
-    json: false,
-    data: {},
-    onStart: function(xhr){},
-    onError: function(e, xhr){},
-    onProgress: function(){},
-    onEnd: function(code, response, xhr){}
-};
+// Exporting the plugin
+module.exports = {
+    ajax: AJAX,
+    nanoajax: nanoajax
+}

@@ -1,7 +1,79 @@
-var app = require("grapnel")();
+// Modules
+var Grapnel = require("grapnel");
+var ajax = require("nanoajax").ajax;
+//var $ = require("cash"); // TODO: Make own implementation (o.o)
+
+// Tiny tests
+var hasPushState = ('history' in window && 'pushState' in history);
+
+var app = new Grapnel({
+    pushState: hasPushState,
+    root: "/"
+});
+
+// Helper
+function url(u) {
+    var scheme = location.protocol+"//";
+    var host = location.hostname;
+    var pathname = ( u.charAt(0) == "/"
+        ? u
+        : location.pathname+"/"+u
+    );
+    return scheme+host+pathname;
+}
 
 // We always include the main script.
 // require("main.oj") - actually copy the app content here.
+
+/*
+    This router is meant for SPA apps.
+
+    In our case, we will:
+    - pick up the route.
+    - Send a PJAX request to the server
+    - Shove the contents into the body.
+
+    If a browser does not support PushState:
+    - Let the site behave like it normally would.
+    - Each click triggers a new load.
+    - When a page loads, run the proper route code, if any.
+*/
+
+app.get("/docs", function(req, e, next){
+    /*
+        - Grab all the markdown docs inside the docs folder.
+        - Read them and create a nice sidebar of them.
+        - Display the document currently selected.
+
+        Yup, this is an SPA inside a MPA. o.o
+
+        The only thing that PHP provides is the base HTML layout.
+        Therefore, we'll attach to the proper "onDone" thing.
+    */
+    app.once("request-done", function(e){
+        require.ensure([], function(require){
+            var docs = require("BIRD3.docs");
+            var $topics = $("#DocTopics");
+            var $docBody = $("#DocBody");
+            docs.forEach(function(topic, topicId){
+                var $t = $(document.createElement("p"));
+                var $h = $("<strong>"+topic.title+"</strong>");
+                var $ul = $(document.createElement("ul"));
+                $t.append($h);
+                topic.entries.forEach(function(entry, entryId){
+                    var $entry = $("<li>"+entry.shortTitle || entry.title+"</li>");
+                    $entry.click(function(){
+                        $docBody.html(entry.body);
+                    });
+                    $ul.append($entry);
+                });
+                $t.append($ul);
+                $topics.append($t);
+            });
+        }, "docs");
+    });
+    next();
+});
 
 app.get("/chat", function(req){
     /*
@@ -16,16 +88,46 @@ app.get("/chat", function(req){
     });*/
 });
 
-app.get("/docs", function(req){
-    /*
-        - Grab all the markdown docs inside the docs folder.
-        - Read them and create a nice sidebar of them.
-        - Display the document currently selected.
+// the catch-all route.
+// Will be called pretty much anytime a regular page is requested.
+app.get("/*", function(req, e, next){
+    if(window.location.pathname !== e.value) {
+        // We aren't on that page, so...
+        ajax({
+            url: url(e.value),
+            headers: {
+                "X-PJAX": "true"
+            }
+        }, function(code, res){
+            /*
+                Since this is a PJAX request, `res` will contain
+                a JSON object. Each key in this object responds to
+                an ID within the DOM.
+            */
+            try {
+                var parts = JSON.parse(res);
+                for(var DomID in parts) {
+                    var html = parts[DomID];
+                    $("#"+DomID).html(html);
+                    /*
+                        this.controller = require("BIRD3/App/Controller/MainController");
+                        RunApplication(this, req);
+                    */
+                    app.trigger("request-done");
+                }
+            } catch(e) {
+                // Need to use BIRD3's Dialog stuff...
+                alert(e);
+            }
+        });
+    }
+});
 
-        Yup, this is an SPA inside a MPA. o.o
-    */
-    require.ensure([], function(require){
-        var docs = require("BIRD3.docs");
-        console.log(docs);
-    }, "docs");
+$("[data-pjax]").click(function(e){
+    if(hasPushState) {
+        // This is a PJAX link. So hold it right there.
+        e.preventDefault();
+        $e = $(e.target);
+        app.navigate($e.attr("href"));
+    }
 });

@@ -1,31 +1,22 @@
 #include <application.oj>
-#include <dialog.oj>
+// import StartApplication from "Application.oj"
 
 // Commons
 require("./Support/Common");
 
-function makeFooter() {
-    var fullHeight = 0
-        + $("#MainPage").height()
-        + $("footer").height();
-    if(window.innerHeight < fullHeight) return $('#MainPage').css('margin-bottom',"auto");
-    if($("body").height() > $("#MainPage").height()) {
-        $('#MainPage').css('margin-bottom',(
-            window.innerHeight
-            - $('#MainPage').height()
-            - $('footer').height()
-        )+"px");
-    } else {
-        $('#MainPage').css('margin-bottom',"auto");
-    }
-}
+// Setup the footer stuff
+var makeFooter = require("BIRD3/Frontend/Design/footer");
 window.addEventListener("resize", makeFooter);
 
 // Introduce a convenience method.
+var Dialog = require("BIRD3/Frontend/Frameworks/Dialog/Dialog");
 [Dialog installOn:window];
 
 @implementation BIRD3App {
-    var sc, rpc, rpcr, args;
+    var scConn; // SocketCluster connection
+    var rpc;    // RPC system instance
+    var rpcr;   // RPC system method proxy
+    var args;   // Args passed from request
 }
 -(void)appIsPreparingWithArguments:(object)args amount:(integer)argc {
     //console.log("args", args);
@@ -36,35 +27,38 @@ window.addEventListener("resize", makeFooter);
     makeFooter();
 
     // Talk to the backend
-    require(
-        ["socketcluster-client/index", "avs-rpc"],
-        function(socketcluster, avs){
-            sc = socketcluster.connect();
-            rpc = new avs.scRpc(sc);
-            sc.on('error', function (err){ console.log("Error:", err); });
-            sc.on('connect', function() {
-                // Logging
-                sc.on("client_log", function(msg){ console.log("REMOTE>", msg); });
+    require.ensure([], function(require){
+        var SC = require("socketcluster-client/index");
+        var avs = require("avs-rpc");
+        scConn = SC.connect();
+        rpc = new avs.scRpc(scConn);
+        scConn.on('error', function (err){ console.log("Error:", err); });
+        scConn.on('connect', function() {
+            // Logging
+            scConn.on("client_log", function(msg){ console.log("REMOTE>", msg); });
 
-                // RPC
-                sc.on("rpc_init_data", function(methods){
-                    //console.log("Methods:",methods);
-                    rpcr = rpc.remote.call(rpc, methods);
-                    // rpcr.foo({baz:"bar"}, console.log); // func(err, res)
-                }).emit("rpc_init");
+            // RPC
+            scConn.on("rpc_init_data", function(methods){
+                //console.log("Methods:",methods);
+                rpcr = rpc.remote.call(rpc, methods);
+                // rpcr.foo({baz:"bar"}, console.log); // func(err, res)
+            }).emit("rpc_init");
 
-                // Save the ajax. Update visit time.
-                // FIXME: No dupes! In fact, maybe PHP itself could emit this.
-                sc.emit("update_user_visit", document.cookie);
-                console.log(sc);
-            });
-        }
-    );
+            // Save the ajax. Update visit time.
+            // FIXME: No dupes! In fact, maybe PHP itself could emit this.
+            scConn.emit("update_user_visit", document.cookie);
+        });
+    }, "SocketCluster");
+
+    /*require.ensure([], function(require){
+        var oo = require("BIRD3/Frontend/Frameworks/o.o/main");
+        window.oo = oo;
+    }, "o.o");*/
 
     return true;
 }
 -(void)run {
-    //console.log("Running main logic...");
+    // o.o
 }
 
 -(id)appIsClosing:(Event)e {
@@ -72,12 +66,12 @@ window.addEventListener("resize", makeFooter);
 }
 
 -(BIRD3App)emit:(string)name data:(id)obj {
-    sc.emit(name, obj);
+    scConn.emit(name, obj);
     return self;
 }
 
 -(BIRD3App)on:(string)name callback:(callable)cb {
-    sc.on(name, cb);
+    scConn.on(name, cb);
     return self;
 }
 @end

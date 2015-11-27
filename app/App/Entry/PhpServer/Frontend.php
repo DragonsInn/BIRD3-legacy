@@ -95,19 +95,21 @@ class Frontend {
                 - Reponse body and headers must be separated.
         */
 
-        // Create a kernel with a WebApplication class instead of Server.
+        // Store the hprose parameters, the optional ones.
+        if(!App::bound(HproseHolder::class)) {
+            App::instance(HproseHolder::class, new HproseHolder());
+        }
+        \Hprose::setContext($ctx["optional"]);
+        $wpA = \Hprose::get("wpHash");
+        $wpB = $ctx["optional"]["wpHash"];
+        assert($wpA == $wpB, "WebPack hash does not match! ($wpA == $wpB)");
+
         $app = App::getInstance();
         $router = $app["router"];
 
-        // Obtain a kernel instance that we can use to handle the request.
+        // Build a HTTP kernel using the ServerApplication instance,
+        // effectively treatening it like a WebApplication.
         $kernel = new HttpKernel($app, $router);
-
-        // Store the hprose parameters, the optional ones.
-        $ctx["optional"]["unique"] = uniqid();
-        if($app->bound(HproseHolder::class)) {
-            $app->forgetInstance(HproseHolder::class);
-        }
-        $app->instance(HproseHolder::class, new HproseHolder($ctx["optional"]));
 
         // Create a request off the hprose parameters
         # create($uri, $method = 'GET', $parameters = array(), $cookies = array(), $files = array(), $server = array(), $content = null)

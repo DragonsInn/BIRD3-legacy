@@ -72,9 +72,8 @@
     </head>
     <body class="panel-pusher">
         <div id="bg"></div>
-        <div id="blurr-bg" class="<?=($this->isIndex ? "onIndex":$this->bg_class)?>">
-        </div>
-        <!--<div id="app">-->
+        <div id="blurr-bg" class="<?=($this->isIndex ? "onIndex":$this->bg_class)?>"></div>
+        <section name="app">
             <div id="Panels">
                 <!-- Panels -->
                 <div id="Ptop" class="panel top">
@@ -299,56 +298,59 @@
                 </div>
             </footer>
             <?php endif; ?>
-        <!--</div>-->
+        </section>
 
         <!-- Modals -->
-        <?php if(!$this->allPage): ?>
-            <div class="modal bootstrap-dialog type-danger fade"
-                 id="report" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <form name="report_issue">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                <p class="modal-title" id="myModalLabel">Report an issue.</p>
+        <div class="modal bootstrap-dialog type-danger fade" id="report"
+             tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel"
+             aria-hidden="true"
+        >
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form name="report_issue">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p class="modal-title" id="myModalLabel">Report an issue.</p>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <p>
+                                    You can use this window to report an issue to the Dragon's Inn staff.
+                                </p>
+                                <p>
+                                    If you only seek to contact us, use the "Contact" link.
+                                </p>
                             </div>
-                            <div class="modal-body">
-                                <div>
-                                    <p>
-                                        You can use this window to report an issue to the Dragon's Inn staff.
-                                    </p>
-                                    <p>
-                                        If you only seek to contact us, use the "Contact" link.
-                                    </p>
-                                </div>
-                                <div class="form-group">
-                                    <label for="report_type">What would you like to report?</label>
-                                    <select name="report_type" class="form-control" id="report_type">
-                                        <option>A (staff-)member misbehaved.</option>
-                                        <option>My art/character/material was posted here without permission.</option>
-                                        <option>I have a technical problem with this site.</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="report_content">Describe the issue.</label>
-                                    <textarea id="report_content" name="report_content" class="form-control" rows=10></textarea>
-                                    <p class="help-block">
-                                        Please provide any reference concerning the issue.
-                                    </p>
-                                </div>
+                            <div class="form-group">
+                                <label for="report_type">What would you like to report?</label>
+                                <select name="report_type" class="form-control" id="report_type">
+                                    <option>A (staff-)member misbehaved.</option>
+                                    <option>My art/character/material was posted here without permission.</option>
+                                    <option>I have a technical problem with this site.</option>
+                                </select>
                             </div>
-                            <div class="modal-footer">
-                                <div id="ri_status" style="visibility:none;"></div>
-                                <button type="button" class="btn btn-default">Send report.</button>
-                                <p>This is currently disabled.</p>
+                            <div class="form-group">
+                                <label for="report_content">Describe the issue.</label>
+                                <textarea id="report_content" name="report_content" class="form-control" rows=10></textarea>
+                                <p class="help-block">
+                                    Please provide any reference concerning the issue.
+                                </p>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div id="ri_status" style="visibility:none;"></div>
+                            <button type="button" class="btn btn-default">Send report.</button>
+                            <p>This is currently disabled.</p>
+                        </div>
+                    </form>
                 </div>
             </div>
-        <?php endif; ?>
+        </div>
+
+        <!-- Script tags -->
         <?=$this->makeBottomScripts()?>
     </body>
 </html>

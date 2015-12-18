@@ -1,42 +1,70 @@
-var winston = require("winston");
-module.exports = function(base) {
-    var lc = {
-        levels: {
-            debug: 0,   silly: 0,
-            verbose: 1, update: 1,
-            info: 2,
-            notice: 3,
-            warn: 4,
-            error: 5,   crit: 5
-        },
-        colors: {
-            silly: 'magenta',   debug: 'blue',
-            verbose: 'orange',  update: "cyan",
-            info: 'green',
-            notice: 'yellow',
-            data: 'grey',
-            warn: 'yellow',
-            error: 'red',       crit: 'red'
-        }
-    };
+// Modules
+var log = require("npmlog");
+var LogFileStream = require("logfilestream");
+var _ = require("microdash");
+var root = require("find-root")();
+var path = require("path");
 
-    var logger = new (winston.Logger)({
-        transports: [
-            new (winston.transports.Console)({
-                colorize: true,
-                timestamp: true
-            }),
-            new (winston.transports.File)({
-                filename: base+'/log/bird3.log',
-                json: false,
-                maxsize: 50*1024^2
-            })
-        ]
-    });
+// Make a logfile stream
+var logStream = LogFileStream({
+    logdir: path.join(root, "log"),
+    nameformat: '[BIRD3.]YYYY-MM-DD[.log]'
+});
 
-    // Teach Winston...
-    logger.setLevels(lc.levels);
-    winston.addColors(lc.colors);
+// Setup
+// Log levels and colors!
+[
+    {name: "debug",     n: 0, style: {fg: "magenta"}},
+    {name: "silly",     n: 0, style: {fg: "blue"}},
+    {name: "verbose",   n: 1, style: {fg: "orange"}},
+    {name: "update",    n: 1, style: {fg: "cyan"}},
+    {name: "info",      n: 2, style: {fg: "green"}},
+    {name: "notice",    n: 3, style: {fg: "yellow"}},
+    {name: "warn",      n: 4, style: {fg: "red"}, disp: "WARNING"},
+    {name: "error",     n: 5, style: {fg: "red", bold: true}, disp: "ERROR"},
+    {name: "crit",      n: 6, style: {fg: "black", bg: "red"}, disp: "CRITICAL"}
+].forEach(function(v){
+    var disp = v.disp || uc_first(v.name);
+    log.addLevel(v.name, v.n, v.style, disp);
+});
+// Heading
+// FIXME: Get global app name and use THAT instead.
+log.heading = "BIRD3";
+// Push to file
+log.on("log", function(message){
+    var nowStr = (new Date()).toUTCString();
+    var parts = [
+        nowStr,                         // the current time
+        "["+log.disp[message.level]+"]" // the display version of the prefix,
+        +(message.prefix || "")+":",    // Prefix
+        message.message,                // the actual message
+        "\n"                            // Just here to trigger a new line.
+    ];
+    logStream.write(parts.join(" "));
+});
 
-    return logger;
+// Helper
+function uc_first(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+function BIRD3Log() {
+    // Using false as prefix, disables it!
+    return BIRD3Log.makeGroup(false);
+}
+
+module.exports = _.extend(BIRD3Log, log, {
+    makeGroup: function(prefix) {
+        var o = {};
+        for(var level in log.levels) {
+            o[level] = (function(l){
+                return function() {
+                    var args = Array.prototype.slice.call(arguments);
+                    args.unshift(prefix);
+                    return log[l].apply(log, args);
+                }
+            })(level);
+        }
+        return o;
+    }
+});

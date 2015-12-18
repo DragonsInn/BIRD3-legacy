@@ -21,7 +21,7 @@
         "querypath/QueryPath": "~3.0",
         "phine/path": "~1.0",
         "kohkimakimoto/earray": "~2.2",
-        "robmorgan/phinx": "^0.4.4",
+        "robmorgan/phinx": "^0.5.0",
         "jdorn/sql-formatter": "^1.2",
         "ircmaxell/password-compat": "^1.0",
         "hprose/hprose": "^1.5",

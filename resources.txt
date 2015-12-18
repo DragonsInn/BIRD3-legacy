@@ -7,6 +7,9 @@ AutoPolyfiller: Frustration-free coding.
     - https://github.com/financial-times/polyfill-service
     * Fork loader, be happy.
 
+// Documentation
+https://jsfiddle.net/a3956k3o/
+
 // Testing
 Real PHP:
     - https://github.com/crysalead/kahlan

@@ -11,7 +11,8 @@ GlobalConfig::load("$root/config/BIRD3.ini");
 
 return [
     "paths" => [
-        "migrations" => "$system/Migrations"
+        "migrations" => "$system/Db/Migrations",
+        "seeds" => "$system/Db/Seeds"
     ],
     "templates" => [
         "file" => "$system/Templates/migration.phpt"

@@ -143,7 +143,7 @@
     "LDT": "kueblc/LDT",
     "behave.js": "jakiestfu/Behave.js",
     "jsCaret": "schovi/jsCaret",
-    "termlib": "unilogue/termlib"
+    "termlib": "http://www.masswerk.at/termlib/termlib.zip"
   },
   "devDependencies": {},
   "scripts": {

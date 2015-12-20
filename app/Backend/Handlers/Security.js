@@ -1,8 +1,8 @@
 var fs = require("fs");
 var util = require("util");
 var wrench = require("wrench");
-var debug = require("debug")("bird3:security");
 var BIRD3 = require("./logger.js")();
+var log = BIRD3.log.makeGroup("Security");
 
 var dirs = [
     config.base+"/cache",
@@ -26,7 +26,7 @@ function doDirs(uid, gid) {
 }
 
 module.exports = function() {
-    debug("BIRD3 Security: Setting up");
+    log.debug("BIRD3 Security: Setting up");
 
     if(typeof config.BIRD3.userName != "undefined" && typeof config.BIRD3.groupName != "undefined") {
         try {
@@ -37,17 +37,17 @@ module.exports = function() {
             var uid = userid.uid(uName);
             var gid = userid.gid(gName);
 
-            debug("BIRD3 Security -> Preparing to change to "+uName+":"+gName+" ("+uid+":"+gid+")")
+            log.debug("BIRD3 Security -> Preparing to change to "+uName+":"+gName+" ("+uid+":"+gid+")")
 
             doDirs(uid, gid);
 
             // Become that.
             process.setgid(gid);
             process.setuid(uid);
-            debug("BIRD3 Security -> Changed.");
+            log.debug("BIRD3 Security -> Changed.");
         } catch(e) {
             // We cant change perms.
-            BIRD3.warn("BIRD3 Security -> Can not change UID/GID! (%s)",e);
+            log.warn("BIRD3 Security -> Can not change UID/GID! (%s)",e);
             doDirs(process.uid, process.gid);
         }
     }

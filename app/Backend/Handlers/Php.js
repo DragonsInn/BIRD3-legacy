@@ -7,6 +7,7 @@ var mime = require("mime");
 var fs = require("fs");
 var BIRD3 = require("BIRD3/Support/GlobalConfig");
 var redis = require("redis").createClient();
+var log = BIRD3.log.makeGroup("PHP Handler");
 
 hljs.configure({
     tabReplace: Array(5).join(" ")
@@ -21,10 +22,10 @@ module.exports = function(php) {
     php.use("preprocess", function GetWebPackHash(wareCtx, next){
         redis.get(BIRD3.WebPackKey, function(err, res){
             if(err) {
-                BIRD3.log.notice("Unable to get WebPack hash.");
+                log.notice("Unable to get WebPack hash.");
                 return next(err);
             }
-            //BIRD3.log.info("Hash: "+res);
+            //log.info("Hash: "+res);
             wareCtx.ctx.optional.wpHash = res;
             next();
         });

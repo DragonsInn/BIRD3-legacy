@@ -4,7 +4,8 @@ var which = require("which").sync;
 var merge = require("merge");
 var path = require("path");
 
-module.exports = function Host(options) {
+module.exports = Host;
+function Host(options) {
     if(!(this instanceof Host)) {
         return new Host(options);
     }

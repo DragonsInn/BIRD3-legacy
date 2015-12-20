@@ -13,7 +13,7 @@ var BIRD3 = module.exports = {
     bower: require(path.join(_root, "bower.json")),
 
     // Loading the global BIRD3 config.
-    config: YAML.parseFile(path.join(BIRD3.root, "config/BIRD3.yml")),
+    config: YAML.parseFile(path.join(_root, "config/BIRD3.yml")),
 
     // Logger
     log: require("../Backend/Log"),

@@ -1,7 +1,7 @@
 // Modules
-var Grapnel = require("grapnel");
-var ajax = require("nanoajax").ajax;
-//var $ = require("cash"); // TODO: Make own implementation (o.o)
+import Grapnel from "grapnel";
+import {ajax} from "nanoajax";
+// import o from "o.o";
 
 // Tiny tests
 var hasPushState = ('history' in window && 'pushState' in history);

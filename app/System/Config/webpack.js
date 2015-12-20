@@ -103,12 +103,6 @@ var sassq = [
     "includePaths[]="+path.join(config.base, "themes"),
     "sourceMap"
 ].join("&");
-// Progress output
-var progress = new webpack.ProgressPlugin(function(p, msg){
-    if(p===0) msg = "Starting compilation...";
-    if(p===1) msg = "Done!";
-    BIRD3.log.update("WebPack => [%s%%]: %s", p.toFixed(2)*100, msg);
-});
 // Try to press down further
 var dedupe = new webpack.optimize.DedupePlugin();
 
@@ -313,7 +307,6 @@ module.exports = {
     })(),
     plugins: [
         // Output
-        //progress,
         assetsp,
         // Cosmetics
         clear, bannerPlugin,

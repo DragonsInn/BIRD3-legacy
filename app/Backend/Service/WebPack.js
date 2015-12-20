@@ -10,6 +10,7 @@ import async from "async";
 // BIRD3
 import BIRD3 from "BIRD3/Support/GlobalConfig";
 import WebPackConfig from "BIRD3/System/Config/webpack";
+import {ProgressPlugin} from "webpack";
 
 // Vars
 var redisClient = createRedisClient();
@@ -39,6 +40,14 @@ export function run(workerConf, house) {
             log.error(err);
             BIRD3.emitRedis("bird3.exit", err);
         } else {
+            log.info("Injecting process output");
+            var progress = new ProgressPlugin((p, msg) => {
+                if(p===0) msg = "Starting compilation...";
+                if(p===1) msg = "Done!";
+                log.update("WebPack => [%s%%]: %s", (p*100).toFixed(2), msg);
+            });
+            WebPackConfig.plugins.push(progress);
+
             log.info("Entering watch mode.");
             var compiler = webpack(WebPackConfig);
             var watcher = compiler.watch({

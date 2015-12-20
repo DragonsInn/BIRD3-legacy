@@ -54,7 +54,7 @@ export default (app, hprosePort) => {
     //require("./api_handler.js")(app);
 
     // CDN must not return caching when not needed.
-    app.use(BIRD3.config.CDN.baseUrl, (req, res, next) => {
+    app.use(BIRD3.config.CDN.baseUrl, function NoCache(req, res, next){
         if("nocache" in req.query) {
             return ex_static(BIRD3.root+"/cdn")(req, res, next);
         } else return next();
@@ -69,7 +69,7 @@ export default (app, hprosePort) => {
             expires: true,
             age: moment.duration(1, "day").asSeconds()
         },{
-            test: /.*/,
+            test: /.+/,
             etag: false,
             lastModified: false,
             cacheControl: false,
@@ -87,7 +87,7 @@ export default (app, hprosePort) => {
     }));
     app.use("/", multiparty(BIRD3.package.version));
     app.use("/", cookies());
-    app.use((req, res, next) => {
+    app.use(function SessionPickup(req, res, next){
         // A throw-together session implementation.
         var RedisSession = (rdKey, afterCb) => {
             var key = this._key = BIRD3.sessionKey + rdKey;

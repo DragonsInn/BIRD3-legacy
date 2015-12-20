@@ -24,6 +24,7 @@ function url(u) {
 
 // We always include the main script.
 // require("main.oj") - actually copy the app content here.
+// require("./Compatibility.js") - Pull in a compatibility layer.
 
 /*
     This router is meant for SPA apps.

@@ -18,9 +18,9 @@ var Dialog = require("BIRD3/Frontend/Frameworks/Dialog/Dialog");
     var rpcr;   // RPC system method proxy
     var args;   // Args passed from request
 }
--(void)appIsPreparingWithArguments:(object)args amount:(integer)argc {
+-(void)appIsPreparingWithArguments:(object)_args amount:(integer)argc {
     //console.log("args", args);
-    self.args = args;
+    self.args = _args;
 }
 -(bool)appIsLaunching {
     // Design! o.o

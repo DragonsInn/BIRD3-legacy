@@ -4,7 +4,7 @@ use \BIRD3\Support\GlobalConfig;
 
 return [
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => false,
     'url' => implode(":",[
         "http://".GlobalConfig::get("BIRD3.url"),
         GlobalConfig::get("BIRD3.http_port")

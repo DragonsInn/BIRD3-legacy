@@ -9,6 +9,7 @@ module.exports = {
         ["module-alias",[
             { src: path.join(root, "app"), expose: "BIRD3" }
         ]],
-        ["add-module-exports"]
-    ], //"transform-runtime"
+        ["add-module-exports"],
+        ["transform-runtime"]
+    ],
 }

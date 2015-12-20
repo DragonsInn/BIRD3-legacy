@@ -70,6 +70,7 @@
     "img-loader": "^1.1.0",
     "imports-loader": "^0.6.4",
     "json-loader": "^0.5.2",
+    "jsxr": "^1.2.4",
     "ladda": "^0.9.8",
     "legacy-loader": "^0.0.2",
     "light-orm": "^0.1.4",
@@ -131,6 +132,7 @@
     "userid": "^0.2.0",
     "utils-md5": "^1.0.0",
     "webpack": "^1.12.0",
+    "webpack-config": "^3.0.0",
     "which": "^1.2.0",
     "wrench": "^1.5.8",
     "yargs": "^3.14.0"
@@ -139,23 +141,33 @@
     "filedrop": "ProgerXP/FileDrop",
     "miniMarkdown": "masylum/miniMarkdown",
     "avs-rpc": "gigerlin/rpc",
-    "jsxdom": "vjeux/jsxdom",
     "LDT": "kueblc/LDT",
     "behave.js": "jakiestfu/Behave.js",
     "jsCaret": "schovi/jsCaret",
     "termlib": "http://www.masswerk.at/termlib/termlib.zip"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.15",
+    "karma-jasmine": "^0.3.6",
+    "karma-phantomjs-launcher": "^0.2.1",
+    "karma-webpack": "^1.7.0",
+    "phantomjs": "^1.9.19"
+  },
   "scripts": {
     "bower": "bower --allow-root",
     "compile": "webpack --config ./app/System/Config/webpack.js",
-    "phinx": "php php_modules/bin/phinx --configuration=app/System/Config/phinx.php",
+    "phinx": "php_modules/bin/phinx --configuration=app/System/Config/phinx.php",
     "dbtool": "php util/dbtool.php",
-    "artisan": "php util/artisan",
-    "shell": "php util/artisan tinker",
+    "artisan": "util/artisan",
+    "shell": "util/artisan tinker",
     "start": "node app/bootstrap/main.js",
     "install": "napa",
-    "napa": "napa"
+    "napa": "napa",
+    "test:php": "php_modules/bin/peridot --configuration=test/php/peridot.php",
+    "test:node": "JASMINE_CONFIG_PATH=./test/node/",
+    "test:browser": "karma ./tests/browser/karma.conf.js start"
   },
   "private": true,
   "keywords": [

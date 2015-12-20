@@ -21,6 +21,9 @@ function Dispatcher(uri, requestClass, hostConfig, optional) {
     // Call the super
     EE.call(this);
 
+    // Self-reference
+    var self = this;
+
     if(!uri) {
         throw new Error("Expected URI, but it was undefined.");
     } else this.uri = uri;
@@ -42,9 +45,9 @@ function Dispatcher(uri, requestClass, hostConfig, optional) {
     };
     ["host","port","url"].forEach(function(propName){
         if(typeof hostConfig[propName] != "undefined") {
-            this[propName] = hostConfig[propName];
+            self[propName] = hostConfig[propName];
         } else {
-            this[propName] = defaultHostConfig[propName];
+            self[propName] = defaultHostConfig[propName];
         }
     });
 

@@ -1,6 +1,7 @@
 // Provide a full BIRD3 object that can be included by submodules.
 var _root = require("find-root")(),
-    path = require("path");
+    path = require("path"),
+    YAML = require("yamljs");
 
 var BIRD3 = module.exports = {
     // The root of the app, one level above .../app
@@ -11,11 +12,11 @@ var BIRD3 = module.exports = {
     composer: require(path.join(_root, "composer.json")),
     bower: require(path.join(_root, "bower.json")),
 
-    // Config from config/BIRD3.ini
-    config: {},
+    // Loading the global BIRD3 config.
+    config: YAML.parseFile(path.join(BIRD3.root, "config/BIRD3.yml")),
 
     // Logger
-    log: require("BIRD3/Backend/Log")(_root),
+    log: require("../Backend/Log"),
 
     // The key to share WebPack data on
     WebPackKey: "BIRD3.WebPack",
@@ -29,11 +30,3 @@ var BIRD3 = module.exports = {
     // Max workers...
     maxWorkers: require("os").cpus().length
 };
-
-// Fill the config
-// Initialize the config object.
-var ini = require("multilevel-ini"),
-    fs = require("fs");
-
-// Load
-BIRD3.config = ini.getSync(path.join(BIRD3.root, "config/BIRD3.ini"));

@@ -1,5 +1,7 @@
 <?php namespace BIRD3\Support;
 
+require_once __DIR__."/Helpers.php";
+
 use FlorianWolters\Component\Util\Singleton\SingletonTrait;
 use Spyc;
 use Exception;
@@ -14,11 +16,11 @@ class GlobalConfig {
     }
 
     static function load() {
-        if(!function_exists("\find_root")) {
+        if(!function_exists("find_root")) {
             throw new Exception("Need to be able to find root.");
         }
         $self = self::getInstance();
-        $root = find_root();
+        $root = find_root(__DIR__);
         $path = "$root/config/BIRD3.yml";
         $yamlArray = Spyc::YAMLLoad($path);
         # FIXME: Spyc needs to implement objects or something.

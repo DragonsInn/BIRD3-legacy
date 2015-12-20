@@ -1,7 +1,7 @@
 <?php namespace BIRD3\Support;
 
 use FlorianWolters\Component\Util\Singleton\SingletonTrait;
-use \Closure;
+use Closure;
 
 class Resolver {
     use SingletonTrait;

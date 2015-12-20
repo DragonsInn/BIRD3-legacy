@@ -13,3 +13,7 @@ function home_path($path = "") {
 function resolve($path) {
     return \BIRD3\Support\Resolver::resolve($path);
 }
+
+function find_root($path) {
+    return \BIRD3\Support\Resolver::root($path);
+}

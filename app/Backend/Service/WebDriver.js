@@ -2,12 +2,13 @@ import WebDriverHost from "BIRD3/Foundation/WebDriver/Host";
 import BIRD3 from "BIRD3/Support/GlobalConfig";
 import Communicator from "BIRD3/Backend/Communicator";
 import redis from "redis";
+import path from "path";
 
 var log = BIRD3.log.makeGroup("WebDriver");
 var comm = Communicator(null, redis);
 
 export function run(conf, house) {
-    var host = WebDriveHost({
+    var host = WebDriverHost({
         procClass: "BIRD3\\Foundation\\ServerApplication",
         composerFile: path.join(BIRD3.root, "php_modules/autoload.php"),
         // $host, $port, $name

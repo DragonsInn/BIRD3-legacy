@@ -27,6 +27,7 @@ var logStream = LogFileStream({
     var disp = v.disp || uc_first(v.name);
     log.addLevel(v.name, v.n, v.style, disp);
 });
+log.level = "update";
 // Heading
 // FIXME: Get global app name and use THAT instead.
 log.heading = "BIRD3";

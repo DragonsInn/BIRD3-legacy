@@ -30,7 +30,7 @@
         * [X] NodeJS scheduler for notifications
     * [X] Previleges
         * [X] User groups (Admin, Moderator, VIP, User, Banned)
-        * [ ] Handle special previleges via DB (Blog to front-page, ...)
+        * [ ] Handle special privileges via DB (Blog to front-page, ...)
         * [X] Developer mode should show extra stuff and error messages are detailed.
     * [ ] Fill the User section in the Community menu.
     * [ ] Generate HTML to
@@ -110,32 +110,7 @@
         - Posting
         - Rendering
         - Searching
-- [ ] Migrating Yii1 to Laravel
-    - [ ] Install modularization
-    - [ ] Integrate `hprose-workerman` with the Illuminate Router
-    - [ ] Transist from CACtiveRecord to Eloquent
 - [ ] Migrate from OJ+EJS to UniterPHP
-- [ ] Namespace code (PHP and possibly JS)
-    * Vendor: `BIRD3`
-    * App: `BIRD3\App`
-    * Common: `BIRD3\Common`
-    * Backend/Server: `BIRD3\Backend`, Logger, Password, ...
-    * Widgets: `BIRD3\Widgets`
-    * Front-end: `BIRD3\Frontend`, Webpacked stuff
-    * Examples:
-        * `BIRD3\App\BaseController`
-        * `BIRD3\App\Modules\CharaBase\Models\Character`
-        * `BIRD3\Backend\Executor`
-        * `BIRD3\Backend\Common`
-        * `BIRD3\Common\Password`
-        * `BIRD3\Widgets\Dialog`
-        * `BIRD3\Frontend\Compatibility`
-    * For NodejS, use: https://github.com/jrf0110/alias-module
-    * For WebPack, use `resolve.alias: { "BIRD3$": "app" }`
-        * JS Example: `import Dialog from "BIRD3/Widgets/Dialog"`
-    * For PHP use composer `"psr-4": {"BIRD3\\": "app"}`
-        * PHP Example: `use BIRD3\Common\Password;`
-        * or `namespace BIRD3\App\Controllers\BaseController`
 
 ## Notes... Scribbles...
 (23:04:14) Sapphy: (whispers) -Birth and Death Tab-

@@ -7,8 +7,6 @@ use BIRD3\Support\Resolver;
 $root = Resolver::root(__DIR__);
 $system = "$root/app/System";
 
-GlobalConfig::load("$root/config/BIRD3.ini");
-
 return [
     "paths" => [
         "migrations" => "$system/Db/Migrations",

@@ -19,7 +19,7 @@ var theme = path.join(app,"App/Frontend/");
 var cache = path.join(root,"cache");
 
 // Config
-var BIRD3 = require("BIRD3/Support/GlobalConfig");
+var BIRD3 = require("../../Support/GlobalConfig");
 var config = BIRD3.config;
 config.maxFileSize = 1024*10;
 config.base = BIRD3.root;
@@ -81,7 +81,7 @@ var provider = new webpack.ProvidePlugin({
 // Generate bundled CSS. (id, fileName)
 var extractor = new extractText("style","[hash]-[name].css",{allChunks:true});
 // Compress and press down our JS.
-var uglify = new webpack.optimize.UglifyJsPlugin(require("BIRD3/System/Config/uglifyjs"));
+var uglify = new webpack.optimize.UglifyJsPlugin(require("./uglifyjs"));
 // Querystring for the CSS Loader
 var cssq = [
     "keepSpecialComments=0",
@@ -155,6 +155,10 @@ var purifyPlugin = new purify({
         "app/Frontend/Design/Layouts/*.ejs"
     ]
 });
+
+// Babel
+var babelConf = require("./babel");
+babelConf.cacheDirectory = path.join(config.base, "cache/babel");
 
 // Return the config
 module.exports = {
@@ -277,15 +281,7 @@ module.exports = {
             /\.(min|bundle|pack)\.js$/,
         ]
     },
-    babel: {
-        presets: ['es2015', 'stage-1'],
-        plugins: [
-            ["transform-es2015-modules-commonjs", {
-                allowTopLevelThis: true
-            }]
-        ], //"transform-runtime"
-        cacheDirectory: path.join(config.base, "cache/babel"),
-    },
+    babel: babelConf,
     oj: {
         runtime: _ojr,
         pre: [ juicy.preprocessor() ],
@@ -328,6 +324,6 @@ module.exports = {
         // CSS
         extractor, purifyPlugin,
         // JavaScript
-        //uglify
+        uglify
     ]
 };

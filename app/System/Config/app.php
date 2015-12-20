@@ -50,6 +50,7 @@ return [
         BIRD3\Support\Providers\AppServiceProvider::class,
         BIRD3\Support\Providers\EventServiceProvider::class,
         BIRD3\Support\Providers\RouteServiceProvider::class,
+
         // Extensions
         BIRD3\Extensions\FlipFlop\Providers\FlipFlopServiceProvider::class,
         BIRD3\Foundation\WebDriver\Providers\WebDriverServiceProvider::class,
@@ -61,8 +62,9 @@ return [
         Spatie\Backup\BackupServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Pingpong\Widget\WidgetServiceProvider::class,
-        #Jlapp\SmartSeeder\SmartSeederServiceProvider::class, // "jlapp/smart-seeder": "dev-master"
-        Zizaco\Entrust\EntrustServiceProvider::class
+        Zizaco\Entrust\EntrustServiceProvider::class,
+        Thujohn\Twitter\TwitterServiceProvider::class,
+        SammyK\LaravelFacebookSdk\LaravelFacebookSdkServiceProvider::class,
     ],
 
     'aliases' => [
@@ -113,6 +115,8 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Widget' => Pingpong\Widget\WidgetFacade::class,
         'Entrust' => Zizaco\Entrust\EntrustFacade::class,
+        'Twitter' => Thujohn\Twitter\Facades\Twitter::class,
+        'Facebook' => SammyK\LaravelFacebookSdk\FacebookFacade::class,
     ],
 
 ];

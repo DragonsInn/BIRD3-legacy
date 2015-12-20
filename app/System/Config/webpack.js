@@ -216,10 +216,7 @@ module.exports = {
             ),
             jquery: _jquery,
             ws: "ws/lib/browser",
-            "LDT": path.join(
-                config.base,
-                "web_modules/LDT.webpack.js"
-            ),
+            "LDT$": "BIRD3/Support/Wrappers/LDT",
             "behave.js": "behave.js/behave.js"
         }
     },

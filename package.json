@@ -138,7 +138,12 @@
   "napa": {
     "filedrop": "ProgerXP/FileDrop",
     "miniMarkdown": "masylum/miniMarkdown",
-    "avs-rpc": "gigerlin/rpc"
+    "avs-rpc": "gigerlin/rpc",
+    "jsxdom": "vjeux/jsxdom",
+    "LDT": "kueblc/LDT",
+    "behave.js": "jakiestfu/Behave.js",
+    "jsCaret": "schovi/jsCaret",
+    "termlib": "unilogue/termlib"
   },
   "devDependencies": {},
   "scripts": {
@@ -149,7 +154,8 @@
     "artisan": "php util/artisan",
     "shell": "php util/artisan tinker",
     "start": "node app/bootstrap/main.js",
-    "install": "napa"
+    "install": "napa",
+    "napa": "napa"
   },
   "private": true,
   "keywords": [

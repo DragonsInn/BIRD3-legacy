@@ -7,20 +7,15 @@
         "ext-pcntl": "*",
         "ext-hprose": "^1.6.1",
         "ext-sockets": "*",
-        "ext-runkit": "^1.0.4",
         "ext-sysvmsg": "*",
         "predis/predis": "0.8.*",
         "okwinza/cloudflare-api": "dev-master",
-        "erusev/parsedown-extra": "^0.7.0",
         "evenement/evenement": "^2.0.0",
         "walkor/workerman": "^3.2.0",
-        "pagon/childprocess": "*",
         "corneltek/cliframework": "*",
         "voodoophp/paginator": "2.*",
         "kevinlebrun/colors.php": "0.*",
-        "querypath/QueryPath": "~3.0",
         "phine/path": "~1.0",
-        "kohkimakimoto/earray": "~2.2",
         "robmorgan/phinx": "^0.5.0",
         "jdorn/sql-formatter": "^1.2",
         "ircmaxell/password-compat": "^1.0",
@@ -39,7 +34,10 @@
         "peridot-php/peridot": "^1.16",
         "peridot-php/peridot-httpkernel-plugin": "^1.1",
         "expect/peridot-expect-plugin": "^3.0",
-        "zizaco/entrust": "dev-laravel-5"
+        "zizaco/entrust": "dev-laravel-5",
+        "mustangostang/spyc": "^0.5.1",
+        "sammyk/laravel-facebook-sdk": "^3.2",
+        "thujohn/twitter": "^2.1"
     },
     "config": {
         "vendor-dir": "php_modules/"

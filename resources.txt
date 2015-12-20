@@ -1,7 +1,6 @@
 // For Laravel migration
 SEO: https://github.com/caffeinated/SEO
 Forum system: https://github.com/cmgmyr/laravel-messenger
-DB seed from JSON: https://github.com/triasrahman/laravel-jsonseeder
 AutoPolyfiller: Frustration-free coding.
     - https://github.com/deepsweet/autopolyfiller-loader
     - https://github.com/financial-times/polyfill-service
@@ -11,11 +10,9 @@ AutoPolyfiller: Frustration-free coding.
 https://jsfiddle.net/a3956k3o/
 
 // Testing
-Real PHP:
-    - https://github.com/crysalead/kahlan
-    - https://github.com/peridot-php/peridot
+Real PHP: https://github.com/peridot-php/peridot
 Uniter PHP: -
-NodeJS:
+NodeJS: Mocha?
 
 // Error handling
 Node: http://jgable.github.io/errorface/example.html
@@ -25,7 +22,6 @@ PHP: http://phperror.net/
 http://labs.mintchaos.com/flippant.js/
 http://brianreavis.github.io/selectize.js/
 http://blueimp.github.io/Bootstrap-Image-Gallery/
-parse audio file time http://de1.php.net/sscanf
 
 // Want to add
 http://codepen.io/xixao/pen/jvxFc

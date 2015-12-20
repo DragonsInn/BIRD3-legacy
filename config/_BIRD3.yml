@@ -1,0 +1,66 @@
+app:
+    # name of the application
+    name: BIRD3
+    # Maintainer email address
+    email: mail@foo.bar
+
+BIRD3:
+    # The HTTP host IP
+    host: 127.0.0.1
+    # The port used for HTTP traffic
+    http_port: 8080
+    # The hostname to access the site
+    url: localhost
+    # The baseUrl for the site.
+    baseUrl: /
+
+    # The user and group the server should run as
+    userName: Ingwie
+    groupName: staff
+
+DB:
+    # The DB informations.
+    user: bird3
+    pass: birddev
+    mydb: bird3
+
+CDN:
+    # Should we use a CDN?
+    enable: false
+    # The URL to the CDN. I.e.: dragonsinn.surge.sh
+    url: localhost
+    # The base URL under which our files are
+    baseUrl: /
+
+# EMail notification configuration.
+# Given to nodemailer.createTransport().
+# Example:
+EMail:
+    service: gmail
+    auth:
+        user: my-gmail@googlemail.com
+        pass: !omega123
+
+# API keys and configuration.
+# Used to connect to services
+API:
+    # Twitter
+    twitter:
+        key: <Your key here.>
+
+    # Facebook
+    # Offical PHP SDK: https://developers.facebook.com/docs/reference/php
+    facebook:
+        app_id: <...>
+        app_secret: <...>
+        default_graph_version: <...>
+
+    # CloudFlare
+    cloudflare:
+        enable: no
+        email: ingwie2000@gmail.com
+        token: <Your token here.>
+
+    # CleanTalk
+    cleantalk:
+        key: <Your key here.>

@@ -4,7 +4,6 @@ u/*
 .DS_Store
 *.pid
 config/gitlabhook.json
-config/BIRD3.ini
 *.bin
 .tmp
 *.rdb
@@ -23,3 +22,4 @@ index.html
 vendor
 app/bootstrap/cache/compiled.php
 *.log
+config/BIRD3.yml

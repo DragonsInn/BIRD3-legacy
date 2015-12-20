@@ -1,30 +1,29 @@
 # BIRD3, the roleplayer's CMS
-This is the CMS behind the Dragon's Inn. I have open-sourced it for easier contribution, and to let people see the guts of it. Developers can use this is as a resource to learn about scalable projects that utilize inter-language communication. In fact, I would go as far and say that people actually get to look at an application that would be best described as "common practice".
+This is the CMS behind the Dragon's Inn. I have open-sourced it for easier contribution, and to let people see the guts of it. Developers can use this is as a resource to learn about scalable projects that utilize inter-language communication and other things. In fact, I would go as far and say that people actually get to look at an application that would be best described as "common practice" or at least "running with current tech".
 
 ## Depdencies, when running the whole stack:
 - Redis (I use 2.8.15 at the moment)
 - MySql >= 5.5
 - Nodejs >= v4.0.0
-    * npm >= 3
+    * npm >= 3 is recommended.
 - PHP >= 5.5.4
     * Composer
-    * Options:
     * Native extensions:
         - pcntl (Install from php source)
         - [hprose](https://github.com/hprose/hprose-pecl)
 
 ### Note
-BIRD3 is devided in various parts. Read more in the "Structure" section! You do not need the whole thing to only run a specific task.
+BIRD3 is divided in various parts. Read more in the "Structure" section! You do not need the whole thing to only run a specific task.
 
 ## Cloning properly and setting up
-If you are here to help me fix a problem, then the requirements on you are by far minimal. All you need to do is:
+If you are here to help me fix a problem, then the requirements on you are very minimal. All you need to do is:
 
 ```bash
 # Clone the repo
 $ git clone --recursive https://github.com/DragonsInn/BIRD3.git
 
 # Install JavaScript resources
-$ npm -g install bower # If you dont have bower, yet.
+$ npm -g install bower # If you don't have bower, yet.
 $ bower install
 $ npm install
 
@@ -33,12 +32,60 @@ curl -sS https://getcomposer.org/installer | php
 php composer.phar install
 ```
 
-Copy `config/BIRD3.ini.example` to `config/BIRD3.ini` and adjust the settings. The values are used by:
+Copy `config/_BIRD3.yml` to `config/BIRD3.yml` and adjust the settings. The values are used by:
 
 - The migration system (Phinx)
-- The Web-App itself (Yii)
-- The automatically generated theme (WingStyle, `themes/dragonsinn/css/main.ws.php`)
-- The NodeJS backend
+- The Web-App itself (Laravel 5.1)
+- The automatically generated theme (SCSS)
+- The NodeJS and PHP backend
+
+## A rough idea of what BIRD3 uses.
+As BIRD3 is a really big project, it doesn't hurt to look at it from a topmost view, to see _what it roughly uses_.
+
+### NodeJS
+| Name          | Version           |
+|---------------|-------------------|
+| SocketCluster | v3.x              |
+| Express       | v4.x              |
+| Babel         | v6.x              |
+| WebPack       | v0.12.x           |
+| PowerHouse    | Selfmade, latest  |
+| WebDriver     | Selfmade, latest  |
+| OJ            | v1.x              |
+
+### PHP
+| Name          | Version           |
+|---------------|-------------------|
+| Laravel       | v5.1.x            |
+| Workerman     | v3.2.x            |
+| Facebook SDK  | v5 via SP         |
+| Entrust       | Via git (master)  |
+
+### Browser
+#### JavaScript
+| Name             | Version           |
+|------------------|-------------------|
+| Cash *           | Latest            |
+| Grapnel          | v0.6.x            |
+| Bootstrap.Native | Git (master)      |
+| ally.js          | 0.0.6             |
+| progressbar.js   | v0.8.x            |
+| web-socket-js    | v1.x              |
+
+#### S/CSS
+| Name                           | Version           |
+|--------------------------------|-------------------|
+| Bootstrap SCSS                 | v3.3.2            |
+| Bootswatch                     | v3.3.2            |
+| Normalize CSS                  | v3.x              |
+| Bootstrap Accessibility Plugin | v1.x              |
+| Ladda                          | v0.9.x            |
+
+## Needing what for what
+- For building the front-end JS and CSS:
+    - NodeJS, WebPack
+- For running the actual PHP app:
+    - PHP, NodeJS, Redis, MySQL and a configuration.
 
 ## Structure
 BIRD3 is a heavy project and has a pretty big stack of software underneath. Here, I will briefly go over what is used why and how. Brace yourself, this is not easy.
@@ -79,22 +126,14 @@ The various bits and pieces that work together are ultimatively sorted properly 
     - `Extensions`: Extensions. Mostly open-source.
     - `Support`: Not very important code, but stuff that makes coding sweet.
     - `System`: Internal config, migrations, seeders, all that stuff.
+    - `bootstrap`: Code used to start a process.
 - `util`: This folder contains self-crafted tools and things that don't have a specific place to belong to.
-- `web_modules`: Some dependencies are not available through NPM, Bower or Composer. Plain, old and classic JavaScript or PHP dependencies live here. Some wrapper scripts to make them work with modern stacks are included. This is the more patchy territory of BIRD3.
 
 Some additional, but not-so-important folders:
 - `cache`: The application cache is here, as well as a few logs.
 - `log`: The logs produced through Winston.
 - `cdn`: Any public thing is here. Most notable is `cdn/app`, which is the public resource for the generated JS and CSS and their belongings.
 - `misc`: Random stuff.
-
-### Needing what for what
-- For building CSS/JS:
-    - NodeJS, WebPack
-- For running the app
-    - PHP, NodeJS, Redis, MySQL and a configuration.
-- For running separate workers:
-    - Find them in `app/Backend/Services`. Be aware that they were intended to be ran via PowerHouse or SocketCluster.
 
 ## More information
 There are more infos in the Wiki section, thus more will be posted on the development site at a later point. Contributors should contact me via either of the details [given on my website](http://ingwie.me).

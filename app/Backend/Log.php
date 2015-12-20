@@ -29,6 +29,7 @@ class Log {
             "name"=>"rpc.log",
             "data"=>[
                 "method"=>$method,
+                "prefix"=>"Workerman", // FIXME: Implement an instantiable logger.
                 "args"=>$args
             ]
         ]);

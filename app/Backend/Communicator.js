@@ -3,8 +3,8 @@ var events = require("events").EventEmitter;
 var avs = require("avs-rpc");
 var util = require("util");
 var merge = require("merge");
-var debug = require("debug")("bird3:events");
 var BIRD3 = require("BIRD3/Support/GlobalConfig");
+var log = BIRD3.log.makeGroup("Communicator");
 
 function dont(m) {
     return function() {
@@ -17,11 +17,17 @@ function Communicator(io, redis) {
         return new Communicator(io, redis);
     }
 
+    // Keep a ref to self.
+    var self = this;
+
+    // The channel for Redis and SC
+    var channel;
+
     // ... extends EventEmitter
     events.call(this);
 
     function onRedisError(e) {
-        BIRD3.log.error("Redis error: "+e);
+        log.error("Redis error: "+e);
     }
 
     function makeRedis(self) {
@@ -29,7 +35,7 @@ function Communicator(io, redis) {
         var subscriber = redis.createClient();
         var publisher  = redis.createClient();
         subscriber.on("subscribe", function(ch, c){
-            BIRD3.log.info("BIRD3 has joined Redis channel: "+ch);
+            log.info("BIRD3 has joined Redis channel: "+ch);
         }).on("error", onRedisError);
         subscriber.subscribe(channel);
         self.onRedis = function(name, cb) {
@@ -59,34 +65,30 @@ function Communicator(io, redis) {
         // Make it public:
         self.io = io;
 
-        // Create a function and run it - private/public can work that way.
-        self.rpc = (function(){
-            // Private members
-            var sync_methods = {},
-                async_methods = {};
-
+        // Private members
+        var sync_methods = {},
+            async_methods = {};
+        self.rpc = {
             // Public functions
-            this.addSync = function(name, cb) {
+            addSync: function(name, cb) {
                 sync_methods[name]=cb;
-                io.emit("rpc_init_data", this.methodNames());
-            };
+                io.emit("rpc_init_data", self.rpc.methodNames());
+            },
 
-            this.addAsync = function(name, cb) {
+            addAsync: function(name, cb) {
                 async_methods[name]=cb;
-                io.emit("rpc_init_data", this.methodNames());
-            };
+                io.emit("rpc_init_data", self.rpc.methodNames());
+            },
 
-            this.methodNames = function() {
+            methodNames: function() {
                 return Object.keys(merge(sync_methods, async_methods));
-            };
+            },
 
-            this.implementTo = function(rpcObj) {
+            implementTo: function(rpcObj) {
                 rpcObj.implement(sync_methods);
                 rpcObj.implementAsync(async_methods);
-            };
-
-            return this;
-        })();
+            }
+        };
         io.on("connection", function(sock){
             var rpc = new avs.scRpc(sock);
             self.rpc.implementTo(rpc);
@@ -96,7 +98,7 @@ function Communicator(io, redis) {
         });
     }
 
-    debug("BIRD3 Events: Initializing...");
+    log.debug("BIRD3 Events: Initializing...");
 
     if(typeof io == "undefined" || io == null) {
         // Mixed-matter

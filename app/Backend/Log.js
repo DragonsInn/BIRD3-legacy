@@ -34,11 +34,11 @@ log.heading = "BIRD3";
 log.on("log", function(message){
     var nowStr = (new Date()).toUTCString();
     var parts = [
-        nowStr,                         // the current time
-        "["+log.disp[message.level]+"]" // the display version of the prefix,
-        +(message.prefix || "")+":",    // Prefix
-        message.message,                // the actual message
-        "\n"                            // Just here to trigger a new line.
+        nowStr,                             // the current time
+        "["+log.disp[message.level]+"]"     // the display version of the prefix,
+        +((message.prefix || "")+" ")+":", // Prefix
+        message.message,                    // the actual message
+        "\n"                                // Just here to trigger a new line.
     ];
     logStream.write(parts.join(" "));
 });

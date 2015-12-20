@@ -9,7 +9,7 @@
                 ." roleplayers as well as casual chatters."
                 ." Stop by and hang out with artists and freaks! =)";
             $pageTitle = "MYNAME".": Derp";#.$this->pageTitle;
-            $cdn = BIRD3\Support\GlobalConfig::get("CDN.baseUrl");
+            $cdn = config("app.url").BIRD3\Support\GlobalConfig::get("CDN.baseUrl");
             $img = "$cdn/images/favicons";
             $hash = Hprose::get("wpHash");
         ?>
@@ -54,7 +54,7 @@
 
         <!-- Scripts -->
         <?=$this->makeTopScripts()?>
-        <script type="text/javascript">
+        <script id="GoogleAnalytics" type="text/javascript">
             // Google Analytics
             (function(i,s,o,g,r,a,m){
                 i['GoogleAnalyticsObject']=r;

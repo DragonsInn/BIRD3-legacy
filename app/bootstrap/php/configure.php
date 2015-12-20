@@ -21,9 +21,6 @@ return function($app) {
         BIRD3\Foundation\Exceptions\Handler::class
     );
 
-    // Surge the global BIRD3 config in
-    \BIRD3\Support\GlobalConfig::load(home_path("config/BIRD3.ini"));
-
     $app->configureMonologUsing(function(\Monolog\Logger $monolog){
         $monolog->pushHandler(new StreamHandler(APP_ROOT."/log/BIRD3.laravel.log"));
     });

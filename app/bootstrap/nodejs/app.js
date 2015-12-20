@@ -2,18 +2,18 @@
 Error.stackTraceLimit = Infinity;
 
 // Require BIRD3's config
-var BIRD3 = require("BIRD3/Support/GlobalConfig");
+import BIRD3 from "BIRD3/support/GlobalConfig";
 
 // Misc
-var args = require("optimist").argv,
-    redis = require("redis"),
-    getports = require("getports"),
-    async = require("async"),
-    child_process = require("child_process");
+import { argv as args } from "optimist";
+import redis from "redis";
+import getports from "getports";
+import async from "async";
+import child_process from "child_process";
 
 // Clustering
-var PowerHouse = require('powerhouse'),
-    cluster = require("cluster");
+import PowerHouse from "powerhouse";
+import cluster from "cluster";
 
 if(args.workers) {
     BIRD3.maxWorkers = args.workers;
@@ -39,12 +39,13 @@ var house = PowerHouse({
     // All other processes likely only need one but Http will want more
     amount: 1,
     //shutdownTimout: 10000, // FIXME: powerhouse doesnt have this yet
+    // PowerHouse can now bootstrap itself.
+    init: require.resolve("./autoload.js"),
     workers: [
         {
             title: "BIRD3/Backend: WebDriver",
             exec: require.resolve("BIRD3/Backend/Service/WebDriver"),
             type: "cluster",
-            amount: 1,
             reloadable: false,
             config: BIRD3.ports
         },{
@@ -52,14 +53,12 @@ var house = PowerHouse({
             //exec: "./node-lib/frontent_worker.js",
             exec: require.resolve("BIRD3/Backend/Service/SocketCluster"),
             type: "child",
-            amount: 1,
             reloadable: false,
             config: BIRD3.ports
         },{
-            title: "BIRD3: WebPack",
+            title: "BIRD3/Backend: WebPack",
             exec: require.resolve("BIRD3/Backend/Service/WebPack"),
             type: "child",
-            amount: 1,
             reloadable: false
         },/*{
             title: "BIRD3: Misc servers",
@@ -69,7 +68,7 @@ var house = PowerHouse({
         }*/
     ],
     master: function(conf, run) {
-        var log = BIRD3.log;
+        var log = BIRD3.log.makeGroup(false);
         var config = BIRD3.config;
         async.parallel({
             mysql: function(cb) { try{
@@ -219,7 +218,7 @@ var house = PowerHouse({
         });
     },
     shutdown: function(err, res) {
-        BIRD3.log.info("BIRD3 has shut down.");
+        BIRD3.log().info("BIRD3 has shut down.");
         process.exit(0);
     }
 });

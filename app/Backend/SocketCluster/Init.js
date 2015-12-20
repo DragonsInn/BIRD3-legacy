@@ -1,15 +1,18 @@
-module.exports.run = function() {
+module.exports.run = function(thisWorker) {
 
     // Time to bootstrap workers.
 
     // Enable OJ support inside NodeJS
     require("oj-node");
 
+    // Bring in babel
+    require("../../bootstrap/nodejs/autoload");
+
     // Enable Uniter support
     //require("uniter-node");
 
     // Put a global BIRD3 object in place
-    //global.BIRD3 = require("BIRD3/Support/GlobalConfig");
-    //if(this wokrker is SC) { make Communicator with SC+Redis }
+    global.BIRD3 = require("../../Support/GlobalConfig");
+    //if(thisWorker.kind == "worker") { require("../Communicator")(redis, sc); }
 
 }

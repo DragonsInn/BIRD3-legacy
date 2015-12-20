@@ -1,9 +1,12 @@
-module.exports.run = function(conf, house) {
-    var WebDriveHost = require("BIRD3/Foundation/WebDriver/Host");
-    var BIRD3 = require("BIRD3/Support/GlobalConfig");
-    var comm = require("BIRD3/Backend/Communicator")(null, require("redis"));
-    var path = require("path");
+import WebDriverHost from "BIRD3/Foundation/WebDriver/Host";
+import BIRD3 from "BIRD3/Support/GlobalConfig";
+import Communicator from "BIRD3/Backend/Communicator";
+import redis from "redis";
 
+var log = BIRD3.log.makeGroup("WebDriver");
+var comm = Communicator(null, redis);
+
+export function run(conf, house) {
     var host = WebDriveHost({
         procClass: "BIRD3\\Foundation\\ServerApplication",
         composerFile: path.join(BIRD3.root, "php_modules/autoload.php"),
@@ -28,7 +31,7 @@ module.exports.run = function(conf, house) {
 
     house.addShutdownHandler(function(ctx, next){
         if(ctx.event != "exit") return next();
-        BIRD3.log.info("Shutting down WebDriver");
+        log.info("Shutting down");
         host.kill();
         next();
     });

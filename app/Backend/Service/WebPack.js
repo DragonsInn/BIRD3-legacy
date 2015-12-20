@@ -1,41 +1,52 @@
-module.exports.run = function(workerConf, house) {
-    var redisP = require("redis");
-    var redis = redisP.createClient();
-    var webpack = require("webpack");
-    var path = require("path");
-    var BIRD3 = require("BIRD3/Support/GlobalConfig");
-    var log = BIRD3.log;
-    var config = require("BIRD3/System/Config/webpack");
-    var fs = require("fs");
-    var async = require("async");
+// Modules
+import {
+    createClient as createRedisClient
+} from "redis";
+import webpack from "webpack";
+import path from "path";
+import fs from "fs";
+import async from "async";
 
-    log.info("BIRD3 WebPack: Starting compiler...");
+// BIRD3
+import BIRD3 from "BIRD3/Support/GlobalConfig";
+import WebPackConfig from "BIRD3/System/Config/webpack";
+
+// Vars
+var redisClient = createRedisClient();
+
+// Export
+export function run(workerConf, house) {
+    var log = BIRD3.log.makeGroup("WebPack");
+
+    log.info("Starting compiler...");
     async.parallel([
-        function(step) {
-            fs.readFile(path.join(BIRD3.root, "cache/webpack-hash.txt"), function(err,ch){
+        (step) => {
+            let hashFile = path.join(BIRD3.root, "cache/webpack-hash.txt");
+            fs.readFile(hashFile, (err, ch) => {
                 if(err) {
                     log.warn("Can not read cache/webpack-hash.txt");
                     return step(err);
                 } else {
                     log.info("Using this WebPack key: "+ch);
-                    redis.set(BIRD3.WebPackKey, ch);
+                    redisClient.set(BIRD3.WebPackKey, ch);
                     step();
                 }
             });
         }
-    ], function(err){
+    ], (err) => {
         if(err) {
             log.error("There was an error within WebPack.");
             log.error(err);
             BIRD3.emitRedis("bird3.exit", err);
         } else {
-            var compiler = webpack(config);
+            log.info("Entering watch mode.");
+            var compiler = webpack(WebPackConfig);
             var watcher = compiler.watch({
-                aggregateTimeout: config.watchDelay,
+                aggregateTimeout: WebPackConfig.watchDelay,
                 poll: true
-            }, function(err,stats){
+            }, (err,stats) => {
                 if(err) throw err;
-                console.log(stats.toString({
+                log.update(stats.toString({
                     colors: true,
                     version: true,
                     assets: true,
@@ -45,15 +56,15 @@ module.exports.run = function(workerConf, house) {
                 }));
                 var out = stats.toJson({hash:true});
                 var hash = out.hash;
-                redis.set(BIRD3.WebPackKey, hash);
+                redisClient.set(BIRD3.WebPackKey, hash);
             });
 
             // shutdown
             var down = false;
-            house.addShutdownHandler(function(ctx, next){
+            house.addShutdownHandler((ctx, next) => {
                 if(down) return;
                 log.info("Shuting down WebPack.");
-                watcher.close(function(){
+                watcher.close(() => {
                     down = true;
                     log.info("WebPack is shut down.");
                     next();

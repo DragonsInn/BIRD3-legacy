@@ -1,34 +1,41 @@
 // Core
-var fs = require("fs"),
-    url = require("url"),
-    path = require("path"),
-    crypto = require("crypto"),
-    mime = require("mime")
-    mkdirp = require("mkdirp")
-    md5_file = require("md5-file"),
-    moment = require("moment");
+import fs from "fs";
+import url from "url";
+import path from "path";
+import crypto from "crypto";
+import mime from "mime";
+import mkdirp from "mkdirp";
+import md5_file from "md5-file";
+import moment from "moment";
+import redis from "redis";
+import phpjs from "phpjs";
 
-// Config
-var BIRD3 = require("BIRD3/Support/GlobalConfig");
+// BIRD3 stuff
+import BIRD3 from "BIRD3/Support/GlobalConfig";
+import WebDriver from "BIRD3/Foundation/WebDriver/Dispatcher";
+import PHPHandler from "BIRD3/Backend/Handlers/Php";
 
 // ExpressJS Web Server
-var st = require("st"),
-    ex_static = require("express-static"),
-    blinker = require("express-blinker"),
-    WebDriver = require("BIRD3/Foundation/WebDriver/Dispatcher"),
-    bodyParser = require('body-parser'),
-    cookies = require("cookie-parser"),
-    session = require("express-session"),
-    RedisStore = require('connect-redis')(session),
-    multiparty = require("connect-multiparty"),
-    responseTime = require("response-time"),
-    compression = require("compression"),
-    favicon = require("serve-favicon"),
-    redis = require("redis").createClient();
+// # Static file server
+import st from "st";
+import ex_static from "express-static";
+import blinker from "express-blinker";
+// # Middlewares
+import bodyParser from "body-parser";
+import cookies from "cookie-parser";
+import multiparty from "connect-multiparty";
+import responseTime from "response-time";
+import compression from "compression";
+import favicon from "favicon";
+// # Plugins
+import session from "express-session";
 
-var debug = require("debug")("bird3:http");
+// var RedisStore = require('connect-redis')(session);
 
-module.exports = function(app, hprosePort) {
+var log = BIRD3.log.makeGroup("Web@"+process.pid);
+var debug = () => { log.debug.call(arguments); }
+
+export default (app, hprosePort) => {
     // We need to incororate with NGINX or any other webserver here.
     debug("BIRD3 WebService: Starting...");
 
@@ -40,14 +47,14 @@ module.exports = function(app, hprosePort) {
     app.use(responseTime());
 
     // favicon
-    app.use(favicon(BIRD3.root+"/cdn/images/favicons/favicon.ico"));
+    //app.use(favicon(BIRD3.root+"/cdn/images/favicons/favicon.ico"));
 
     // Inject API and CloudFlare
     //require("./cloudflare_worker.js")(app);
     //require("./api_handler.js")(app);
 
     // CDN must not return caching when not needed.
-    app.use(BIRD3.config.CDN.baseUrl, function(req, res, next){
+    app.use(BIRD3.config.CDN.baseUrl, (req, res, next) => {
         if("nocache" in req.query) {
             return ex_static(BIRD3.root+"/cdn")(req, res, next);
         } else return next();
@@ -80,15 +87,15 @@ module.exports = function(app, hprosePort) {
     }));
     app.use("/", multiparty(BIRD3.package.version));
     app.use("/", cookies());
-    app.use(function(req, res, next){
+    app.use((req, res, next) => {
         // A throw-together session implementation.
-        var RedisSession = function(rdKey, afterCb){
+        var RedisSession = (rdKey, afterCb) => {
             var key = this._key = BIRD3.sessionKey + rdKey;
             var self = this;
-            redis.get(key, function(err, res){
+            redis.get(key, (err, res) => {
                 if(err) return afterCb(err);
                 try{
-                    self._store = require("phpjs").unserialize(res);
+                    self._store = phpjs.unserialize(res);
                 } catch(e) {
                     self._store = {};
                 }
@@ -97,15 +104,15 @@ module.exports = function(app, hprosePort) {
         }
         RedisSession.prototype = {
             _store: {}, _key: null,
-            get: function(k) { return this._store[k]; },
-            set: function(k,v) { this._store[k]=v; },
-            write: function(cb) {
+            get(k) { return this._store[k]; },
+            set(k,v) { this._store[k]=v; },
+            write(cb) {
                 cb = cb || function(){};
-                redis.set(this._key, require("phpjs").serialize(this._store), cb);
+                redis.set(this._key, phpjs.serialize(this._store), cb);
             }
         }
         if(typeof req.cookies.PHPSESSID != "undefined") {
-            (new RedisSession(req.cookies.PHPSESSID, function(err, sess){
+            (new RedisSession(req.cookies.PHPSESSID, (err, sess) => {
                 if(err) return next(err);
                 req.session = sess;
                 next();
@@ -130,7 +137,7 @@ module.exports = function(app, hprosePort) {
             version: BIRD3.package.version
         }
     );
-    require("BIRD3/Backend/Handlers/Php")(wd);
+    PHPHandler(wd);
     app.use("/", wd.getMiddleware());
 
     debug("BIRD3 WebService: Running.");

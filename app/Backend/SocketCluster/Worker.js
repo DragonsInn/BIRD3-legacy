@@ -1,19 +1,23 @@
+import WebService from "BIRD3/Backend/Service/Web";
+import BIRD3 from "BIRD3/Support/GlobalConfig";
+import Express from "express";
+import Communicator from "BIRD3/Backend/Communicator";
+
 module.exports.run = function (worker) {
     process.title = "BIRD3: SC Worker";
-    var BIRD3 = require("BIRD3/Support/GlobalConfig");
     var hprosePort = worker.options.workerOptions.hprose;
 
     // Be secure
     //require("../security_handler.js")();
 
-    var app = require('express')();
+    var app = Express();
 
     // Get a reference to our raw Node HTTP server
     var httpServer = worker.getHTTPServer();
     // Get a reference to our realtime SocketCluster server
     var scServer = worker.getSCServer();
     // Initialize the BIRD3 connector
-    var comm = require("BIRD3/Backend/Communicator")(scServer);
+    var comm = Communicator(scServer);
     /* FIXME: Restore API functionality for SC
     require("glob")(path.join(__dirname, "api", "*.js"), function(err, files){
         files.forEach(function(file){
@@ -38,7 +42,7 @@ module.exports.run = function (worker) {
 
     // Front-end specific
     app.set('etag', false); // Because. Damn.
-    require("BIRD3/Backend/Service/Web")(app, hprosePort);
+    WebService(app, hprosePort);
 
     httpServer.on('request', app);
 

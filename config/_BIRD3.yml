@@ -15,14 +15,14 @@ BIRD3:
     baseUrl: /
 
     # The user and group the server should run as
-    userName: Ingwie
-    groupName: staff
+    userName: www-data
+    groupName: www-data
 
 DB:
     # The DB informations.
-    user: bird3
-    pass: birddev
-    mydb: bird3
+    user: <Your username.>
+    pass: <Your password.>
+    mydb: <Your database name.>
 
 CDN:
     # Should we use a CDN?
@@ -46,19 +46,21 @@ EMail:
 API:
     # Twitter
     twitter:
+        enable: false
         key: <Your key here.>
 
     # Facebook
     # Offical PHP SDK: https://developers.facebook.com/docs/reference/php
     facebook:
+        enable: false
         app_id: <...>
         app_secret: <...>
         default_graph_version: <...>
 
     # CloudFlare
     cloudflare:
-        enable: no
-        email: ingwie2000@gmail.com
+        enable: false
+        email: <Your EMail here.>
         token: <Your token here.>
 
     # CleanTalk

@@ -34,4 +34,8 @@ class GlobalConfig {
         if(!$self->config) self::load();
         return array_get($self->config, $key);
     }
+
+    public function all() {
+        return $this->config;
+    }
 }

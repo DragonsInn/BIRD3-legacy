@@ -1,7 +1,25 @@
 # BIRD3, the roleplayer's CMS
 This is the CMS behind the Dragon's Inn. I have open-sourced it for easier contribution, and to let people see the guts of it. Developers can use this is as a resource to learn about scalable projects that utilize inter-language communication and other things. In fact, I would go as far and say that people actually get to look at an application that would be best described as "common practice" or at least "running with current tech".
 
-## Depdencies, when running the whole stack:
+## Common practices
+- Modularized
+The whole BIRD3 source tree is modularized. It even has a few modules inside of it that are to be published out of it too. Like it's web server component.
+- Unit testing
+BIRD3 is tested in all aspects back and forth. We use Jasmine for Node and Web, Peridot for PHP.
+- Code sharing
+The namespaces are aligned in a way that allows the code to be shared between the various parts. For instance, the frontend could easily use the same method for pasword generation than the backend. No problem!
+- Branching
+Heavy changes in the code are branched, minor changes are kept on master. Master is always the topmost development branch.
+- Versioning with semver
+Although `BIRD 3.0.0-dev.76` may not look like it, but it actually is a semantic version:
+    * Major: `3`
+    * Minor: `0`
+    * Patch: `0`
+    * Tag: `dev.76`
+- Development and production dependencies are separated
+BIRD3 makes use of `dependencies` and `devDependencies` in order to sort it's stuff into what is needed in development, and which is only needed for running.
+
+## Dependencies, when running the whole stack:
 - Redis (I use 2.8.15 at the moment)
 - MySql >= 5.5
 - Nodejs >= v4.0.0

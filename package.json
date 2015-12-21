@@ -147,7 +147,7 @@
     "termlib": "http://www.masswerk.at/termlib/termlib.zip"
   },
   "devDependencies": {
-    "chai": "^3.4.1",
+    "jasmine": "^2.4.1",
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.15",
     "karma-jasmine": "^0.3.6",
@@ -165,9 +165,10 @@
     "start": "node app/bootstrap/main.js",
     "install": "napa",
     "napa": "napa",
-    "test:php": "php_modules/bin/peridot --configuration=test/php/peridot.php",
-    "test:node": "JASMINE_CONFIG_PATH=./test/node/",
-    "test:browser": "karma ./tests/browser/karma.conf.js start"
+    "test:php": "php_modules/bin/peridot --configuration test/php/peridot.php",
+    "test:node": "node test/node/jasmine",
+    "test:browser": "karma ./tests/browser/karma.conf.js start",
+    "test": "npm run test:node && npm run test:php"
   },
   "private": true,
   "keywords": [

@@ -1,4 +1,4 @@
-<?php namespace BIRD3\Test\Php\Dsl;
+<?php namespace BIRD3\Test\php\Dsl;
 
 /**
  * This is kindly copied from the Peridot Example.
@@ -39,6 +39,9 @@ class FeatureReporter extends SpecReporter
     protected function handleGivenWhen(Test $test)
     {
         $scope = $test->getScope();
+        if(!isset($scope->acceptanceDslTitle)) {
+            return $this->symbol('check');
+        }
         $title = $scope->acceptanceDslTitle;
         if (preg_match('/Given|When/', $title)) {
             $this->passing--;

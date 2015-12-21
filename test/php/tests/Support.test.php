@@ -2,15 +2,19 @@
 
 use BIRD3\Support\GlobalConfig;
 
-describe("Configuration", function(){
+describe("Support", function(){
 
-    it("should load the configuration", function(){
-        GlobalConfig::load();
-    });
+    describe("GlobalConfig", function(){
 
-    it("should have an array as config store", function(){
-        $store = GlobalConfig::getInstance()->store;
-        expect($store)->toBeA("array");
+        it("should load the configuration. Throws on failure.", function(){
+            GlobalConfig::load();
+        });
+
+        it("should have the config loaded as array", function(){
+            $store = GlobalConfig::getInstance()->all();
+            expect($store)->toBeA("array");
+        });
+
     });
 
 });

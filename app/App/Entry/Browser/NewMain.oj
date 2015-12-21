@@ -1,6 +1,6 @@
 // Modules
-import Grapnel from "grapnel";
-import {ajax} from "nanoajax";
+//import Grapnel from "grapnel";
+//import {ajax} from "nanoajax";
 // import o from "o.o";
 
 // Tiny tests

@@ -8,10 +8,6 @@ var a_merge = require("array-merger").merge;
 var glob = require("glob");
 var fs = require("fs");
 
-// Global
-require(path.join(root,"app/bootstrap/nodejs/autoload.js"));
-
-
 // Paths
 var cdn = path.join(root,"cdn");
 var app = path.join(cdn,"app");

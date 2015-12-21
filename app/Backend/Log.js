@@ -6,10 +6,10 @@ var root = require("find-root")();
 var path = require("path");
 
 // Make a logfile stream
-var logStream = LogFileStream({
+var streamOpts = {
     logdir: path.join(root, "log"),
     nameformat: '[BIRD3.]YYYY-MM-DD[.log]'
-});
+};
 
 // Setup
 // Log levels and colors!
@@ -41,7 +41,8 @@ log.on("log", function(message){
         message.message,                    // the actual message
         "\n"                                // Just here to trigger a new line.
     ];
-    logStream.write(parts.join(" "));
+    var logStream = LogFileStream(streamOpts);
+    logStream.write(parts.join(" ")).close();
 });
 
 // Helper

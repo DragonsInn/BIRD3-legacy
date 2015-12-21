@@ -31,13 +31,15 @@
         "laravelcollective/html": "^5.1",
         "ikimea/browser": "^1.12",
         "athari/yalinqo": "^2.3",
-        "peridot-php/peridot": "^1.16",
-        "peridot-php/peridot-httpkernel-plugin": "^1.1",
-        "expect/peridot-expect-plugin": "^3.0",
         "zizaco/entrust": "dev-laravel-5",
         "mustangostang/spyc": "^0.5.1",
         "sammyk/laravel-facebook-sdk": "^3.2",
         "thujohn/twitter": "^2.1"
+    },
+    "require-dev": {
+        "peridot-php/peridot": "^1.16",
+        "peridot-php/peridot-httpkernel-plugin": "^1.1",
+        "expect/peridot-expect-plugin": "^3.0"
     },
     "config": {
         "vendor-dir": "php_modules/"

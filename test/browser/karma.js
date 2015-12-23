@@ -1,20 +1,16 @@
 module.exports = function(config) {
-    // Script for running the tests
-    var runnerScript = require.resolve("./test-runner.js")
-
     // Karma config
     var karmaConfig = {
         browsers: ['PhantomJS'],
         frameworks: ['jasmine'],
         reporters: ['spec'],
         files: [
-            { pattern: runnerScript }
+            //{ pattern: runnerScript }
+            "tests/*.test.*"
         ],
-        preprocessors: (function obtainPreprocessors(){
-            var p = {};
-            p[runnerScript] = ["webpack"];
-            return p;
-        })(),
+        preprocessors: {
+            "tests/*.test.*": ["webpack"]
+        },
         webpack: (function obtainWebPackConfig(){
             // WebPack
             var webpack = require("webpack");

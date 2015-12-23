@@ -1,0 +1,4 @@
+describe("Markdown Editor",function(){
+    it("can be created.");
+    it("parses the text within the textarea.");
+});

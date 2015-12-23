@@ -1,0 +1,6 @@
+describe("OJ",function(){
+    it("loads classes through require.");
+    it("provides a class object", function(){
+        expect(oj._cls).toEqual(jasmine.any(Object));
+    });
+});

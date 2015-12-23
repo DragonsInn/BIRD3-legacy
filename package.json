@@ -152,6 +152,7 @@
     "karma": "^0.13.15",
     "karma-jasmine": "^0.3.6",
     "karma-phantomjs-launcher": "^0.2.1",
+    "karma-spec-reporter": "0.0.23",
     "karma-webpack": "^1.7.0",
     "phantomjs": "^1.9.19"
   },
@@ -167,8 +168,9 @@
     "napa": "napa",
     "test:php": "php_modules/bin/peridot --configuration test/php/peridot.php",
     "test:node": "node test/node/jasmine",
-    "test:browser": "karma ./tests/browser/karma.conf.js start",
-    "test": "npm run test:node && npm run test:php"
+    "test:browser": "karma start ./test/browser/karma.js",
+    "test:browser:once": "npm run test:browser -- --single-run",
+    "test": "npm run test:node && npm run test:php && npm run test:browser:once"
   },
   "private": true,
   "keywords": [

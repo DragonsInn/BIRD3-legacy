@@ -21,6 +21,10 @@ class FeatureReporter extends SpecReporter
     {
         $title = $this->handleGivenWhen($test);
 
+        if(isset($test->acceptanceDslTitle)) {
+            unset($test->acceptanceDslTitle);
+        }
+
         $this->output->writeln(sprintf(
             "  %s%s %s",
             $this->indent(),

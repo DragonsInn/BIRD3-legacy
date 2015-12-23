@@ -42,7 +42,8 @@ log.on("log", function(message){
         "\n"                                // Just here to trigger a new line.
     ];
     var logStream = LogFileStream(streamOpts);
-    logStream.write(parts.join(" ")).close();
+    logStream.write(parts.join(" "));
+    logStream.close();
 });
 
 // Helper

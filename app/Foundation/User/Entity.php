@@ -102,12 +102,15 @@ implements
             - Forum\Post    : hasMany
     */
 
-    // Authentificable utility function
+    // # Authentificable utility function
+
     public function getRememberTokenName() {
         return "remember_me";
     }
 
-    // Utility functions
+    // # Utility functions
+
+    // Convert this user's role to a string representation.
     public function roleToString() {
         switch($this->superuser) {
             case self::R_USER:  return "User";
@@ -115,5 +118,11 @@ implements
             case self::R_MOD:   return "Mod";
             case self::R_ADMIN: return "Admin";
         }
+    }
+
+    // Determine if this user can or can not see adult stuff.
+    // @class BIRD3\Support\Model\Rateable
+    public function canSeeNSFWContent() {
+        return $this->settings->adult;
     }
 }

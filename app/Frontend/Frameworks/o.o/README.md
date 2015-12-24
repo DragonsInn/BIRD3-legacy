@@ -50,7 +50,7 @@ oo.extend({},{
 ```
 
 ### About constructors
-`o.o` features a very simple constructor method. If you overwrite it's prototype's `__init` function, you hit it's constructor. That's it, really.
+`o.o` features a very simple constructor method. If you overwrite the prototype's `__init` function, you hit it's constructor. That's it, really.
 
 ## Dependencies
 The main focus in this library is to stay as tiny as possible and be as efficient as possible. The dependencies used here were mostly discovered by [MicroJS](https://microjs.com)
@@ -59,7 +59,7 @@ The main focus in this library is to stay as tiny as possible and be as efficien
 This source tree is inside BIRD3, simply because it is yet in conception stage and still under construction.
 
 ## Modules
-`o.o` is developed with a modular approach in mind. Therefore, it uses a modular aproach. Its a dead-simple, flat method. the `.publish()` method accepts two parameters; the first being an object of public members, and the latter for instance, prototype variables.
+`o.o` is developed with a modular approach in mind.  The `.publish()` method accepts two parameters; the first being an object of public members, and the latter for instance, prototype variables.
 
 The internal modules are all `Function`s. But you can write your implementation however you see fit. But by using a functional approach, you can even use the library by parts instead of by whole! So keep in mind, that `o.o` collects itself off the modules, but can also be plucked apart.
 
@@ -68,3 +68,48 @@ The internal modules are all `Function`s. But you can write your implementation 
 - AJAX: Perform `XMLHttpRequest`s
 - DOM: Simple DOM manipulation. Uses `Qwery` as a selector engine, and operates on an array, which is stanced into the instance. The instance also has a `.length` property. This module also provides the main constructor.
 - Events: Currently only DOM events, but soon generic events too.
+
+
+## TODOs
+- Allow usage with JSX. Teach `o.o/dom` to notice JSX usage and react properly.
+Example (Using Babel):
+```jsx
+/** @jsx oo */
+var modal = (<div className="modal hidden">
+    Imagine this being a big, fat modal structure.
+</div>);
+modal.appendTo(oo("body"));
+
+oo.ajax("some url", {
+    onSuccess: function(statusCode, data) {
+        modal.removeClass("hidden");
+        modal.find(".body").html((
+            <p>
+                Your paycheck looks like this:
+                <div innerHTML={data}/>
+            </p>
+        ));
+    }
+});
+```
+
+At least I think that this is very nice for writing things. for instance, you'd have to do this ajax callback like this without jSX:
+
+```javascript
+var modal = oo.element("div");
+modal.addClass("modal", "hidden");
+modal.html("Imagine this being a big, fat modal struct.");
+modal.appendTo(oo("body"));
+
+oo.ajax("some url", {
+    onSuccess: function(statusCode, data) {
+        var p = oo.element("p");
+        var str = "Your paycheck looks like this:"+data;
+        p.html(str);
+        modal.removeClass("hidden");
+        modal.find(".body").html(p.html());
+    }
+});
+```
+
+It is not bad at all. But it feels less structured. Plus, this is a small example. A real modal would take way longer, constructing like that.

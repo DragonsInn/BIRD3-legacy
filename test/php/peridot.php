@@ -9,8 +9,10 @@ require_once "$rootPath/$autoloadPath";
 use Peridot\Console\Environment;
 use expect\peridot\ExpectPlugin;
 use BIRD3\Test\php\Dsl\FeatureReporter;
+use Peridot\Plugin\HttpKernel\HttpKernelPlugin;
+use Illuminate\Contracts\Http\Kernel as HttpKernel;
 
-return function($emitter) {
+return function($emitter) use($rootPath){
     $emitter->on('peridot.start', function (Environment $environment) {
         $p = __DIR__."/tests";
         $pathArg = $environment
@@ -21,6 +23,10 @@ return function($emitter) {
 
     # Plugins
     ExpectPlugin::create()->registerTo($emitter);
+    HttpKernelPlugin::register($emitter, function() use($rootPath){
+        $app = require_once "$rootPath/app/bootstrap/php/app.php";
+        return $app;
+    });
 
     $emitter->on('peridot.configure', function($config) {
         $oldDsl = $config->getDsl();

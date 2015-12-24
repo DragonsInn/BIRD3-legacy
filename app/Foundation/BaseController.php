@@ -172,8 +172,8 @@ abstract class BaseController extends LaravelController {
 
 	public function makeTopScripts() {
         // Pick up CDN info
-		$cdnUrl = GlobalConfig::get("CDN.baseurl");
-		$url = config("app.url");
+		$cdnUrl = GlobalConfig::get("CDN.baseUrl");
+		$url = config("app.domain");
 		$escYiiUrl = json_encode($url);
 
 		// Load webpack stuff

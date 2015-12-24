@@ -8,17 +8,18 @@ var a_merge = require("array-merger").merge;
 var glob = require("glob");
 var fs = require("fs");
 
-// Paths
-var cdn = path.join(root,"cdn");
-var app = path.join(cdn,"app");
-var theme = path.join(app,"App/Frontend/");
-var cache = path.join(root,"cache");
-
 // Config
 var BIRD3 = require("../../Support/GlobalConfig");
 var config = BIRD3.config;
 config.maxFileSize = 1024*10;
 config.base = BIRD3.root;
+
+// Paths
+var cdnHelper = require("../../Support/CDN");
+var cdn = cdnHelper();
+var app = path.join(config.base, "cdn/app");
+var theme = path.join(config.base, "App/Frontend/");
+var cache = path.join(config.base, "cache");
 
 var __debug = global.__debug || process.env["BIRD3_DEBUG"]==true || false;
 var _jquery = path.join( config.base, "app/App/Entry/Browser/Support/jQueryize.js" );
@@ -52,7 +53,6 @@ var defines = new webpack.DefinePlugin({
     "__PRERELEASE__": JSON.stringify(true),
     "__VERSION__": JSON.stringify(config.version),
     "__CDN__": JSON.stringify(cdn),
-    "__APP__": JSON.stringify(app),
     "__TITLE__": JSON.stringify(config.BIRD3.name),
 });
 // Bower integration. Mind the excludes!
@@ -125,7 +125,7 @@ var purifyPlugin = new purify({
     // Path where everything starts...
     basePath: config.base,
     // These extensions should be searched in the dep files.
-    scanForExts: ["oj","ejs","html","md"],
+    scanForExts: ["oj","ejs",'jsx',"html","md"],
     // The paths/globs to check, path.join()'ed with base.
     paths: [
         // Laravel views
@@ -175,17 +175,17 @@ module.exports = {
         filename: "[hash]-[name].js",
         chunkFilename: "c_[hash]-[name].js",
         sourceMapFilename: "c_[hash]-[name].map",
-        publicPath: "/cdn/app/",
+        publicPath: cdn,
         sourcePrefix: "    "
     },
     //recordsPath: path.join(BIRD3.root, "cache"),
     resolve: {
         extensions: [
-            "",             // Support supplied extensions.
-            ".js", ".oj",   // JavaScript
-            ".json",        // Structured data
-            ".css", ".scss",// Styles
-            ".ejs", ".md"   // Documents and templates
+            "",                // Support supplied extensions.
+            ".js", ".oj","jsx",// JavaScript
+            ".json",           // Structured data
+            ".css", ".scss",   // Styles
+            ".ejs", ".md"      // Documents and templates
         ],
         root: [
             config.base,
@@ -258,6 +258,18 @@ module.exports = {
             },{ // ES6/7 -> ES5...hopefuly.
                 test: /\.js$/,
                 loader: "babel",
+                exclude: /(node_modules|bower_components|web_modules)/,
+            },{ // JSX!
+                test: /\.jsx$/,
+                loader: "babel",
+                query: {
+                    plugins: [
+                        ["syntax-jsx"],
+                        ["transform-react-jsx",{
+                            pragma: "jsxr"
+                        }]
+                    ]
+                },
                 exclude: /(node_modules|bower_components|web_modules)/,
             },{ // Webfont generator
                 test: /\.font\.(js|json)$/,

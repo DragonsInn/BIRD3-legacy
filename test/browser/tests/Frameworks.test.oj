@@ -1,0 +1,52 @@
+var Dialog = require("BIRD3/Frontend/Frameworks/Dialog/Dialog");
+
+describe("Frameworks", function(){
+
+    describe("Dialog", function(){
+        it("[Dialog alert:]", function(){
+            expect(function(){
+                var d = [Dialog alert:"Hello, world."];
+                d.close();
+            }).not.toThrow();
+        });
+        it("[Dialog info:]", function(){
+            expect(function(){
+                var d = [Dialog info:"We're testing, sir!"];
+                d.close();
+            }).not.toThrow();
+        });
+        it("[Dialog error:]");
+        it("[Dialog prompt:withMessage:onResult:]", function(){
+            //var spyCb = spyOn(function(value){});
+            expect(function(){
+                var d = [Dialog
+                    prompt: "Your name"
+                    withMessage: "What is your name?"
+                    onResult: function(){}
+                ];
+                d.close();
+            }).not.toThrow();
+            //expect(spyCb).toHaveBeenCalled();
+        });
+        it("[Dialog confirm:options:onResult:]", function(){
+            //var spyCb = spyOn(function(yepnope){});
+            expect(function(){
+                var d = [Dialog
+                    confirm: "Are you alive?"
+                    options: {}
+                    onResult: function(){}
+                ];
+            }).not.toThrow();
+        });
+        it("[Dialog installOn:]", function(){
+            var target = {};
+            [Dialog installOn:target];
+            expect(target.alert).toBeDefined();
+            expect(target.errorAlert).toBeDefined();
+            expect(target.infoAlert).toBeDefined();
+            expect(target.question).toBeDefined();
+            expect(target.prompt).toBeDefined();
+        });
+    })
+
+});

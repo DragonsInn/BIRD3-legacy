@@ -34,6 +34,44 @@ BIRD3.ports = {hprose: -1, phpStats: -1, update: -1};
         - update > look for code updates and make workers restart.
 */
 
+// The workers to make.
+var workers = [];
+
+// FIXME: Optimally check which workers to run.
+// This would help a lot in integration tests.
+workers.push({
+    title: "BIRD3/Backend: WebDriver",
+    exec: require.resolve("BIRD3/Backend/Service/WebDriver"),
+    type: "cluster",
+    reloadable: false,
+    config: BIRD3.ports
+});
+workers.push({
+    title: "BIRD3/Backend: SocketCluster",
+    exec: require.resolve("BIRD3/Backend/Service/SocketCluster"),
+    type: "child",
+    reloadable: false,
+    config: BIRD3.ports
+});
+workers.push({
+    title: "BIRD3/Backend: WebPack",
+    exec: require.resolve("BIRD3/Backend/Service/WebPack"),
+    type: "child",
+    reloadable: false
+});
+workers.push({
+    title: "BIRD3/Frontend: CDN",
+    exec: require.resolve("BIRD3/Backend/Service/CDN"),
+    type: "cluster",
+    reloadable: false
+});
+/*workers.push({
+    title: "BIRD3: Misc servers",
+    exec: "./node-lib/misc_worker.js",
+    type: "cluster",
+    reloadable: false
+})*/
+
 var house = PowerHouse({
     title: "BIRD3: Main",
     // All other processes likely only need one but Http will want more
@@ -41,32 +79,7 @@ var house = PowerHouse({
     //shutdownTimout: 10000, // FIXME: powerhouse doesnt have this yet
     // PowerHouse can now bootstrap itself.
     init: require.resolve("./autoload.js"),
-    workers: [
-        {
-            title: "BIRD3/Backend: WebDriver",
-            exec: require.resolve("BIRD3/Backend/Service/WebDriver"),
-            type: "cluster",
-            reloadable: false,
-            config: BIRD3.ports
-        },{
-            title: "BIRD3/Backend: SocketCluster",
-            //exec: "./node-lib/frontent_worker.js",
-            exec: require.resolve("BIRD3/Backend/Service/SocketCluster"),
-            type: "child",
-            reloadable: false,
-            config: BIRD3.ports
-        },{
-            title: "BIRD3/Backend: WebPack",
-            exec: require.resolve("BIRD3/Backend/Service/WebPack"),
-            type: "child",
-            reloadable: false
-        },/*{
-            title: "BIRD3: Misc servers",
-            exec: "./node-lib/misc_worker.js",
-            type: "cluster",
-            reloadable: false
-        }*/
-    ],
+    workers: workers,
     master: function(conf, run) {
         var log = BIRD3.log.makeGroup(false);
         var config = BIRD3.config;

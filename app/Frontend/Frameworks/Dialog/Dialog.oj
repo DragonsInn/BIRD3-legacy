@@ -7,7 +7,7 @@ var guidGenerator = require("./guidGenerator");
 
 @implementation Dialog
 // Public methods
-+(void)alert:(string)message {
++(Modal)alert:(string)message {
     return render({
         title: "Alert",
         type: "success",
@@ -17,7 +17,7 @@ var guidGenerator = require("./guidGenerator");
     });
 }
 
-+(void)prompt:(string)title withMessage:(string)message onResult:(callable)cb {
++(Modal)prompt:(string)title withMessage:(string)message onResult:(callable)cb {
     var putId = guidGenerator();
     return render({
         title: title,
@@ -42,7 +42,7 @@ var guidGenerator = require("./guidGenerator");
     });
 }
 
-+(void)confirm:(string)message options:(object)options onResult:(callable)cb {
++(Modal)confirm:(string)message options:(object)options onResult:(callable)cb {
     var okId = guidGenerator();
     var nopeId = guidGenerator();
     return render({
@@ -72,7 +72,7 @@ var guidGenerator = require("./guidGenerator");
     });
 }
 
-+(void)info:(string)message {
++(Modal)info:(string)message {
     return render({
         title: "Information",
         type: "info",
@@ -81,9 +81,9 @@ var guidGenerator = require("./guidGenerator");
         footer: '<button type="button" class="btn btn-default" data-dismiss="modal">Okay.</button>'
     });
 }
-+(void)error:(string)message {}
++(Modal)error:(string)message {}
 
-+(id)installOn:(Object)target {
++(void)installOn:(Object)target {
     var d = [Dialog class];
     var prompter = function(m,c){
         return [d prompt:window.title withMessage:m withResult:c];
@@ -106,4 +106,10 @@ var guidGenerator = require("./guidGenerator");
 }
 @end
 
+// OJ classes aren't objects, per-se. They are registered into
+// $oj_oj._cls instead. But calling [o class] reveals that very object.
+// It can even be messaged. So in a way, this allows a class
+// "to be exported" - although, you shouldn't do that. It's simply
+// semantically wrong with ObjC - but the only real solution for WebPack,
+// if I don't want to use a preprocessor.
 module.exports = [Dialog class];

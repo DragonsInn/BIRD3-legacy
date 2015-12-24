@@ -28,7 +28,7 @@ CDN:
     # Should we use a CDN?
     enable: false
     # The URL to the CDN. I.e.: dragonsinn.surge.sh
-    url: localhost
+    domain: foo.surge.sh
     # The base URL under which our files are
     baseUrl: /
 

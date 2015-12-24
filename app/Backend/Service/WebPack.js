@@ -1,7 +1,5 @@
 // Modules
-import {
-    createClient as createRedisClient
-} from "redis";
+import redis from "redis";
 import webpack from "webpack";
 import path from "path";
 import fs from "fs";
@@ -9,11 +7,13 @@ import async from "async";
 
 // BIRD3
 import BIRD3 from "BIRD3/Support/GlobalConfig";
+import Communicator from "BIRD3/Backend/Communicator";
 import WebPackConfig from "BIRD3/System/Config/webpack";
 import {ProgressPlugin} from "webpack";
 
 // Vars
-var redisClient = createRedisClient();
+var redisClient = redis.createClient();
+var comm = Communicator(null, redis);
 
 // Export
 export function run(workerConf, house) {
@@ -66,6 +66,7 @@ export function run(workerConf, house) {
                 var out = stats.toJson({hash:true});
                 var hash = out.hash;
                 redisClient.set(BIRD3.WebPackKey, hash);
+                comm.emitRedis("webpack.compiled");
             });
 
             // shutdown

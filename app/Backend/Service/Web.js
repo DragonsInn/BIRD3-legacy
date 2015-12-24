@@ -53,30 +53,33 @@ export default (app, hprosePort) => {
     //require("./cloudflare_worker.js")(app);
     //require("./api_handler.js")(app);
 
-    // CDN must not return caching when not needed.
-    app.use(BIRD3.config.CDN.baseUrl, function NoCache(req, res, next){
-        if("nocache" in req.query) {
-            return ex_static(BIRD3.root+"/cdn")(req, res, next);
-        } else return next();
-    });
-    app.use(BIRD3.config.CDN.baseUrl, blinker(BIRD3.root+"/cdn", [
-        {
-            test: /\.(jp?g|png|tiff|ttf|eot|woff?|svg|js|css)$/,
-            etag: false,
-            lastModified: false,
-            cacheControl: true,
-            cacheKeyword: "public",
-            expires: true,
-            age: moment.duration(1, "day").asSeconds()
-        },{
-            test: /.+/,
-            etag: false,
-            lastModified: false,
-            cacheControl: false,
-            expires: false,
-            age: 0
-        }
-    ]));
+    if(!BIRD3.config.CDN.enable) {
+        // CDN is disabled. Host it ourself.
+        // CDN must not return caching when not needed.
+        app.use(BIRD3.config.CDN.baseUrl, function NoCache(req, res, next){
+            if("nocache" in req.query) {
+                return ex_static(BIRD3.root+"/cdn")(req, res, next);
+            } else return next();
+        });
+        app.use(BIRD3.config.CDN.baseUrl, blinker(BIRD3.root+"/cdn", [
+            {
+                test: /\.(jp?g|png|tiff|ttf|eot|woff?|svg|js|css)$/,
+                etag: false,
+                lastModified: false,
+                cacheControl: true,
+                cacheKeyword: "public",
+                expires: true,
+                age: moment.duration(1, "day").asSeconds()
+            },{
+                test: /.+/,
+                etag: false,
+                lastModified: false,
+                cacheControl: false,
+                expires: false,
+                age: 0
+            }
+        ]));
+    }
 
     // Configuring the BIRD Main server.
     app.use("/", bodyParser.urlencoded({

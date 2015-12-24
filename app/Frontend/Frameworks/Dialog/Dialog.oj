@@ -3,6 +3,7 @@ require("BIRD3/Frontend/Frameworks/onEnter");
 
 // The actual renderer
 var render = require("./render");
+var guidGenerator = require("./guidGenerator");
 
 @implementation Dialog
 // Public methods
@@ -46,21 +47,25 @@ var render = require("./render");
     var nopeId = guidGenerator();
     return render({
         title: options.title || "Question",
-        size: question.size || "lg",
-        type: question.type || "warning",
+        size: options.size || "lg",
+        type: options.type || "warning",
         body: message,
         footer: [
             '<button id="'+okId+'-ok" class="btn btn-warning">Yep</button>',
             '<button id="'+nopeId+'-nope" class="btn btn-default">Nope</button>'
         ].join(" "),
     }, function(modal, id, node){
-        var $modal = $("#"+id);
+        // Add the ids
+        modal.okId = okId;
+        modal.nopeId = nopeId;
         // Set up the triggers
-        $modal.find("#"+okId+"-ok").click(function(){
+        var okBtn = document.getElementById(okId+"-ok")
+        okBtn.addEventListener("click", function(e){
             modal.close();
             cb(true);
         });
-        $modal.find("#"+nopeId+"-nope").click(function(){
+        var nopeBtn = document.getElementById(nopeId+"-nope");
+        nopeBtn.addEventListener("click", function(e){
             modal.close();
             cb(false);
         });
@@ -81,14 +86,14 @@ var render = require("./render");
 +(id)installOn:(Object)target {
     var d = [Dialog class];
     var prompter = function(m,c){
-        [d prompt:window.title withMessage:m withResult:c];
+        return [d prompt:window.title withMessage:m withResult:c];
     };
     var oPrompt = target.prompt || prompter;
     var conv = {
-        alert: function(msg) { [d alert:msg]; },
-        errorAlert: function(msg) { [d error:msg]; },
-        infoAlert: function(msg) { [d info:msg]; },
-        question: function(m, o, cb) { [d confirm:m options:o onResult:cb]; },
+        alert: function(msg) { return [d alert:msg]; },
+        errorAlert: function(msg) { return [d error:msg]; },
+        infoAlert: function(msg) { return [d info:msg]; },
+        question: function(m, o, cb) { return [d confirm:m options:o onResult:cb]; },
         prompt: function(q, cb) {
             if(typeof cb != "function") {
                 return oPrompt.apply(target, arguments);

@@ -109,6 +109,7 @@ return [
         "BIRD3" => BIRD3\Support\Facades\BIRD3::class,
         "FlipFlop" => BIRD3\Extensions\FlipFlop\Facades\FlipFlop::class,
         "User" => BIRD3\Foundation\User\Entity::class,
+        "CDN" => BIRD3\Support\CDN::class,
 
         // External
         'HTML' => Collective\Html\HtmlFacade::class,

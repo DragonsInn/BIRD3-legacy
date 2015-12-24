@@ -16,7 +16,7 @@ config.base = BIRD3.root;
 
 // Paths
 var cdnHelper = require("../../Support/CDN");
-var cdn = cdnHelper();
+var cdn = cdnHelper("/app/");
 var app = path.join(config.base, "cdn/app");
 var theme = path.join(config.base, "App/Frontend/");
 var cache = path.join(config.base, "cache");
@@ -72,7 +72,8 @@ var provider = new webpack.ProvidePlugin({
     $: _jquery,
     jQuery: _jquery,
     "window.jQuery": _jquery,
-    "window.$": _jquery
+    "window.$": _jquery,
+    jsxr: "jsxr"
 });
 // Generate bundled CSS. (id, fileName)
 var extractor = new extractText("style","[hash]-[name].css",{allChunks:true});
@@ -181,11 +182,11 @@ module.exports = {
     //recordsPath: path.join(BIRD3.root, "cache"),
     resolve: {
         extensions: [
-            "",                // Support supplied extensions.
-            ".js", ".oj","jsx",// JavaScript
-            ".json",           // Structured data
-            ".css", ".scss",   // Styles
-            ".ejs", ".md"      // Documents and templates
+            "",                 // Support supplied extensions.
+            ".js", ".oj",".jsx",// JavaScript
+            ".json",            // Structured data
+            ".css", ".scss",    // Styles
+            ".ejs", ".md"       // Documents and templates
         ],
         root: [
             config.base,
@@ -248,7 +249,12 @@ module.exports = {
                 loader: "markdown-it-plus"
             },{ // Embedded JS templates
                 test: /\.ejs$/,
-                loader: "ejs-compiled?delimiter=?&+rmWhitespaces"
+                loader: "ejs-compiled",
+                query: {
+                    delimiter: "?",
+                    compileDebug: false,
+                    rmWhitespaces: true
+                }
             },{ // Load JSON. How stupid is this...?
                 test: /\.json$/,
                 loader: "json",

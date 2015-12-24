@@ -9,7 +9,7 @@
                 ." roleplayers as well as casual chatters."
                 ." Stop by and hang out with artists and freaks! =)";
             $pageTitle = "MYNAME".": Derp";#.$this->pageTitle;
-            $cdn = config("app.url").BIRD3\Support\GlobalConfig::get("CDN.baseUrl");
+            $cdn = BIRD3\Support\CDN::link();
             $img = "$cdn/images/favicons";
             $hash = Hprose::get("wpHash");
         ?>

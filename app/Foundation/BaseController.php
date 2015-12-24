@@ -12,6 +12,7 @@ use Ikimea\Browser\Browser;
 // BIRD3
 use BIRD3\Support\GlobalConfig;
 use BIRD3\Support\Compatibility;
+use BIRD3\Support\CDN;
 
 // Facades
 use Cache;
@@ -179,7 +180,7 @@ abstract class BaseController extends LaravelController {
 		// Load webpack stuff
 		$hash = Hprose::get("wpHash");
 		$bower = resolve("@bower");
-		$cdnApp = GlobalConfig::get("CDN.baseUrl")."/app";
+        $cdnApp = CDN::link("/app");
 		$escCdnApp = json_encode($cdnApp);
 		$use = json_encode($this->panelBottom);
 

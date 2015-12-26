@@ -16,6 +16,7 @@ This library also "wants" to be used with a module loader or bundler like Browse
 - Add, set, remove `data-` attributes.
 - Connect to events.
 - Pick and use an AJAX interface to do some AJAXing. Its minimal, but does the job.
+- Use with JSX (Use the `/* @jsx */` directive in Babel).
 
 ## The 2-way usage
 Usually, libraries want you to include most, if not all their bulk. `o.o` has an eye-candy fix for that. You can pick it up using two methods:
@@ -68,48 +69,3 @@ The internal modules are all `Function`s. But you can write your implementation 
 - AJAX: Perform `XMLHttpRequest`s
 - DOM: Simple DOM manipulation. Uses `Qwery` as a selector engine, and operates on an array, which is stanced into the instance. The instance also has a `.length` property. This module also provides the main constructor.
 - Events: Currently only DOM events, but soon generic events too.
-
-
-## TODOs
-- Allow usage with JSX. Teach `o.o/dom` to notice JSX usage and react properly.
-Example (Using Babel):
-```jsx
-/** @jsx oo */
-var modal = (<div className="modal hidden">
-    Imagine this being a big, fat modal structure.
-</div>);
-modal.appendTo(oo("body"));
-
-oo.ajax("some url", {
-    onSuccess: function(statusCode, data) {
-        modal.removeClass("hidden");
-        modal.find(".body").html((
-            <p>
-                Your paycheck looks like this:
-                <div innerHTML={data}/>
-            </p>
-        ));
-    }
-});
-```
-
-At least I think that this is very nice for writing things. for instance, you'd have to do this ajax callback like this without jSX:
-
-```javascript
-var modal = oo.element("div");
-modal.addClass("modal", "hidden");
-modal.html("Imagine this being a big, fat modal struct.");
-modal.appendTo(oo("body"));
-
-oo.ajax("some url", {
-    onSuccess: function(statusCode, data) {
-        var p = oo.element("p");
-        var str = "Your paycheck looks like this:"+data;
-        p.html(str);
-        modal.removeClass("hidden");
-        modal.find(".body").html(p.html());
-    }
-});
-```
-
-It is not bad at all. But it feels less structured. Plus, this is a small example. A real modal would take way longer, constructing like that.

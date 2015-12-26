@@ -1,15 +1,22 @@
 // Modules
-//import Grapnel from "grapnel";
-//import {ajax} from "nanoajax";
-// import o from "o.o";
+var Grapnel = require("grapnel");
+var oo = require("o.o");
 
-// Tiny tests
-var hasPushState = ('history' in window && 'pushState' in history);
-
-var app = new Grapnel({
-    pushState: hasPushState,
+var pushRouter = new Grapnel({
+    pushState: true,
     root: "/"
 });
+var hashRouter = new Grapnel({
+    pushState: false,
+    hashbang: true
+});
+
+// Hacky way to enable hashbang AND pushState routing.
+var app = pushRouter;
+app.get = function(){
+    hashRouter.get.apply(hashBangrouter, arguments);
+    Grapnel.prototype.get.apply(this, arguments);
+}
 
 // Helper
 function url(u) {
@@ -41,39 +48,14 @@ function url(u) {
 */
 
 app.get("/docs", function(req, e, next){
-    /*
-        - Grab all the markdown docs inside the docs folder.
-        - Read them and create a nice sidebar of them.
-        - Display the document currently selected.
-
-        Yup, this is an SPA inside a MPA. o.o
-
-        The only thing that PHP provides is the base HTML layout.
-        Therefore, we'll attach to the proper "onDone" thing.
-    */
-    app.once("request-done", function(e){
-        require.ensure([], function(require){
-            var docs = require("BIRD3.docs");
-            var $topics = $("#DocTopics");
-            var $docBody = $("#DocBody");
-            docs.forEach(function(topic, topicId){
-                var $t = $(document.createElement("p"));
-                var $h = $("<strong>"+topic.title+"</strong>");
-                var $ul = $(document.createElement("ul"));
-                $t.append($h);
-                topic.entries.forEach(function(entry, entryId){
-                    var $entry = $("<li>"+entry.shortTitle || entry.title+"</li>");
-                    $entry.click(function(){
-                        $docBody.html(entry.body);
-                    });
-                    $ul.append($entry);
-                });
-                $t.append($ul);
-                $topics.append($t);
-            });
-        }, "docs");
-    });
-    next();
+    require.ensure([
+        "BIRD3/App/Controllers/DocsController",
+        "BIRD3.docs"
+    ], function(require){
+        var controller = require("BIRD3/App/Controllers/DocsController");
+        var docs = require("BIRD3.docs");
+        (new Controller(docs)).render();
+    }, "DocsController");
 });
 
 app.get("/chat", function(req){
@@ -109,7 +91,7 @@ app.get("/*", function(req, e, next){
                 var parts = JSON.parse(res);
                 for(var DomID in parts) {
                     var html = parts[DomID];
-                    $("#"+DomID).html(html);
+                    document.getElementById(DomID).innerHTML = html;
                     /*
                         this.controller = require("BIRD3/App/Controller/MainController");
                         RunApplication(this, req);
@@ -117,8 +99,9 @@ app.get("/*", function(req, e, next){
                     app.trigger("request-done");
                 }
             } catch(e) {
-                // Need to use BIRD3's Dialog stuff...
-                alert(e);
+                // We probably got raw HTML. Load it.
+                // FIXME: ...load it into the proper place.
+                document.body.innerHTML(res);
             }
         });
     }
@@ -128,7 +111,6 @@ $("[data-pjax]").click(function(e){
     if(hasPushState) {
         // This is a PJAX link. So hold it right there.
         e.preventDefault();
-        $e = $(e.target);
-        app.navigate($e.attr("href"));
+        app.navigate(e.target.attributes.href);
     }
 });

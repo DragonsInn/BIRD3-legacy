@@ -4,6 +4,7 @@
   "description": "CMS for Roleplaying with additional features. Yii+NodeJS based, with WebSocket thru socket.io. Is it's own webserver. Do not proxy thru Apache.",
   "main": "app/bootstrap/main.js",
   "dependencies": {
+    "appcache-webpack-plugin": "^1.2.1",
     "array-merger": "^0.1.1",
     "async": "^1.3.0",
     "awesomplete": "^1.0.0",

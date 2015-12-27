@@ -1,32 +1,32 @@
 // Text editor behaviours
-var behave = require("behave.js");
-var LDT = require("LDT");
-var jsCaret = require("legacy!jsCaret/jsCaret.js");
+import behafe from "behave.js";
+import LDT from "LDT";
+import jsCaret from "legacy!jsCaret/jsCaret.js";
 
 // Text parser
-var markdownIt = require("BIRD3/Support/MarkdownIt")();
-var transform = require("./lib/transform-md-ast");
+import miniMarkdown from "miniMarkdown";
+// var markdownIt = require("BIRD3/Support/MarkdownIt")();
+// var transform = require("./lib/transform-md-ast");
 
 // Color picker
-var piklor = window.piklor = require("piklor.js").Piklor;
+import {Piklor} from "piklor.js"
 
 // Bootstrap.native
 var Tooltip = require("bootstrap.native/lib/tooltip-native");
 var Popover = require("bootstrap.native/lib/popover-native");
+// import Tooltip from "bootstrap.native/lib/"
+
 // CSS
 require("./Style/editor.scss");
+
 // Data
 var palette = require("./Resources/nes-colors.json").colors;
 
-// Pull the main class in
-@class BIRD3App;
-
 // The actual logic
-module.exports = function(){
-    var App = [BIRD3App instance];
-    $("div[data-b3me]").each(function(el){
-        var $el = $.grab(el);
-        var id = $el.prop("id");
+export default function BIRD3MarkdownEditor(){
+    oo("div[data-b3me]").each(function(el){
+        var $el = $(el);
+        var id = el.id;
         var name = $el.data("name");
         var taClass = $el.data("taClass");
         var textDisplay = $el.data("textDisplay");
@@ -39,30 +39,30 @@ module.exports = function(){
         var content = el.innerHTML;
         el.innerHTML = "";
 
-        var toolbar = require("./Views/toolbar.ejs")({
+        var Toolbar = require("./Views/toolbar")({
             wid: id,
             placement: placement,
             textDisplay: textDisplay,
             groupSize: groupSize
         });
-        var $tb = $.parseHTML(toolbar)[0];
 
         // Create the input
-        var $ta = $("<textarea></textarea>");
-        $ta.attr("id", id+"_input");
-        $ta.attr("class", taClass);
-        $ta.attr("name", name);
-        $ta.attr("placeholder", placeholder);
-        $ta.val(content);
+        var TextArea = (<textarea
+            id={(id+"_input")}
+            className={taClass}
+            name={name}
+            placeholder={placeholder}
+            value={content}
+        />);
 
         // Pop the components in
-        if(editorPlacement == "top") $el.append($ta);
-        $el.append($tb);
-        if(editorPlacement == "bottom") $el.append($ta);
+        if(editorPlacement == "top") el.appendChild(TextArea);
+        el.appendChild(Toolbar);
+        if(editorPlacement == "bottom") el.appendChild(TextArea);
 
         // Rendering the Popovers and Tooltips...
         $("[data-toggle=tooltip]").each(function(item){
-            var options = {}, $i = $.grab(item);
+            var options = {}, $i = $(item);
             options.animation = $i.data('animation');
             options.placement = $i.data('placement');
             options.duration = $i.data('duration');
@@ -70,12 +70,12 @@ module.exports = function(){
             new Tooltip(item,options);
         });
         $("[data-toggle=popover]").each(function(item){
-            var options = {}, $i = $.grab(item);
+            var options = {}, $i = $(item);
             options.trigger = $i.data('trigger');
     		options.animation = $i.data('animation');
     		options.duration = $i.data('duration');
     		options.placement = $i.data('placement');
-            //options.dismiss = $i.data('dismiss');
+            options.dismiss = $i.data('dismiss');
     		options.delay = $i.data('delay');
     		new Popover(item,options);
         });
@@ -83,9 +83,7 @@ module.exports = function(){
         // Give this text-area some super bird power!
         // LDT setup. A bit complicated but do-able.
         var parser = {
-            add: function(){
-                throw new Error("Can't add dynamic rules. Yet.");
-            },
+            add: function(){ throw new Error("Can't add dynamic rules."); },
             tokenize: function(input){
                 return transform(markdownIt.parse(input));
             },
@@ -95,7 +93,7 @@ module.exports = function(){
                 return token.identify();
             },
         };
-        var ta_l = new LDT($ta[0], parser);
+        var ta_l = new LDT(TextArea, parser);
         // jsCaret setup
         var caret = new jsCaret(ta_l.input);
         // Create behave.js stuff.
@@ -108,10 +106,10 @@ module.exports = function(){
         //ta_l.input.addEventListener("keydown", ta_l.update);
         //ta_l.input.addEventListener("keypress", ta_l.update);
         // Auto-resize? Sure.
-        var $ldt = $.grab(ta_l.input).parent().parent();
+        var $ldt = $(ta_l.input).parent().parent();
         $ta.data("origSize",$ldt.height());
         ta_l.input.addEventListener("keyup", function(e){
-            var $e = $.grab(e.target);
+            var $e = $(e.target);
             var lh = parseFloat($e.css("line-height"));
             var size = parseFloat($ta.data("origSize"));
             var lines = parseInt($e.val().split("\n").length);

@@ -1,5 +1,4 @@
 var _ = require("microdash");
-var htmlChain = require("html-chain");
 var queryEngine = require("qwery");
 var domReady = require("domready");
 var domEasy = require("dom-easy");
@@ -7,20 +6,32 @@ var domEasy = require("dom-easy");
 /*
     Methods left to implement:
     - class() : get/set class(es)
-    - id() : get/set the id
-    - attr() : get/set attribute value
-    - html() : get/set html content
-    - text() : get/set html content
-    - height() / width() : height, width
 */
 
+/**
+ * Construct a new o.o DOM object.
+ * @return DOM
+ */
 function DOM() {
     var inst = Object.create(DOM.prototype.__init);
     return inst.apply(inst, arguments);
 }
 
+/**
+ * Convert string to snake-case
+ * @param  {string} str String to convert
+ * @return {String} Snake-case'd string.
+ */
+function toSnake(str) {
+    return str.replace(/[A-Z]/g, function(L){
+        return "-"+L.toLowerCase();
+    })
+}
+
+/**
+ * Public properties of DOM.
+ */
 DOM = _.extend({
-    html: htmlChain,
     ready: domReady,
     queryEngine: queryEngine,
     dom: DOM,
@@ -29,13 +40,49 @@ DOM = _.extend({
 
 DOM.prototype = Object.create(domEasy.prototype);
 DOM.prototype = _.extend(DOM.prototype, {
-    // Props
+    // # Props
+    /**
+     * Used to identify that this is an o.o Dom element.
+     * @type {Boolean}
+     */
     __blinkDom: true,
+
+    /**
+     * Pseudo length
+     * @type {Number}
+     */
     length: 0,
-    // Methods
+
+    // # Methods
+    /**
+     * Initialize the new DOM object.
+     *
+     * Possible usages:
+     *
+     * DOM Ready
+     * @param Function                  Adds the given function to domReady.
+     *
+     * JSX (Use with Babel and the @jsx pragma!)
+     * @param String/HTMLElement        Root element for this creation.
+     * @param Null|Object               Attributes for the node.
+     * @param ...children               A continued list of child elements. Optional.
+     *
+     * Query selection
+     * @param String                    Query selector
+     * @param String|HTMLElement        Context - either selector or node. Optional.
+     *
+     * Load single or multiple node(s)
+     * @param HTMLElement|Collection    Load these nodes using o.o DOM.
+     *
+     * @return {o.o DOM}                Instance of o.o DOM. Except when using DomReady, then it's NULL.
+     */
     __init: function(/*selector|collection, attrs[, ...children...]*/) {
         var args = arguments;
-        if(
+        if(_.isFunction(args[0])) {
+            // DOM(function(){ ... })
+            domReady(args[0]);
+            return null;
+        } else if(
             typeof args[0] ==  "string"
             && (
                 typeof args[1] == "undefined"
@@ -119,14 +166,154 @@ DOM.prototype = _.extend(DOM.prototype, {
                 this[0] = args[0];
             }
         }
+
+        // Put away unsafe methods.
+        this._attr = this.attr;
+
         return this;
     },
+
+    /**
+     * Iterate over each captured element
+     * @param {Function} cb Callback in the form of: cb(node, id, DOM(node))
+     */
     each: function(cb) {
         for(var i=0; i<this.length; i++) {
-            cb(this[i], i);
+            cb(this[i], i, DOM(this[i]));
         }
     },
-    forEach: function(cb) { this.each.call(this, cb); }
+
+    /**
+     * Mapping to .each()
+     */
+    forEach: function(cb) { this.each.call(this, cb); },
+
+    /**
+     * Get or set a data- attribute.
+     * @param {String} key Key to get or set.
+     * @param {String} value Value to set. Setting is only performed, if value is given.
+     * @return {String} The data- property.
+     */
+    data: function(key, value) {
+        if(typeof value == "undefined") {
+            if(this.length < 1) {
+                // Single return
+                return this[0].dataset[key];
+            } else {
+                var vals = [];
+                this.each(function(e){
+                    vals.push(e.dataset[key])
+                });
+            }
+        } else {
+            if(this.length < 1) {
+                // Single return
+                this[0].dataset[key] = value;
+            } else {
+                this.each(function(e){
+                    e.dataset[key] = value;
+                });
+            }
+        }
+    },
+
+    /**
+     * Get or set a CSS property.
+     * @param {String} key Key to get or set.
+     * @param {Mixed} value Value to set. Setting is only performed, if value is given.
+     * @return {Mixed} Value of the CSS rule.
+     */
+    css: function(key, value) {
+        if(typeof value == "undefined") {
+            if(this.length < 1) {
+                // Single return
+                return this[0].style[toSnake(key)];
+            } else {
+                var vals = [];
+                this.each(function(e){
+                    vals.push(e.style[toSnake(key)])
+                });
+            }
+        } else {
+            if(this.length < 1) {
+                // Single return
+                this[0].style[toSnake(key)] = value;
+            } else {
+                this.each(function(e){
+                    e.style[toSnake(key)] = value;
+                });
+            }
+        }
+    },
+
+    /**
+     * Get height of element.
+     * @return {Number} Height in picels (px).
+     */
+    height: function() {
+        return this[0].clientHeight;
+    },
+
+    /**
+     * Get or set the innerText property of the FIRST element.
+     * @param {String} txt If given, this becomes the new text.
+     * @return {String} The containing string. Undefined when setting.
+     */
+    text: function(txt) {
+        if(_.isString(txt)) {
+            this[0].innerText = txt;
+        } else {
+            return this[0].innerText;
+        }
+    },
+
+    /**
+     * Get or set the HTML of the FIRST element.
+     * @param {String} h If given, set the HTML to this.
+     * @return {String} String of the node's HTML. Undefined when setting.
+     */
+    html: function(h) {
+        if(typeof h != "undefined") {
+            this[0].innerHTML = h;
+        } else {
+            return this[0].innerHTML;
+        }
+    },
+
+    /**
+     * Get or set an attribute.
+     * @param {String} k Attribute name
+     * @param {String} v Attribute value. If given, perform set.
+     * @return {String} Attribute value.
+     *
+     * If you specify an Object instead:
+     * @param {Object} k Set this object as the new properties.
+     * @return Nothing.
+     */
+    attr: function(k, v) {
+        if(_.isPlainObject(k)) {
+            this._attr(k);
+        } else {
+            if(_.isString(k) && typeof v == "undefined") {
+                return this[0].attributes[k];
+            } else if(_.isString(k) && _.isString(v)) {
+                this[0].attributes[k]=v;
+            }
+        }
+    },
+
+    /**
+     * Get or set the FIRST element's ID.
+     * @param {String} v ID to set. Setting is only performed if this is given.
+     * @return {String} The ID.
+     */
+    id: function(v) {
+        if(_.isString(v)) {
+            this[0].id=v;
+        } else {
+            return this[0].id;
+        }
+    }
 });
 
 module.exports = DOM;

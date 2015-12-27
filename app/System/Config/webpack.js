@@ -31,6 +31,7 @@ var extractText = require("extract-text-webpack-plugin");
 var HashPlugin = require('hash-webpack-plugin');
 var cleanPlugin = require('clean-webpack-plugin');
 var purify = require("bird3-purifycss-webpack-plugin");
+var appCachePlugin = require("appcache-webpack-plugin");
 
 // postcss
 var mergeRules = require('postcss-merge-rules');
@@ -147,6 +148,26 @@ var purifyPlugin = new purify({
     ]
 });
 
+// manifest
+var cdnBase = path.join(config.base, "cdn");
+var appCache = new appCachePlugin({
+    cache: (function AssetGlobber(){
+        var files = glob.sync(cdnBase+"/**/*.{png,jp?g,svg,gif,mp3,wav,ogg}");
+        // Do not double-include /cdn/app data.
+        files = files.map(function(k){
+            return cdnHelper(k.replace(cdnBase, ""));
+        }).filter(function(k){
+            if( !(/^\/app/.test(k)) ) {
+                return k;
+            }
+        });
+        return files;
+    })(),
+    settings: ["fast"],
+    exclude: [],
+    output: "allyourcachebelongstothe.appcache"
+});
+
 // Babel
 var babelConf = require("./babel");
 babelConf.cacheDirectory = path.join(config.base, "cache/babel");
@@ -214,7 +235,9 @@ module.exports = {
             jquery: _jquery,
             ws: "ws/lib/browser",
             "LDT$": "BIRD3/Support/Wrappers/LDT",
-            "behave.js": "behave.js/behave.js"
+            "behave.js": "behave.js/behave.js",
+            "o.o": "BIRD3/Frontend/Frameworks/o.o/main.js",
+            "miniMarkdown": "miniMarkdown/miniMarkdown.js"
         }
     },
     module: {
@@ -318,7 +341,7 @@ module.exports = {
     })(),
     plugins: [
         // Output
-        assetsp,
+        assetsp, appCache,
         // Cosmetics
         clear, bannerPlugin,
         // Chunking

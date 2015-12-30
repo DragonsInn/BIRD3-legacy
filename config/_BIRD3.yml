@@ -3,6 +3,9 @@ app:
     name: BIRD3
     # Maintainer email address
     email: mail@foo.bar
+    # Add a description. Used in SEO tags.
+    desc: >
+        Some nice words about this thing.
 
 BIRD3:
     # The HTTP host IP

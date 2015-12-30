@@ -75,6 +75,7 @@
     "ladda": "^0.9.8",
     "legacy-loader": "^0.0.2",
     "light-orm": "^0.1.4",
+    "loaders.css": "^0.1.1",
     "logfilestream": "^1.0.1",
     "mailin": "^3.0.1",
     "markdown-it": "^5.0.2",

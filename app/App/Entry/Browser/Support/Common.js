@@ -1,21 +1,40 @@
-// jQuery
-var $ = require("./jQueryize");
-
 // Bootstrap.Native
-require("./BootstrapNative.js");
+import "./BootstrapNative.js";
+
 // Theme
-require("BIRD3/Frontend/Design/Styles/bs-extra.css");
-require("BIRD3/Frontend/Design/Styles/main.scss");
-//require("dragonsinn/Birdcons/Birdcons.font.js");
-// Syntax highlighting
-require("highlight.js/styles/hybrid.css");
+import "BIRD3/Frontend/Design/Styles/main";
+import "BIRD3/Frontend/Design/Styles/bs-extra";
+import "BIRD3/Frontend/Design/footer";
+
+// Icons
+// import "BIRD3/Frontend/Design/Icons/Birdcons.main.font.js";
+
+// o.o
+import oo from "o.o";
+import Visibility from "ally.js/src/dom/visible-quotient";
+
+// Publish to global space.
+// That way, inline scripts can use it too.
+window.oo = oo;
+
+// Visibility
+oo.publish({},{
+    visibility: function() {
+        return Visibility(this[0]);
+    }
+});
 
 // BIRD3 Markdown editor
-$.ready(function(){
-    if($("body").find('div[data-b3me]').length > 0) {
-        require(["Editor/MarkdownEditor"], function(editor){
+oo(function(){
+    var findings = oo("body").find('div[data-b3me]').length;
+    if(findings > 0) {
+        require.ensure(["Editor/MarkdownEditor"], function(require){
             // Easy.
-            editor();
-        });
+            var editor_ = require("Editor/MarkdownEditor");
+            var editor = editor_.default || editor_;
+            oo("[data-b3me]").each((node) => {
+                editor_(node);
+            });
+        }, "BIRD3MarkdownEditor");
     }
 });

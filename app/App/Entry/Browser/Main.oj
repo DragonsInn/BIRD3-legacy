@@ -6,9 +6,6 @@ require("./Support/Common");
 
 // Setup the footer stuff
 var makeFooter = require("BIRD3/Frontend/Design/footer");
-window.addEventListener("resize", makeFooter);
-
-// window.oo = require("BIRD3/Frontend/Frameworks/o.o");
 
 // Introduce a convenience method.
 var Dialog = require("BIRD3/Frontend/Frameworks/Dialog/Dialog");

@@ -1,0 +1,59 @@
+#include <Foundation/BaseController.oj>
+
+var oo = require("o.o");
+var url = require("BIRD3/Support/UrlHelper");
+var Communicator = require("BIRD3/Frontend/Communicator");
+var foyer = require("foyer");
+
+@implementation MainController <BaseController> {
+    var comm; // Communicator instance.
+}
+-(id)setupWithArgs:(Object)req andEvent:(Event)e andCallback:(Function)cb {
+    foyer([
+        function loadDOM(step) {
+            // Load remote DOM.
+            if(window.location.pathname !== e.value) {
+                // We aren't on that page, so...
+                oo.ajax({
+                    url: url(e.value),
+                    method: "GET",
+                    headers: { "X-PJAX": "true" }
+                }, function(code, res){
+                    console.log("Code:",code);
+                    document.body.innerHTML = res;
+                    step(code != 200 ? code : null, res);
+                });
+            } else {
+                console.log("Not loading the same page twice.");
+            }
+        },
+        function loadCommunicator(step) {
+            Communicator(function(err, communicator){
+                console.log("Communicator obtained.");
+                self.comm = communicator;
+                step();
+            });
+        }
+    ], function(){
+        cb();
+    });
+}
+-(id)appIsStarting {
+    // Talk to the backend
+    // Save the ajax. Update visit time.
+    // FIXME: No dupes! In fact, maybe PHP itself could emit this.
+    // FIXME: Do we really need to abstract ajax? o.o has an ajax lib...
+    comm.emit("update_user_visit", document.cookie);
+
+    return true;
+}
+
+-(id)appIsClosing:(Event)e {
+    //console.log("Closing...", e);
+}
+-(id)respondToAction:(String)action {
+    console.log("Action:",action);
+}
+@end
+
+module.export = [MainController class];

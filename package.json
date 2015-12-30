@@ -22,7 +22,7 @@
     "babel-register": "^6.3.13",
     "bcrypt": "^0.8.5",
     "bird3-purifycss-webpack-plugin": "^1.0.7",
-    "body-parser": "^1.13.1",
+    "body-parser": "^1.14.2",
     "cheerio": "^0.19.0",
     "classlist-polyfill": "^1.0.2",
     "clean-webpack-plugin": "^0.1.3",

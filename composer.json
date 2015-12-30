@@ -5,7 +5,7 @@
     "require": {
         "php": ">=5.5.4",
         "ext-pcntl": "*",
-        "ext-hprose": "^1.6.1",
+        "ext-hprose": "^1.5.0",
         "ext-sockets": "*",
         "ext-sysvmsg": "*",
         "predis/predis": "0.8.*",

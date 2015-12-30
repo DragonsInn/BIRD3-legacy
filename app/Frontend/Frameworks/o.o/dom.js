@@ -1,4 +1,5 @@
 var _ = require("microdash");
+var getType = require("microdash/src/getType");
 var queryEngine = require("qwery");
 var domReady = require("domready");
 var domEasy = require("dom-easy");
@@ -13,8 +14,8 @@ var domEasy = require("dom-easy");
  * @return DOM
  */
 function DOM() {
-    var inst = Object.create(DOM.prototype.__init);
-    return inst.apply(inst, arguments);
+    var inst = Object.create(DOM.prototype);
+    return DOM.prototype.__init.apply(inst, arguments);
 }
 
 /**
@@ -31,15 +32,14 @@ function toSnake(str) {
 /**
  * Public properties of DOM.
  */
-DOM = _.extend({
+DOM = _.extend(DOM, {
     ready: domReady,
     queryEngine: queryEngine,
     dom: DOM,
     domEasy: domEasy,
 });
 
-DOM.prototype = Object.create(domEasy.prototype);
-DOM.prototype = _.extend(DOM.prototype, {
+var methods = {
     // # Props
     /**
      * Used to identify that this is an o.o Dom element.
@@ -92,18 +92,20 @@ DOM.prototype = _.extend(DOM.prototype, {
             && typeof args[2] == "undefined"
         ) {
             // DOM("foo>bar.baz") : Selector call
+            console.log("Selector call:",args[0]);
             var els = queryEngine(args[0], args[1]);
             domEasy.call(this, els);
             this.length = els.length;
             els.forEach(function(e, i){ this[i]=e }.bind(this));
         } else if(
-            (typeof args[0] == "string" || typeof args[0] == "object")
-            && (args[1] == null || typeof args[1] == "object")
+            (_.isString(args[0]) || _.isPlainObject(args[0]))
+            && (args[1] == null || _.isPlainObject(args[1]))
         ) {
             // DOM("div", null|{...}, ...children) : JSX call
+            console.log("JSX call");
 
             // Is the first arg an element or string?
-            if(typeof args[0] == "string") {
+            if(_.isString(args[0])) {
                 var e = document.createElement(args[0]);
             } else {
                 var e = args[0];
@@ -119,7 +121,11 @@ DOM.prototype = _.extend(DOM.prototype, {
             // Add attributes and values.
             for(var key in args[1]) {
                 var val = args[1][key];
-                if(key != "style") {
+                if(key == "style") {
+                    this.css(val);
+                } else if(key == "data") {
+                    this.el.dataset = _.extend(this.el.dataset, val);
+                } else {
                     if(typeof this.el[key] == "undefined") {
                         var o = {};
                         o[key] = val;
@@ -127,15 +133,13 @@ DOM.prototype = _.extend(DOM.prototype, {
                     } else {
                         this.el[key] = val;
                     }
-                } else {
-                    this.style(val);
                 }
             }
 
             // Attach children. They are rest args.
             var argId = 2, child = args[2];
             while(typeof child != "undefined") {
-                if(typeof child == "string") {
+                if(_.isString(child)) {
                     this.append(document.createTextNode(child));
                 } else {
                     if("length" in child) {
@@ -156,7 +160,7 @@ DOM.prototype = _.extend(DOM.prototype, {
             // DOM(Element|ElementCollection)
             // Single or multiple element(s)
             domEasy.call(this, args[0]);
-            if(_.isArray(args[0])) {
+            if(args[0] instanceof Array) {
                 this.length = args[0].length;
                 for(var i=0; i<args[0].length; i++) {
                     this[i]=args[0][i];
@@ -187,6 +191,18 @@ DOM.prototype = _.extend(DOM.prototype, {
      * Mapping to .each()
      */
     forEach: function(cb) { this.each.call(this, cb); },
+
+    /**
+     * Grab all the nodes.
+     * @return Array
+     */
+    nodes: function() {
+        var nodes = [];
+        for(var i=0; i<this.length; i++) {
+            nodes.push(this[i]);
+        }
+        return nodes;
+    },
 
     /**
      * Get or set a data- attribute.
@@ -224,7 +240,14 @@ DOM.prototype = _.extend(DOM.prototype, {
      * @return {Mixed} Value of the CSS rule.
      */
     css: function(key, value) {
-        if(typeof value == "undefined") {
+        if(_.isPlainObject(key)) {
+            for(var rule in key) {
+                var data = key[rule];
+                for(var i=0; i<this.length; i++) {
+                    this[i].style[toSnake(rule)] = data;
+                }
+            }
+        } else if(typeof value == "undefined") {
             if(this.length < 1) {
                 // Single return
                 return this[0].style[toSnake(key)];
@@ -313,7 +336,34 @@ DOM.prototype = _.extend(DOM.prototype, {
         } else {
             return this[0].id;
         }
+    },
+
+    class: function(){
+        return this[0].className;
+    },
+
+    click: function(cb) {
+        if(_.isFunction(cb)) {
+            this.each(function(node){
+                if(node.addEventListener) {
+                    node.addEventListener("click", cb);
+                } else {
+                    node.attachEvent("click", cb);
+                }
+            });
+        }
+    },
+
+    find: function(sel) {
+        var context = this.nodes();
+        var query = queryEngine(sel, context);
+        var newDom = DOM(query);
+        return newDom;
     }
-});
+};
+
+DOM.prototype = Object.create(domEasy.prototype);
+DOM.prototype = _.extend(DOM.prototype, methods);
+DOM.prototype.constructor = methods.__init;
 
 module.exports = DOM;

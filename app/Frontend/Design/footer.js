@@ -1,15 +1,17 @@
-module.exports = function makeFooter() {
+import oo from "o.o";
+export default function makeFooter() {
     var fullHeight = 0
-        + $("#MainPage").height()
-        + $("footer").height();
-    if(window.innerHeight < fullHeight) return $('#MainPage').css('margin-bottom',"auto");
-    if($("body").height() > $("#MainPage").height()) {
-        $('#MainPage').css('margin-bottom',(
+        + oo("#MainPage").height()
+        + oo("footer").height();
+    if(window.innerHeight < fullHeight) return oo('#MainPage').css('margin-bottom',"auto");
+    if(oo("body").height() > oo("#MainPage").height()) {
+        oo('#MainPage').css('margin-bottom',(
             window.innerHeight
-            - $('#MainPage').height()
-            - $('footer').height()
+            - oo('#MainPage').height()
+            - oo('footer').height()
         )+"px");
     } else {
-        $('#MainPage').css('margin-bottom',"auto");
+        oo('#MainPage').css('margin-bottom',"auto");
     }
 }
+window.addEventListener("resize", makeFooter);

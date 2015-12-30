@@ -94,6 +94,7 @@ and (orientation : portrait) {
 
 /* Thumbnail elements */
 .thumbnail.thumbnail-soft {
+    color: red;
     background: rgba(40,40,40, 0.5);
 }
 

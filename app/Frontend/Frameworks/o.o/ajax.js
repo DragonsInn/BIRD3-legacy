@@ -11,9 +11,11 @@ function AJAX() {
         // f(Object) -> NanoAjax call
         o = args[0];
     } else if(_.isString(args[0])) {
+        // f(String, Object)
         o.url = args[0];
         o = _.extend(o, args[1] || {});
     } else if(_.isString(args[0]) && _.isString(args[1])) {
+        // f(String, String, Object)
         o.url = args[0];
         o.method = args[1].toUpperCase();
         o = _.extend(o, args[2] || {});

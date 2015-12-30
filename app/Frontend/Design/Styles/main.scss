@@ -6,20 +6,20 @@
     Now, this is a re-implementation in SCSS.
 */
 
-// BOOTSTRAP
-// Variables...
+// # BOOTSTRAP
+// ## Variables...
 @import "bootstrap/variables";
 @import "bootstrapaccessibilityplugin/src/sass/partials/variables";
 @import "bootswatch/cyborg/variables";
 //@import "bootswatch/cyborg/bootswatch";
 
-// Bootstrap's mixins
+// ## Bootstrap's mixins
 @import "bootstrap/mixins";
 
-// Reset and dependencies
+// ## Reset and dependencies
 @import "bootstrap/normalize";
 
-// Core CSS
+// ## Core CSS
 @import "bootstrap/scaffolding";
 @import "bootstrap/type";
 @import "bootstrap/code";
@@ -28,7 +28,7 @@
 @import "bootstrap/forms";
 @import "bootstrap/buttons";
 
-// Components
+// ## Components
 @import "bootstrap/dropdowns";
 @import "bootstrap/component-animations";
 @import "bootstrap/button-groups";
@@ -46,16 +46,16 @@
 @import "bootstrap/wells";
 @import "bootstrap/close";
 
-// Components w/ JavaScript
+// ## Components w/ JavaScript
 @import "bootstrap/modals";
 @import "bootstrap/tooltip";
 @import "bootstrap/popovers";
 
-// Utility classes
+// ## Utility classes
 @import "bootstrap/utilities";
 @import "bootstrap/responsive-utilities";
 
-// Accessibility
+// ## Accessibility
 @import "bootstrapaccessibilityplugin/src/sass/partials/mixins";
 @import "bootstrapaccessibilityplugin/src/sass/partials/alerts";
 @import "bootstrapaccessibilityplugin/src/sass/partials/buttons";
@@ -63,7 +63,7 @@
 @import "bootstrapaccessibilityplugin/src/sass/partials/divs";
 @import "bootstrapaccessibilityplugin/src/sass/partials/navigation";
 
-// Excluded
+// ## Excluded
 //@import "bootstrap/print";
 //@import "bootstrap/breadcrumbs";
 //@import "bootstrap/carousel";
@@ -72,8 +72,15 @@
 //@import "bootstrap/pagination";
 //@import "bootstrap/pager";
 
-// BIRD3: Side'n'Slide panels
+// # BIRD3
+// ## Side'n'Slide panels
 @import "./panels";
+
+// ## Bootstrap extras
+// @import "./bs-extra.css";
+
+// ## Syntax highlight
+@import "~highlight.js/styles/hybrid.css";
 
 // Mixins
 @mixin reactToAll() {

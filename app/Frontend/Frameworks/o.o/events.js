@@ -12,10 +12,13 @@ function binder(method) {
 }
 
 // Little extras
-module.exports = function Event(){
+function ooEvent(){
     // noop
 };
-module.exports.prototype.trigger = binder("emit");
+ooEvent.domEvents = domEvents;
+ooEvent.prototype.trigger = binder("emit");
 Object.keys(domEvents).forEach(function(method){
-    module.exports.prototype[method] = binder(method);
+    ooEvent.prototype[method] = binder(method);
 });
+
+module.exports = ooEvent;

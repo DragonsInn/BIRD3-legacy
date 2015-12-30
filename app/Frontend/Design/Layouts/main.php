@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <?php // PHP logic
-    $meta_desc = "The Dragon's Inn is a cozy place for furry and non-furry"
-        ." roleplayers as well as casual chatters."
-        ." Stop by and hang out with artists and freaks! =)";
+    $meta_desc = GlobalConfig::get("app.desc");
     $pageTitle = "MYNAME".": Derp";#.$this->pageTitle;
     $cdn = CDN::link();
-    $manifest = CDN::link("/allyourcachebelongstothe.appcache");
+    $manifest = CDN::link("app/allyourcachebelongstothe.appcache");
     $img = "$cdn/images/favicons";
     $hash = Hprose::get("wpHash");
 ?>
-<!--[if lt IE 7]>      <html class="ie6"> <![endif]-->
-<!--[if IE 7]>         <html class="ie7"> <![endif]-->
-<!--[if IE 8]>         <html class="ie8"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="pure"><!--<![endif]-->
+<!--[if lt IE 7]>      <html class="ie6"  manifest="<?=$manifest?>"> <![endif]-->
+<!--[if IE 7]>         <html class="ie7"  manifest="<?=$manifest?>"> <![endif]-->
+<!--[if IE 8]>         <html class="ie8"  manifest="<?=$manifest?>"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="pure" manifest="<?=$manifest?>"> <!--<![endif]-->
     <head>
         <title><?=$pageTitle?></title>
         <meta charset="utf-8"/>

@@ -2,7 +2,6 @@ var b = BIRD3 = {
     baseUrl: <?=$escYiiUrl?>,
     cdnUrl: <?=$escCdnApp?>,
     webpackHash: '<?=$hash?>',
-    module: '<?=$module?>',
     hash: function(f){
         return [
             b.cdnUrl, b.webpackHash
@@ -48,18 +47,9 @@ b.include = function(target, cb) {
 	}
 };
 
-// Modularize
-b.modules = {
-    lib: b.hash('libwebpack.js'),
-    main: b.hash('main.js'),
-    chat: b.hash('chat.js'),
-    compatibility: b.hash('compatibility.js'),
-    upload: [b.hash('upload.js'), b.hash('upload.css')]
-};
-
 b.load = function(m, cb){
     console.log('Loading',m);
-    b.include.call(b.include, b.modules[m], cb);
+    b.include.call(b.include, m, cb);
 };
 
 // DOMReady stuff
@@ -74,19 +64,17 @@ b.ready = function(cb) {
     }
 };
 
-// Load the library
-b.load("lib", function(){
-    console.log('BIRD3 runtime initialized');
-
-    // Make sure WebPack's webpackJsonp is available before anything.
-    var loadMain = function(){
-        if(typeof window["webpackJsonp"] == "undefined") {
-            setTimeout(loadMain, 100);
-        } else {
-            b.load(b.module, function(){
-                b.ready();
-            });
-        }
-    };
-    setTimeout(loadMain, 100);
+b.load(b.hash('main.js'), function(){
+    console.log("Loading main.js...");
 });
+
+if(window.addEventListener) {
+    window.addEventListener("BIRD3.ready", function(){
+        b.ready();
+    });
+} else {
+    console.error("What int he world are you using?!");
+    window.attachEvent("BIRD3.ready", function(){
+        b.ready();
+    });
+}

@@ -11,12 +11,13 @@ class Communicator {
         require.ensure([
             "socketcluster-client/index",
             "avs-rpc"
-        ], function(require){
+        ], (require) => {
             // Socketcluster and rpc layer.
             var SC = require("socketcluster-client/index");
             var SCRPC = require("avs-rpc").scRpc;
 
             // Connect
+            console.log(this)
             this.scConn = SC.connect();
             this.rpc = new SCRPC(this.scConn);
 

@@ -1,0 +1,93 @@
+var oo = require("o.o");
+var foyer = require("foyer");
+
+function addWindowEvent(ev, cb) {
+    if (window.addEventListener) {
+        window.addEventListener(ev, cb);
+    } else {
+        window.attachEvent(ev, cb);
+    }
+}
+
+function removeWindowEvent(ev, cb) {
+    if(window.removeEventListener) {
+        window.removeEventListener(ev, cb);
+    } else {
+        window.detachEvent(ev, cb);
+    }
+}
+
+module.exports = function ControllerExecutor(controller, app, req, e, next) {
+    // Controller and @optional selectors.
+    var Controller = [[controller alloc] init];
+    var startingSel = @selector(appIsStarting:);
+    var closingSel = @selector(appIsClosing:);
+    var events = [
+        "beforeunload",
+        "onbeforeunload"
+    ];
+
+    // Shutdown, once the new route is called.
+    var shutdownHandler = function() {
+        if([Controller respondsToSelector:closingSel]) {
+            return [Controller performSelector:closingSel];
+        }
+    };
+
+    foyer([
+        function startController(step) {
+            // Bootstrap the controller.
+            [Controller
+                setupWithArgs: req
+                withEvent: e
+                withCallback: step
+            ];
+        },
+        function runStartup(step) {
+            // Does the controlelr want to perform custom bootstrap logic?
+            if([Controller respondsToSelector:startingSel]) {
+                [Controller performSelector:startingSel];
+            }
+            step();
+        },
+        function runAction(step) {
+            // Execute action!
+            oo(function(){
+                [Controller
+                    respondToAction: req.action
+                    orReject: function(err) {
+                        shutdownHandler();
+                        app.remove("match", shutdownHandler);
+                        events.forEach(function(ev){
+                            removeWindowEvent(ev, shutdownHandler);
+                        });
+                        next(err);
+                    }
+                ];
+            });
+            step();
+        },
+        function registerShutdown(step) {
+            // Attach handlers for shutdown.
+            app.once("match", function() {
+                shutdownHandler();
+                // Remove, once fired.
+                events.forEach(function(ev) {
+                    removeWindowEvent(ev, shutdownHandler);
+                });
+            });
+            events.forEach(function(ev) {
+                addWindowEvent(ev, function(){
+                    var rt = shutdownHandler();
+                    // Remove once fired.
+                    removeWindowEvent(ev, shutdownHandler);
+                    return rt;
+                });
+            });
+            step();
+        }
+    ], function(err){
+        if(err) return console.error(err);
+        console.log("Controller successfully booted.");
+    });
+}

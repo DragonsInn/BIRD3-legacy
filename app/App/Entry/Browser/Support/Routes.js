@@ -63,11 +63,13 @@ export default function Routes(app) {
 
     // The main controller.
     app.get("/*", function(req, e, next){
+        console.log("Handling main request");
         require.ensure([
-            "BIRD3/App/Controllers/MainController"
+            "BIRD3/App/Controllers/MainController.oj"
         ], function(require){
-            var controller = require("BIRD3/App/Controllers/MainController");
-            ControllerExecutor(controller, req, e, next);
+            var controller = require("BIRD3/App/Controllers/MainController.oj");
+            console.log(controller);
+            ControllerExecutor(controller, app, req, e, next);
         }, "MainController");
     });
 }

@@ -8,8 +8,7 @@ import Compatibility from "BIRD3/Support/Compatibility";
 import Routes from "./Support/Routes";
 
 var pushRouter = new Grapnel({
-    pushState: true,
-    root: "/"
+    pushState: true
 });
 var hashRouter = new Grapnel({
     pushState: false,
@@ -33,5 +32,14 @@ oo("[data-pjax]").click(function(e){
 
 Compatibility(function(err){
     if(err) { console.log(err); }
+    console.log("Loading routes...");
     Routes(app);
+
+    app.on("navigate",function(){
+        console.log(arguments);
+        console.log("Navigating...");
+    })
+
+    //app.navigate();
+    window.app = app;
 });

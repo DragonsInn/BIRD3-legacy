@@ -92,7 +92,7 @@ var methods = {
             && typeof args[2] == "undefined"
         ) {
             // DOM("foo>bar.baz") : Selector call
-            console.log("Selector call:",args[0]);
+            // console.log("Selector call:",args[0]);
             var els = queryEngine(args[0], args[1]);
             domEasy.call(this, els);
             this.length = els.length;
@@ -102,7 +102,7 @@ var methods = {
             && (args[1] == null || _.isPlainObject(args[1]))
         ) {
             // DOM("div", null|{...}, ...children) : JSX call
-            console.log("JSX call");
+            // console.log("JSX call");
 
             // Is the first arg an element or string?
             if(_.isString(args[0])) {

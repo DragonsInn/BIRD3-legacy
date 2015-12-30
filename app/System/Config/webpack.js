@@ -22,7 +22,6 @@ var theme = path.join(config.base, "App/Frontend/");
 var cache = path.join(config.base, "cache");
 
 var __debug = global.__debug || process.env["BIRD3_DEBUG"]==true || false;
-var _jquery = path.join( config.base, "app/App/Entry/Browser/Support/jQueryize.js" );
 var _ojr = require.resolve("ojc/src/runtime");
 
 // Webpack: Load plugins
@@ -70,11 +69,7 @@ var assetsp = new HashPlugin({
 });
 // The usual jQuery madness.
 var provider = new webpack.ProvidePlugin({
-    $: _jquery,
-    jQuery: _jquery,
-    "window.jQuery": _jquery,
-    "window.$": _jquery,
-    jsxr: "jsxr"
+    "oo": "o.o"
 });
 // Generate bundled CSS. (id, fileName)
 var extractor = new extractText("style","[hash]-[name].css",{allChunks:true});
@@ -127,25 +122,33 @@ var purifyPlugin = new purify({
     // Path where everything starts...
     basePath: config.base,
     // These extensions should be searched in the dep files.
-    scanForExts: ["oj","ejs",'jsx',"html","md"],
+    resolveExtensions: [
+        // JS:
+        ".js", ".oj",
+        // Templates:
+        ".ejs", ".jsx",
+        // Documents:
+        ".md"
+    ],
     // The paths/globs to check, path.join()'ed with base.
     paths: [
         // Laravel views
-        "app/App/Resources/Views/*/*.php",
-        "app/App/Resources/Views/*.php",
-        "app/App/Modules/*/Resources/Views/*/*.php",
-        "app/App/Modules/*/Resources/Views/*.php",
+        "app/Resources/Views/**/*.php",
+        "app/App/Modules/*/Resources/Views/**/*.php",
         "app/Extensions/*/Views/*.php",
         "app/Frontend/Design/Layouts/*.php",
         // User
-        "app/Foundation/User/Views/*.php",
-        "app/Foundation/User/Views/*/*.php",
+        "app/Foundation/User/Views/**/*.php",
         // Chat
         //"app/modules/chat/lib/template/*.html",
         //"app/modules/chat/lib/template/*.php",
         // Xynu
         "app/Frontend/Design/Layouts/*.ejs"
-    ]
+    ],
+    purifyOptions: {
+        info: true,
+        minify: true
+    }
 });
 
 // manifest
@@ -178,29 +181,21 @@ module.exports = {
     cache: true,
     debug: __debug,
     watchDelay: 1000*5,
+    recordsPath: path.join(config.base, "cache/webpack.records.json"),
     //devtool: "#source-map",
     entry: {
-        libwebpack: [
-            _jquery, _ojr,
-            "BIRD3/App/Entry/Browser/Support/Common",
-            "BIRD3/App/Entry/Browser/Support/BootstrapNative",
-            "BIRD3/Frontend/Design/panels.js"
-        ],
-        main: "BIRD3/App/Entry/Browser/Main",
-        newMain: "BIRD3/App/Entry/Browser/NewMain",
-        upload: "BIRD3/Frontend/Upload",
+        main: "BIRD3/App/Entry/Browser/NewMain",
         xynu: "BIRD3/Frontend/Design/Styles/xynu.scss",
-        sizeTest: "BIRD3/App/Entry/Browser/SizeTest"
+        //sizeTest: "BIRD3/App/Entry/Browser/SizeTest"
     },
     output: {
         path: app,
         filename: "[hash]-[name].js",
         chunkFilename: "c_[hash]-[name].js",
-        sourceMapFilename: "c_[hash]-[name].map",
+        sourceMapFilename: "s_[hash]-[name].map",
         publicPath: cdn,
         sourcePrefix: "    "
     },
-    //recordsPath: path.join(BIRD3.root, "cache"),
     resolve: {
         extensions: [
             "",                 // Support supplied extensions.
@@ -213,12 +208,12 @@ module.exports = {
             config.base,
             path.join(config.base,"app/App/Modules"),
             path.join(config.base,"app/Extensions"),
+            path.join(config.base,"app/Frontend/Frameworks")
         ],
         modulesDirectories: [
             'bower_components',
             'node_modules',
-            'php_modules',
-            'web_modules'
+            'php_modules'
         ],
         alias: {
             // This is sooooo cool!
@@ -232,7 +227,6 @@ module.exports = {
                 "bower_components",
                 "bootstrapaccessibilityplugin/src"
             ),
-            jquery: _jquery,
             ws: "ws/lib/browser",
             "LDT$": "BIRD3/Support/Wrappers/LDT",
             "behave.js": "behave.js/behave.js",
@@ -283,6 +277,7 @@ module.exports = {
                 loader: "json",
             },{ // OJ -> JS
                 test: /\.oj$/,
+                // FIXME: babel
                 loader: "oj?-warn-unknown-ivars&-warn-unknown-selectors"
             },{ // ES6/7 -> ES5...hopefuly.
                 test: /\.js$/,
@@ -295,7 +290,7 @@ module.exports = {
                     plugins: [
                         ["syntax-jsx"],
                         ["transform-react-jsx",{
-                            pragma: "jsxr"
+                            pragma: "oo"
                         }]
                     ]
                 },
@@ -318,6 +313,7 @@ module.exports = {
                 include_path: [
                     theme,
                     path.join(config.base, "app/Frontend/Frameworks"),
+                    path.join(config.base, "app")
                 ],
                 defines: {},
             }
@@ -345,12 +341,12 @@ module.exports = {
         // Cosmetics
         clear, bannerPlugin,
         // Chunking
-        commonsPlugin, dedupe,
+        dedupe,
         // Module enhancements
         defines, provider, bowerProvider,
         // CSS
         extractor, purifyPlugin,
         // JavaScript
-        uglify
+        //uglify
     ]
 };

@@ -199,7 +199,7 @@ abstract class BaseController extends LaravelController {
 		$this->jsTags["top"][] = '<script type="text/javascript">'.$inlineScript.'</script>';
 
 		// The design.
-		$this->cssTags[] = HTML::style("$cdnApp/$hash-libwebpack.css");
+		$this->cssTags[] = HTML::style("$cdnApp/$hash-main.css");
 
 		// For browsers that are NOT compatible with the blurr effect
 		if(!Compatibility::check("blur_bg")) {
@@ -243,15 +243,15 @@ abstract class BaseController extends LaravelController {
                 // FIXME: Did I spell "blur" right? o.o
                 $script =
                 "window.addEventListener('scroll', function(){
-                        $('#blurr-bg').css({opacity: (1-$('#intro').visibility())});
+                        oo('#blurr-bg').css({opacity: (1-oo('#intro').visibility())});
                 });";
             } else {
                 // Since the blur effect would cause issues, let's just darken the BG more.
                 $script =
                 "window.addEventListener('scroll', function(){
-                    $('#outerContent').css({
+                    oo('#outerContent').css({
                         background: 'rgba(0,0,0,'+(
-                            $fbAlpha-($fbAlpha*$('#intro').visibility())
+                            $fbAlpha-($fbAlpha*oo('#intro').visibility())
                         )+')'
                     });
                 });";

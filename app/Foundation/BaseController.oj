@@ -1,0 +1,34 @@
+@protocol BaseController
+
+@required
+    /**
+     * Initialize the application.
+     *
+     * @param {Object}      req     Request data.
+     * @param {Event}       e       Event according to the request.
+     * @param {Function}    next    Callback to call, when error occurs,
+     *                              or when the controller can not respond.
+     *
+     * @return {BaseController}     The controller instance, ready to use.
+     */
+    -(id)setupWithArgs:(Object)req andEvent:(Event)e andCallback:(Function)cb;
+
+    /**
+     * Respond o an action
+     *
+     * @param {String}  action  The action name to respond to.
+     */
+    -(void)respondToAction:(String)action orReject:(Function)next;
+
+@optional
+    /**
+     * Perform on startup.
+     */
+    +(id)appIsStarting;
+
+    /**
+     * Perform on shutdown - when the window is closed, tab left, etc.
+     */
+    +(id)appIsClosing;
+
+@end

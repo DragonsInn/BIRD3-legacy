@@ -17,7 +17,6 @@ tmp/
 Thumbs.db
 php.out
 cdn/content/avatars/*
-index.html
 .vscode/
 vendor
 app/bootstrap/cache/compiled.php

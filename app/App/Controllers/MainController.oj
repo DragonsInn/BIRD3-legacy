@@ -1,16 +1,18 @@
 #include <Foundation/BaseController.oj>
 
 var oo = require("o.o");
-var url = require("BIRD3/Support/UrlHelper");
-var Communicator = require("BIRD3/Frontend/Communicator");
+var E = require("BIRD3/Support/ES6Pickup");
+var url = E(require("BIRD3/Support/UrlHelper"));
+var Communicator = E(require("BIRD3/Frontend/Communicator"));
 var foyer = require("foyer");
 
 @implementation MainController <BaseController> {
     var comm; // Communicator instance.
 }
--(id)setupWithArgs:(Object)req andEvent:(Event)e andCallback:(Function)cb {
+-(id)setupWithArgs:(Object)req withEvent:(Event)e withCallback:(Function)cb {
     foyer([
         function loadDOM(step) {
+            window.__e = e;
             // Load remote DOM.
             if(window.location.pathname !== e.value) {
                 // We aren't on that page, so...
@@ -25,6 +27,7 @@ var foyer = require("foyer");
                 });
             } else {
                 console.log("Not loading the same page twice.");
+                step();
             }
         },
         function loadCommunicator(step) {
@@ -35,6 +38,7 @@ var foyer = require("foyer");
             });
         }
     ], function(){
+        console.log("setupWithArgs:andEvent:andCallback: is done.");
         cb();
     });
 }
@@ -51,9 +55,9 @@ var foyer = require("foyer");
 -(id)appIsClosing:(Event)e {
     //console.log("Closing...", e);
 }
--(id)respondToAction:(String)action {
+-(id)respondToAction:(String)action orReject:(Function)cb {
     console.log("Action:",action);
 }
 @end
 
-module.export = [MainController class];
+module.exports = [MainController class];

@@ -64,6 +64,7 @@ export default function Compatibility(callback) {
         },
         function HTMLPolyfill(cb) {
             require("js-polyfills/html");
+            cb();
         },
         function DOMPolyfill(cb) {
             // require("js-polyfills/dom");

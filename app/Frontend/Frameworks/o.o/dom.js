@@ -1,5 +1,4 @@
 var _ = require("microdash");
-var getType = require("microdash/src/getType");
 var queryEngine = require("qwery");
 var domReady = require("domready");
 var domEasy = require("dom-easy");
@@ -39,7 +38,9 @@ DOM = _.extend(DOM, {
     domEasy: domEasy,
 });
 
-var methods = {
+module.exports = DOM;
+DOM.prototype = Object.create(domEasy.prototype);
+DOM.prototype = _.extend(DOM.prototype, domEasy.prototype, {
     // # Props
     /**
      * Used to identify that this is an o.o Dom element.
@@ -126,12 +127,12 @@ var methods = {
                 } else if(key == "data") {
                     this.el.dataset = _.extend(this.el.dataset, val);
                 } else {
-                    if(typeof this.el[key] == "undefined") {
+                    if(typeof this[0][key] == "undefined") {
                         var o = {};
                         o[key] = val;
                         this.attr(o);
                     } else {
-                        this.el[key] = val;
+                        this[0][key] = val;
                     }
                 }
             }
@@ -140,18 +141,18 @@ var methods = {
             var argId = 2, child = args[2];
             while(typeof child != "undefined") {
                 if(_.isString(child)) {
-                    this.append(document.createTextNode(child));
+                    this.appendChild(document.createTextNode(child));
                 } else {
                     if("length" in child) {
                         if(child.length == 1) {
-                            this.append(child[0]);
+                            this.appendChild(child);
                         } else {
                             child.forEach(function(e){
-                                this.append(e);
+                                this.appendChild(e);
                             }.bind(this));
                         }
                     } else {
-                        this.append(child);
+                        this.appendChild(child);
                     }
                 }
                 child = args[++argId];
@@ -204,6 +205,17 @@ var methods = {
         return nodes;
     },
 
+    appendChild: function(blinkOrNode){
+        if(typeof blinkOrNode.__blinkDom != "undefined") {
+            // o.o Dom
+            blinkOrNode.each(function(node){
+                this[0].appendChild(node);
+            }.bind(this));
+        } else {
+            this[0].appendChild(blinkOrNode);
+        }
+    },
+
     /**
      * Get or set a data- attribute.
      * @param {String} key Key to get or set.
@@ -212,24 +224,11 @@ var methods = {
      */
     data: function(key, value) {
         if(typeof value == "undefined") {
-            if(this.length < 1) {
-                // Single return
-                return this[0].dataset[key];
-            } else {
-                var vals = [];
-                this.each(function(e){
-                    vals.push(e.dataset[key])
-                });
-            }
+            return this[0].dataset[key];
+        } else if(_.isPlainObject(key)) {
+            _.extend(this[0].dataset, key);
         } else {
-            if(this.length < 1) {
-                // Single return
-                this[0].dataset[key] = value;
-            } else {
-                this.each(function(e){
-                    e.dataset[key] = value;
-                });
-            }
+            this[0].dataset[key] = value;
         }
     },
 
@@ -303,6 +302,10 @@ var methods = {
         }
     },
 
+    val: function(){
+        return this[0].value;
+    },
+
     /**
      * Get or set an attribute.
      * @param {String} k Attribute name
@@ -315,7 +318,9 @@ var methods = {
      */
     attr: function(k, v) {
         if(_.isPlainObject(k)) {
-            this._attr(k);
+            for(var prop in k) {
+                this[0].setAttribute(prop, k[prop]);
+            }
         } else {
             if(_.isString(k) && typeof v == "undefined") {
                 return this[0].attributes[k];
@@ -323,6 +328,11 @@ var methods = {
                 this[0].attributes[k]=v;
             }
         }
+    },
+
+    removeAttr: function(name){
+        this[0].removeAttribute(name);
+        return this;
     },
 
     /**
@@ -342,6 +352,42 @@ var methods = {
         return this[0].className;
     },
 
+    // Get the index in a className string.
+    getClassIndex: function(c) {
+        return this[0].className.split(" ").indexOf(c);
+    },
+
+    // Check if element0 has a class.
+    hasClass: function(c) {
+        return this.getClassIndex(c) > -1;
+    },
+
+    toggleClass: function(c) {
+        var classIndex = this.getClassIndex(c);
+        if(classIndex > -1) {
+            // Disable class
+            this.removeClass(c);
+        } else {
+            this.addClass(c);
+        }
+    },
+
+    addClass: function(c){
+        var classNames = this[0].className.split(" ");
+        classNames.push(c);
+        this[0].className = classNames.join(" ");
+        return this;
+    },
+
+    removeClass: function(c){
+        var classNames = this[0].className.split(" ");
+        classNames = classNames.filter(function(className){
+            return className != c;
+        });
+        this[0].className = classNames.join(" ");
+        return this;
+    },
+
     click: function(cb) {
         if(_.isFunction(cb)) {
             this.each(function(node){
@@ -351,6 +397,10 @@ var methods = {
                     node.attachEvent("click", cb);
                 }
             });
+        } else {
+            this.each(function(node){
+                node.click();
+            })
         }
     },
 
@@ -360,10 +410,4 @@ var methods = {
         var newDom = DOM(query);
         return newDom;
     }
-};
-
-DOM.prototype = Object.create(domEasy.prototype);
-DOM.prototype = _.extend(DOM.prototype, methods);
-DOM.prototype.constructor = methods.__init;
-
-module.exports = DOM;
+});

@@ -3,9 +3,10 @@ var domEvents = require("dom-events");
 function binder(method) {
     return function() {
         // i.e.: on("name", cb(...))
-        var args = Array.prototype.splice.call(arguments);
+        var args = Array.prototype.slice.call(arguments);
         this.each(function(node){
-            var thisArgs = args.slice(0).unshift(node);
+            var thisArgs = args.slice(0);
+            thisArgs.unshift(node);
             domEvents[method].apply(domEvents, thisArgs);
         });
     }

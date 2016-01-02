@@ -33,6 +33,11 @@ oo.publish = function(publics, privates) {
     } else throw makeTypeError(privates, "private members");
 }
 
+// jQuery stuff publishes to $.fn - we can mimic that.
+oo.__defineGetter__("fn", function(){
+    return oo.prototype;
+});
+
 // Provide microdash right away
 oo.publish(_, {});
 

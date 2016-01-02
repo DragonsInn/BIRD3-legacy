@@ -68,7 +68,6 @@ export default function Routes(app) {
             "BIRD3/App/Controllers/MainController.oj"
         ], function(require){
             var controller = require("BIRD3/App/Controllers/MainController.oj");
-            console.log(controller);
             ControllerExecutor(controller, app, req, e, next);
         }, "MainController");
     });

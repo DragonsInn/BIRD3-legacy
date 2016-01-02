@@ -5,6 +5,7 @@ import "./BootstrapNative.js";
 import "BIRD3/Frontend/Design/Styles/main";
 import "BIRD3/Frontend/Design/Styles/bs-extra";
 import "BIRD3/Frontend/Design/footer";
+import "BIRD3/Frontend/Design/panels";
 
 // Icons
 // import "BIRD3/Frontend/Design/Icons/Birdcons.main.font.js";
@@ -24,6 +25,9 @@ oo.publish({},{
     }
 });
 
+// ES stuff
+import pick from "BIRD3/Support/ES6Pickup";
+
 // BIRD3 Markdown editor
 oo(function(){
     var findings = oo("body").find('div[data-b3me]').length;
@@ -31,9 +35,9 @@ oo(function(){
         require.ensure(["Editor/MarkdownEditor"], function(require){
             // Easy.
             var editor_ = require("Editor/MarkdownEditor");
-            var editor = editor_.default || editor_;
+            var editor = pick(editor_);
             oo("[data-b3me]").each((node) => {
-                editor_(node);
+                editor(node);
             });
         }, "BIRD3MarkdownEditor");
     }

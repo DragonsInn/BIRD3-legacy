@@ -1,6 +1,6 @@
 // Load the equivalent for accessibility
-
-require("domready")(function(){
+import oo from "o.o";
+oo(function(){
     /*
     require("a11y.bs/js/functions");
     require("a11y.bs/js/modal");

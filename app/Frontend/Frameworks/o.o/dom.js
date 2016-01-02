@@ -2,11 +2,7 @@ var _ = require("microdash");
 var queryEngine = require("qwery");
 var domReady = require("domready");
 var domEasy = require("dom-easy");
-
-/*
-    Methods left to implement:
-    - class() : get/set class(es)
-*/
+var cssValue = require("css-value");
 
 /**
  * Construct a new o.o DOM object.
@@ -247,14 +243,18 @@ DOM.prototype = _.extend(DOM.prototype, domEasy.prototype, {
                 }
             }
         } else if(typeof value == "undefined") {
-            if(this.length < 1) {
+            if(this.length <= 1) {
                 // Single return
-                return this[0].style[toSnake(key)];
+                var css = window.getComputedStyle(this[0]);
+                var val = css.getPropertyValue(key);
+                return cssValue(val)[0].value;
             } else {
                 var vals = [];
                 this.each(function(e){
-                    vals.push(e.style[toSnake(key)])
+                    var css = window.getComputedStyle(e);
+                    return cssValue(css.getPropertyValue(key))[0].value;
                 });
+                return vals;
             }
         } else {
             if(this.length < 1) {
@@ -409,5 +409,9 @@ DOM.prototype = _.extend(DOM.prototype, domEasy.prototype, {
         var query = queryEngine(sel, context);
         var newDom = DOM(query);
         return newDom;
+    },
+
+    parent: function() {
+        return DOM(this[0].parentNode);
     }
 });

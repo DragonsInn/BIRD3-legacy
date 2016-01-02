@@ -5,23 +5,20 @@ import jsCaret from "legacy!jsCaret/jsCaret.js";
 
 // Text parser
 import miniMarkdown from "miniMarkdown";
-// var markdownIt = require("BIRD3/Support/MarkdownIt")();
-// var transform = require("./lib/transform-md-ast");
 
 // Color picker
 import {Piklor} from "piklor.js"
 import ToolbarTemplate from "./Views/toolbar";
 
 // Bootstrap.native
-var Tooltip = require("bootstrap.native/lib/tooltip-native");
-var Popover = require("bootstrap.native/lib/popover-native");
-// import Tooltip from "bootstrap.native/lib/"
+import Tooltip from "bootstrap.native/lib/tooltip-native";
+import Popover from "bootstrap.native/lib/popover-native";
 
 // CSS
-require("./Style/editor.scss");
+import "./Style/editor.scss";
 
 // Data
-var palette = require("./Resources/nes-colors.json").colors;
+import {colors as palette} from "./Resources/nes-colors.json";
 
 // The actual logic
 export default function BIRD3MarkdownEditor(targetNode){
@@ -86,7 +83,7 @@ export default function BIRD3MarkdownEditor(targetNode){
         add: function(){ throw new Error("Can't add dynamic rules."); },
         tokenize: function(input){
             //return transform(markdownIt.parse(input));
-            return [];
+            return input;
         },
         identify: function(token){
             // Identify a token... aha. o.o
@@ -110,23 +107,21 @@ export default function BIRD3MarkdownEditor(targetNode){
     //ta_l.input.addEventListener("keypress", ta_l.update);
 
     // Auto-resize? Sure.
-    window.ta_l = ta_l;
-    //var $ldt = oo(ta_l.input).parent().parent();
-    var $ldt = oo(ta_l.input.parentNode.parentNode);
+    window.$ta = ta_l.input;
+    var $ldt = oo(ta_l.input).parent().parent();
     TextArea.data("origSize", $ldt.height());
     ta_l.input.addEventListener("keyup", function(e){
         var $e = oo(e.target);
+        var $parent = $e.parent().parent();
         var lh = parseFloat($e.css("line-height"));
         var size = parseFloat(TextArea.data("origSize"));
         var lines = parseInt($e.val().split("\n").length);
         var inner = (lh*lines);
         if(inner > size) {
             // The text "went over the borders". Then lets go borderlandsing.
-            //$e.parent().parent().css("height", (inner)+"px");
-            oo(e.target.parentNode.parentNode).css("height", (inner)+"px");
+            $parent.css("height", (inner)+"px");
         } else {
-            //$e.parent().parent().removeAttr("style");
-            oo(e.target.parentNode.parentNode).removeAttr("style");
+            $parent.removeAttr("style");
         }
     });
 

@@ -27,7 +27,7 @@ function generateButtons(set, data) {
             data-container="body"
         >{f.html}</button>);
         if(_.isPlainObject(f.data)) {
-            _.extend(elem.dataset, f.data);
+            elem.data(f.data);
         }
         return elem;
     });
@@ -40,7 +40,7 @@ function generateButtons(set, data) {
  * @return {HTML} Output HTML
  */
 export default function(data) {
-    const FontSettings = (
+    const Formatting = (
         <div className={("btn-group btn-group-"+data.groupSize)} role="group" aria-label="Font settings">
             {generateButtons([ // Formatters
                 {name: "Bold", func: "bold", html: (<b>B</b>)},
@@ -66,8 +66,8 @@ export default function(data) {
         </div>
     );
 
-    const textDisplay = (
-        <div className={("btn-group btn-group-"+groupSize)} role="group" aria-label="Text display">
+    const TextDisplay = (
+        <div className={("btn-group btn-group-"+data.groupSize)} role="group" aria-label="Text display">
             {generateButtons([
                 {name: "Code", func: "code", html:(<span>
                     <i className="fa fa-code" aria-hidden="true"></i>
@@ -94,7 +94,7 @@ export default function(data) {
     );
 
     const Links = (
-        <div className={("btn-group btn-group-"+groupSize)} role="group" aria-label="Links">
+        <div className={("btn-group btn-group-"+data.groupSize)} role="group" aria-label="Links">
             {generateButtons([
                 {name: "Link", func: "link", html:(<span>
                     <i className="glyphicon glyphicon-link" aria-hidden="true"></i>
@@ -109,7 +109,7 @@ export default function(data) {
     );
 
     const Options = (
-        <div className={("btn-group btn-group-"+groupSize)} role="group" aria-label="Options">
+        <div className={("btn-group btn-group-"+data.groupSize)} role="group" aria-label="Options">
             <button
                 className="btn btn-primary"
                 id={(data.wid+"_preview")}
@@ -134,7 +134,8 @@ export default function(data) {
             </a>
         </div>
     );
-    const toolbar = (
+
+    const Toolbar = (
         <div
             id={(data.wid+"_toolbar")}
             className="btn-toolbar"
@@ -144,11 +145,11 @@ export default function(data) {
     );
 
     // Build the child tree.
-    toolbar.appendChild(Formatting);
+    Toolbar.appendChild(Formatting);
     if(data.textDisplay) {
-        toolbar.appendChild(TextDisplay);
+        Toolbar.appendChild(TextDisplay);
     }
-    toolbar.appendChild(options);
+    Toolbar.appendChild(Options);
 
-    return toolbar;
+    return Toolbar;
 }

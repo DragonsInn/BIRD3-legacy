@@ -1,5 +1,5 @@
 // Text editor behaviours
-import behafe from "behave.js";
+import behave from "behave.js";
 import LDT from "LDT";
 import jsCaret from "legacy!jsCaret/jsCaret.js";
 
@@ -10,6 +10,7 @@ import miniMarkdown from "miniMarkdown";
 
 // Color picker
 import {Piklor} from "piklor.js"
+import ToolbarTemplate from "./Views/toolbar";
 
 // Bootstrap.native
 var Tooltip = require("bootstrap.native/lib/tooltip-native");
@@ -24,8 +25,8 @@ var palette = require("./Resources/nes-colors.json").colors;
 
 // The actual logic
 export default function BIRD3MarkdownEditor(targetNode){
-    var $el = oo(el);
-    var id = el.id;
+    var $el = oo(targetNode);
+    var id = targetNode.id;
     var name = $el.data("name");
     var taClass = $el.data("taClass");
     var textDisplay = $el.data("textDisplay");
@@ -35,10 +36,10 @@ export default function BIRD3MarkdownEditor(targetNode){
     var editorPlacement = $el.data("editorPlacement");
 
     // Grab the content and flush the DIV.
-    var content = el.innerHTML;
-    el.innerHTML = "";
+    var content = targetNode.innerHTML;
+    targetNode.innerHTML = "";
 
-    var Toolbar = require("./Views/toolbar")({
+    var Toolbar = ToolbarTemplate({
         wid: id,
         placement: placement,
         textDisplay: textDisplay,
@@ -55,9 +56,9 @@ export default function BIRD3MarkdownEditor(targetNode){
     />);
 
     // Pop the components in
-    if(editorPlacement == "top") el.appendChild(TextArea);
-    el.appendChild(Toolbar);
-    if(editorPlacement == "bottom") el.appendChild(TextArea);
+    if(editorPlacement == "top") $el.appendChild(TextArea);
+    $el.appendChild(Toolbar);
+    if(editorPlacement == "bottom") $el.appendChild(TextArea);
 
     // Rendering the Popovers and Tooltips...
     oo("[data-toggle=tooltip]").each(function(item){
@@ -85,14 +86,16 @@ export default function BIRD3MarkdownEditor(targetNode){
         add: function(){ throw new Error("Can't add dynamic rules."); },
         tokenize: function(input){
             //return transform(markdownIt.parse(input));
+            return [];
         },
         identify: function(token){
             // Identify a token... aha. o.o
             // TODO: Investigate into this.
             //return token.identify();
+            return "";
         },
     };
-    var ta_l = new LDT(TextArea, parser);
+    var ta_l = new LDT(TextArea[0], parser);
     // jsCaret setup
     var caret = new jsCaret(ta_l.input);
     // Create behave.js stuff.
@@ -107,19 +110,23 @@ export default function BIRD3MarkdownEditor(targetNode){
     //ta_l.input.addEventListener("keypress", ta_l.update);
 
     // Auto-resize? Sure.
-    var $ldt = oo(ta_l.input).parent().parent();
-    $ta.data("origSize",$ldt.height());
+    window.ta_l = ta_l;
+    //var $ldt = oo(ta_l.input).parent().parent();
+    var $ldt = oo(ta_l.input.parentNode.parentNode);
+    TextArea.data("origSize", $ldt.height());
     ta_l.input.addEventListener("keyup", function(e){
         var $e = oo(e.target);
         var lh = parseFloat($e.css("line-height"));
-        var size = parseFloat($ta.data("origSize"));
+        var size = parseFloat(TextArea.data("origSize"));
         var lines = parseInt($e.val().split("\n").length);
         var inner = (lh*lines);
         if(inner > size) {
             // The text "went over the borders". Then lets go borderlandsing.
-            $e.parent().parent().css("height", (inner)+"px");
+            //$e.parent().parent().css("height", (inner)+"px");
+            oo(e.target.parentNode.parentNode).css("height", (inner)+"px");
         } else {
-            $e.parent().parent().removeAttr("style");
+            //$e.parent().parent().removeAttr("style");
+            oo(e.target.parentNode.parentNode).removeAttr("style");
         }
     });
 
@@ -128,7 +135,7 @@ export default function BIRD3MarkdownEditor(targetNode){
         e.preventDefault();
         /* Old preview method.
         $.post(BIRD3.baseUrl+"/tools/render_markdown", {
-            md: $ta.val(),
+            md: TextArea.val(),
         },function(data, status, xhr){
             $html = oo(data);
             var $div = oo("<div/>").html($html);
@@ -145,7 +152,7 @@ export default function BIRD3MarkdownEditor(targetNode){
                     dialog.getModalDialog().addClass("modal-lg");
                 },
                 onhidden: function(dialog) {
-                    $ta.focus();
+                    TextArea.focus();
                 }
             });
         });
@@ -250,7 +257,7 @@ export default function BIRD3MarkdownEditor(targetNode){
             e.preventDefault();
             e.stopPropagation();
             var o = oo(this),
-                ta = $ta,
+                ta = TextArea,
                 func = o.data("func");
             if(typeof func != "undefined") {
                 switch(func) {

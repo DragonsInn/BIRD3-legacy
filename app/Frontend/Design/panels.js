@@ -1,26 +1,28 @@
-$.ready(function(){
+import oo from "o.o";
+
+oo(function(){
     console.log("Setting up panels...");
     // Panel vars
     var useBottomPanel = BIRD3.useBottomPanel,
-        everything = $(".panel-pusher"),
+        everything = oo(".panel-pusher"),
         // Panes
         _panels = {
-            top: $("#Ptop"),
-            left: $("#Pleft"),
-            right: $("#Pright")
+            top: oo("#Ptop"),
+            left: oo("#Pleft"),
+            right: oo("#Pright")
         },
         // Trigger
         _triggers = {
-            top: $("#trigger-top"),
-            left: $("#trigger-left"),
-            right: $("#trigger-right")
+            top: oo("#trigger-top"),
+            left: oo("#trigger-left"),
+            right: oo("#trigger-right")
         },
         // Which ones to use
         sides = ["top", "left", "right"];
 
     if(useBottomPanel) {
-        _triggers.bottom = $("#trigger-bottom");
-        _panels.bottom = $("#Pbottom");
+        _triggers.bottom = oo("#trigger-bottom");
+        _panels.bottom = oo("#Pbottom");
         sides.push("bottom");
     }
 
@@ -53,7 +55,7 @@ $.ready(function(){
     });
 
     // Finalize
-    $("#MainPage").on("click",function(e) {
+    oo("#MainPage").on("click",function(e) {
         disableAndRemovePushers(null);
     });
 

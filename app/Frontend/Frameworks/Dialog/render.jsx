@@ -1,5 +1,6 @@
 var guidGenerator = require("./guidGenerator");
 var Modal = require("bootstrap.native/lib/modal-native");
+var _ = require("microdash");
 
 // This is the actual modal renderer.
 // @param: obj: Contains render data.
@@ -29,7 +30,10 @@ module.exports = function render(obj, modify) {
                             ? <div innerHTML={obj.header}/>
                             : undefined
                         )}
-                        <div innerHTML={obj.body}/>
+                        {(_.isString(obj.body)
+                            ? <div innerHTML={obj.body}/>
+                            : obj.body
+                        )}
                     </div>
                     <div className="modal-footer" innerHTML={obj.footer}/>
                 </div>

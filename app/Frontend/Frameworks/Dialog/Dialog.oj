@@ -113,3 +113,6 @@ var guidGenerator = require("./guidGenerator");
 // semantically wrong with ObjC - but the only real solution for WebPack,
 // if I don't want to use a preprocessor.
 module.exports = [Dialog class];
+
+// Install on self, allowing it to be used from raw JS.
+[Dialog installOn:module.exports];

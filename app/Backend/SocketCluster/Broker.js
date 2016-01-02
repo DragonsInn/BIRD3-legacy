@@ -1,5 +1,6 @@
-var scRedis = require("sc-redis");
-module.exports.run = function (store) {
-    process.title = "BIRD3: SC Store";
-    scRedis.attach(store);
-};
+process.title = "BIRD3: SC Store";
+
+import SCRedis from "sc-redis";
+export function run(store) {
+    SCRedis.attach(store);
+}

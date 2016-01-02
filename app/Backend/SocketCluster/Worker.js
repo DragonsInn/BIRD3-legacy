@@ -1,10 +1,11 @@
+process.title = "BIRD3: SC Worker";
+
 import WebService from "BIRD3/Backend/Service/Web";
 import BIRD3 from "BIRD3/Support/GlobalConfig";
 import Express from "express";
 import Communicator from "BIRD3/Backend/Communicator";
 
-module.exports.run = function (worker) {
-    process.title = "BIRD3: SC Worker";
+export function run(worker) {
     var hprosePort = worker.options.workerOptions.hprose;
 
     // Be secure

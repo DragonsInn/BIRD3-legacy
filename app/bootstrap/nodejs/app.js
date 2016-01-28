@@ -2,7 +2,7 @@
 Error.stackTraceLimit = Infinity;
 
 // Require BIRD3's config
-import BIRD3 from "BIRD3/support/GlobalConfig";
+import BIRD3 from "BIRD3/Support/GlobalConfig";
 
 // Misc
 import { argv as args } from "optimist";

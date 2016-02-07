@@ -1,5 +1,5 @@
 var b = BIRD3 = {
-    baseUrl: <?=$escYiiUrl?>,
+    baseUrl: <?=json_encode(config("app.url"))?>,
     cdnUrl: <?=$escCdnApp?>,
     webpackHash: '<?=$hash?>',
     hash: function(f){
@@ -73,7 +73,7 @@ if(window.addEventListener) {
         b.ready();
     });
 } else {
-    console.error("What int he world are you using?!");
+    console.error("What in the world are you using?!");
     window.attachEvent("BIRD3.ready", function(){
         b.ready();
     });

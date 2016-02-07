@@ -14,31 +14,40 @@ import "BIRD3/Frontend/Design/panels";
 import oo from "o.o";
 import Visibility from "ally.js/src/dom/visible-quotient";
 
+import Dialog from "BIRD3/Frontend/Frameworks/Dialog/Dialog";
+
+// ES stuff
+import pick from "BIRD3/Support/ES6Pickup";
+
 // Publish to global space.
 // That way, inline scripts can use it too.
 window.oo = oo;
+
+// Dialog
+Dialog.installOn(oo);
 
 // Visibility
 oo.publish({},{
     visibility: function() {
         return Visibility(this[0]);
+    },
+    editor: function() {
+        var self = this;
+        require.ensure(["Editor/MarkdownEditor"], function(require){
+            var editor_ = require("Editor/MarkdownEditor");
+            var editor = pick(editor_);
+            editor(self[0]);
+        }, "BIRD3MarkdownEditor");
+        return this;
     }
 });
-
-// ES stuff
-import pick from "BIRD3/Support/ES6Pickup";
 
 // BIRD3 Markdown editor
 oo(function(){
     var findings = oo("body").find('div[data-b3me]').length;
     if(findings > 0) {
-        require.ensure(["Editor/MarkdownEditor"], function(require){
-            // Easy.
-            var editor_ = require("Editor/MarkdownEditor");
-            var editor = pick(editor_);
-            oo("[data-b3me]").each((node) => {
-                editor(node);
-            });
-        }, "BIRD3MarkdownEditor");
+        oo("[data-b3me]").each((node) => {
+            oo(node).editor();
+        });
     }
 });

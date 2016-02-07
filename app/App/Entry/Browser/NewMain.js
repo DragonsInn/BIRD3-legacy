@@ -40,6 +40,20 @@ Compatibility(function(err){
         console.log("Navigating...");
     })
 
-    //app.navigate();
-    window.app = app;
+    // fire the global event, that BIRD3's frontent is ready.
+    // http://stackoverflow.com/questions/2490825/how-to-trigger-event-in-javascript
+    var event, evName = "BIRD3.ready";
+    if (document.createEvent) {
+        event = document.createEvent("HTMLEvents");
+        event.initEvent(evName, true, true);
+    } else {
+        event = document.createEventObject();
+        event.eventType = evName;
+    }
+    event.eventName = evName;
+    if (document.createEvent) {
+        window.dispatchEvent(event);
+    } else {
+        window.fireEvent("on" + event.eventType, event);
+    }
 });

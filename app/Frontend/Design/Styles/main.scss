@@ -247,9 +247,7 @@ $in_marg: 80px;
 code, pre {
     color: white;
     border: none;
-    &.hljs {
-        background: rgba(31, 31, 31, 0.7);
-    }
+    background: rgba(31, 31, 31, 0.7);
 }
 pre {
     padding: 0.5em;

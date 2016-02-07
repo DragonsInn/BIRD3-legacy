@@ -26,7 +26,7 @@ $sides-y             : top, bottom;
     &.from-bottom  { bottom: $panel_bottom_height; }
     &.from-top     { top: $panel_top_height;       }
 
-    .panel {
+    .push-panel {
         position: fixed;
         background: rgba(0,0,0, 0.5);
         visibility: hidden;
@@ -68,7 +68,7 @@ $sides-y             : top, bottom;
         }
     }
 
-    .panel, & {
+    .push-panel, & {
         transition: all 0.3s ease;
     }
 }

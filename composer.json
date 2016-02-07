@@ -34,7 +34,8 @@
         "zizaco/entrust": "dev-laravel-5",
         "mustangostang/spyc": "^0.5.1",
         "sammyk/laravel-facebook-sdk": "^3.2",
-        "thujohn/twitter": "^2.1"
+        "thujohn/twitter": "^2.1",
+        "mobiledetect/mobiledetectlib": "^2.8"
     },
     "require-dev": {
         "peridot-php/peridot": "^1.16",

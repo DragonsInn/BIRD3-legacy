@@ -15,10 +15,13 @@ export function run(worker) {
 
     // Get a reference to our raw Node HTTP server
     var httpServer = worker.getHTTPServer();
+
     // Get a reference to our realtime SocketCluster server
     var scServer = worker.getSCServer();
+
     // Initialize the BIRD3 connector
     var comm = Communicator(scServer);
+
     /* FIXME: Restore API functionality for SC
     require("glob")(path.join(__dirname, "api", "*.js"), function(err, files){
         files.forEach(function(file){
@@ -28,16 +31,6 @@ export function run(worker) {
                 BIRD3.error(e);
             }
         });
-    });
-    */
-
-    /*
-    app.use(function(req, res, next){
-        BIRD3.info("Starting: "+req.method+" | "+req.url);
-        res.on("finish", function(){
-            BIRD3.info(req.ip+"> "+req.method+" "+res.statusCode+": "+req.url);
-        });
-        return next();
     });
     */
 

@@ -3,6 +3,7 @@ var fs = require("fs");
 var which = require("which").sync;
 var merge = require("merge");
 var path = require("path");
+var watchGlob = require("watch-glob");
 
 module.exports = Host;
 function Host(options) {
@@ -20,7 +21,16 @@ function Host(options) {
 
         // OPTIONAL
         // CWD for PHP
-        cwd: process.cwd()
+        cwd: process.cwd(),
+
+        // Should we watch?
+        isWatching: false,
+
+        // Pattern for watch
+        watchPattern: null,
+
+        // Where?
+        watchPath: null
     }, options);
 
     // Sanity check
@@ -29,6 +39,14 @@ function Host(options) {
     }
     if(options.composerFile == false) {
         throw new Error("You need to supply the path to the Composer autoloader.");
+    }
+    if(options.isWatching) {
+        if(options.watchPattern == null) {
+            throw new Error("isWatching is on, but no pattern specified.");
+        }
+        if(options.watchPath == null) {
+            throw new Error("isWatching is on, but no base path specified.")
+        }
     }
 
     // Try to find PHP...
@@ -58,6 +76,15 @@ function Host(options) {
             stdio: ["ignore", process.stdout, process.stderr]
         };
         var php = spawn(phpBin, args, opts);
+
+        if(options.isWatching) {
+            var cb = function(/*No args needed.*/) {
+                php.kill("SIGUSR1");
+            }
+            php.watcher = watchGlob(options.watchPattern, {
+                cwd: options.watchPath
+            }, cb, cb);
+        }
 
         return php;
     }

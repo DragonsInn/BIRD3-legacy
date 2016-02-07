@@ -18,7 +18,18 @@ export function run(conf, house) {
             4,
             "WebDriver (hprose)"
         ],
-        cwd: path.join(BIRD3.root, "app")
+        cwd: path.join(BIRD3.root, "app"),
+
+        isWatching: true,
+        watchPath: BIRD3.root,
+        watchPattern: [
+            "app/App/**/*.php",
+            "app/Backend/**/*.php",
+            "app/Foundation/**/*.php",
+            "app/Extensions/**/*.php",
+            "app/Support/**/*.php",
+            "app/Resources/**/*.php"
+        ]
     });
     host.on("error", function(e){
         host.kill();

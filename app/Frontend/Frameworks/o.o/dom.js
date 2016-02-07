@@ -134,10 +134,13 @@ DOM.prototype = _.extend(DOM.prototype, domEasy.prototype, {
             }
 
             // Attach children. They are rest args.
-            var argId = 2, child = args[2];
-            while(typeof child != "undefined") {
+            for(var argId=2; argId<arguments.length; argId++) {
+                var child = arguments[argId];
                 if(_.isString(child)) {
                     this.appendChild(document.createTextNode(child));
+                } else if(child == null || typeof child == "undefined") {
+                    // null/undefined means, skip.
+                    continue;
                 } else {
                     if("length" in child) {
                         if(child.length == 1) {
@@ -151,7 +154,6 @@ DOM.prototype = _.extend(DOM.prototype, domEasy.prototype, {
                         this.appendChild(child);
                     }
                 }
-                child = args[++argId];
             }
         } else if(args[0] instanceof HTMLElement || _.isArray(args[0])) {
             // DOM(Element|ElementCollection)
@@ -210,6 +212,13 @@ DOM.prototype = _.extend(DOM.prototype, domEasy.prototype, {
         } else {
             this[0].appendChild(blinkOrNode);
         }
+    },
+
+    // Append us to this object.
+    appendTo: function(selector) {
+        this.each(function(node){
+            DOM(selector).appendChild(node);
+        });
     },
 
     /**
@@ -273,7 +282,7 @@ DOM.prototype = _.extend(DOM.prototype, domEasy.prototype, {
      * @return {Number} Height in picels (px).
      */
     height: function() {
-        return this[0].clientHeight;
+        return this[0].offsetHeight;
     },
 
     /**

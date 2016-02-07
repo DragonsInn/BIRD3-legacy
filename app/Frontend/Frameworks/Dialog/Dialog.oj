@@ -81,7 +81,15 @@ var guidGenerator = require("./guidGenerator");
         footer: '<button type="button" class="btn btn-default" data-dismiss="modal">Okay.</button>'
     });
 }
-+(Modal)error:(string)message {}
++(Modal)error:(string)message {
+    return render({
+        title: "An error has occured!",
+        type: "danger",
+        size: "lg",
+        body: message,
+        footer: '<button type="button" class="btn btn-default" data-dismiss="modal">Okay.</button>'
+    });
+}
 
 +(void)installOn:(Object)target {
     var d = [Dialog class];
@@ -116,3 +124,7 @@ module.exports = [Dialog class];
 
 // Install on self, allowing it to be used from raw JS.
 [Dialog installOn:module.exports];
+
+module.exports.installOn = function(target) {
+    return [Dialog installOn:target];
+}

@@ -4,7 +4,7 @@ class UserMedia extends AbstractMigration {
         $donull = ["null"=>true];
         $submission = $this->table("media_submission");
         $submission
-            ->addColumn("uiD","integer")
+            ->addColumn("uID","integer")
             ->addForeignKey("uID","users","id",["delete"=>"CASCADE","update"=>"NO_ACTION"])
             ->addColumn("title","string",["limit"=>50])
             ->addColumn("desc","text")

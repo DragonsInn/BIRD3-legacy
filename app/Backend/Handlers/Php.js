@@ -1,12 +1,19 @@
-var cheerio = require("cheerio");
-var hljs = require("highlight.js");
-var htmlminify = require("html-minifier").minify;
-var path = require("path");
-var temp = require("temp");
-var mime = require("mime");
-var fs = require("fs");
-var BIRD3 = require("BIRD3/Support/GlobalConfig");
-var redis = require("redis").createClient();
+// Processors:
+import cheerio from "cheerio";
+import hljs from "highlight.js";
+import {minify as htmlminify} from "html-minifier";
+import {transform as Babel} from "babel-core";
+
+// Regular
+import path from "path";
+import temp from "temp";
+import mime from "mime";
+import fs from "fs";
+import BIRD3 from "BIRD3/Support/GlobalConfig";
+import RedisClient from "redis";
+
+
+var redis = RedisClient.createClient();
 var log = BIRD3.log.makeGroup("PHP Handler");
 
 hljs.configure({
@@ -121,7 +128,7 @@ module.exports = function(php) {
 
     // # Post-Processor
 
-    // HighlightJS
+    // HighlightJS / Babel
     php.use("postprocess",function(wareCtx,next){
         var ctx = wareCtx.ctx;
         var $ = ctx.$ = cheerio.load(ctx.response.body, {decodeEntities: false});
@@ -137,6 +144,21 @@ module.exports = function(php) {
                 }
             });
         }
+        // Enable ES6 on the client. Should be useful with JSX and o.o
+        $("body").find("script.es6").each(function(i,v){
+            console.log(Babel)
+            var source = $(v).text();
+            var newSource = Babel(source, {
+                presets: [ 'es2015', 'stage-1' ],
+                plugins: [
+                    ["syntax-jsx"],
+                    ["transform-react-jsx",{
+                        pragma: "window.oo"
+                    }]
+                ]
+            }).code;
+            $(v).text(newSource);
+        });
         ctx.response.body = $.html();
         next();
     });

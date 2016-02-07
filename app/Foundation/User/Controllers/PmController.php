@@ -9,6 +9,8 @@ use Auth;
 use Request;
 use User;
 
+use BIRD3\Backend\Log;
+
 class PmController extends BaseController {
 
     public function __construct() {
@@ -19,7 +21,9 @@ class PmController extends BaseController {
     public function getBox() {
         $user = Auth::user();
         $convos = $user->conversationMemberships;
-        return $this->render("User::pm.box",["convos"=>$convos]);
+        return $this->render("User::pm.box",[
+            "convos"=>$convos
+        ]);
     }
 
     public function anyCompose($to=null) {
@@ -62,6 +66,7 @@ class PmController extends BaseController {
                     $realmembers[] = $user;
                     foreach($realmembers as $target) {
                         // Attach the members...
+                        \BIRD3\Backend\Log::info("Adding: {$target->id} ({$target->username})");
                         $target
                             ->conversationMemberships()
                             ->attach($convo->id);
@@ -98,13 +103,13 @@ class PmController extends BaseController {
             $to_conv_id = Request::input("pmReply.conv_id");
             $is_member = $user->conversationMemberships()->contains($to_conv_id);
             if(!$is_member) {
-                $errors["Validation"][]= "There was an error during transmission. Please try again.";
+                $errors["Validation"][] = "There was an error during transmission. Please try again.";
             } else {
                 if($to_conv_id !== $conv_id) {
-                    $errors["Validation"][]="You tried to reply to an non-existant conversation.";
+                    $errors["Validation"][] = "You tried to reply to an non-existant conversation.";
                 } else {
                     $msg->conv_id = $to_conv_id;
-                    $msg->from_id = User::me()->id;
+                    $msg->from_id = $user->id;
                     $msg->body = Request::input("pmReply.body");
                     if(!$msg->save()) {
                         $errors = array_merge_recursive($errors, $msg->getErrors());
@@ -112,16 +117,47 @@ class PmController extends BaseController {
                 }
             }
         }
+
         // Find and backtrack all the messages, the laraway.
         $messages = Message::where("conv_id", $conv_id)
                            ->orderBy("id","DESC")
                            ->get();
-        $this->render("User::pm.convo",[
-            "messages"=>$messages,
-            "convo"=>$convo,
-            "newMsg"=>$msg,
-            "errors"=>$errors
-        ]);
+
+        if(Request::ajax()) {
+            // This came from the /user/pm/box page, most likely.
+            // For this case, we need to simplify things a little...
+            $flatMessages = [];
+            $error = false;
+            $err = null;
+            try {
+                foreach($messages as $message) {
+                    $flatMessages[] = [
+                        "from"      => $message->sender->username,
+                        "body"      => $message->body,
+                        "is_read"   => $user->hasReadMessage($message)
+                    ];
+                }
+            } catch(\Exception $e) {
+                Log::error($e->getMessage());
+                $error = true;
+                $err = $e;
+            }
+            $resp = json_encode([
+                "status" => $error ? "error" : "ok",
+                "messages" => $flatMessages,
+                "errorObj" => $err,
+                "errors" => $errors
+            ]);
+            return $resp;
+        } else {
+            Log::info("In regular call");
+            return $this->render("User::pm.convo",[
+                "messages"=>$messages,
+                "convo"=>$convo,
+                "newMsg"=>$msg,
+                "errors"=>$errors
+            ]);
+        }
     }
 
     // These methods should become AJAX methods.

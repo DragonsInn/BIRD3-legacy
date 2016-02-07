@@ -9,6 +9,8 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 use BIRD3\Support\Model\Validatable;
 use BIRD3\Foundation\User\Conversations\Conversation;
+use BIRD3\Foundation\User\Conversations\Message;
+use BIRD3\Foundation\User\Conversations\ReadStatus;
 
 // Alias
 use Eloquent;
@@ -89,10 +91,29 @@ implements
         return $this->belongsToMany(
             Conversation::class,
             "user_pm_conv_members",
-            "conv_id",
-            "user_id"
+            "user_id",
+            "conv_id"
         );
     }
+    public function messageReadStatuses() {
+        return $this->hasMany(ReadStatus::class, "user_id");
+    }
+
+    public function hasReadMessage(Message $msg) {
+        return Readstatus::firstOrCreate([
+            "msg_id" => $msg->id,
+            "user_id" => $this->id
+        ])->isRead;
+    }
+    public function didReadMessage(Message $msg) {
+        $readStatus = ReadStatus::findOrNew([
+            "msg_id" => $msg->id,
+            "user_id" => $this->id
+        ]);
+        $readStatus->isRead = true;
+        $readStatus->save();
+    }
+
     /*
         Missing relations:
             - Character     : hasMany
@@ -100,6 +121,7 @@ implements
             - Blog\Posts    : hasMany
             - Forum\Topic   : hasMany
             - Forum\Post    : hasMany
+            - Chat\Message  : hasMany
     */
 
     // # Authentificable utility function

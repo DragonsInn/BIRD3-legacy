@@ -10,6 +10,13 @@ class Message extends Eloquent {
     protected $table = "user_pm_msg";
     public $timestamps = false;
 
+    protected $fillable = [
+        "conv_id",
+        "from_id",
+        "body",
+        "sent"
+    ];
+
     /**
      *  @int id PK          | Message ID
      *  @int conv_id        | The conversation this message belongs to
@@ -24,6 +31,11 @@ class Message extends Eloquent {
     }
     public function conversation() {
         return $this->belongsTo(Conversation::class, "conv_id");
+    }
+
+    // $message->readStatus->contains(["user_id"=>Auth::user()->id]) : Boolean
+    public function readStatus() {
+        return $this->hasMany(MessageReadStatus::class, "id");
     }
 
     // Rules for validation

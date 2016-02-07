@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <?php // PHP logic
     $meta_desc = GlobalConfig::get("app.desc");
-    $pageTitle = "MYNAME".": Derp";#.$this->pageTitle;
+    $pageTitle = "BIRD3: Derp";#.$this->pageTitle;
     $cdn = CDN::link();
     $manifest = CDN::link("app/allyourcachebelongstothe.appcache");
+    #$manifestAttr = "manifest=\"$manifest\"";
+    $manifestAttr = "";
     $img = "$cdn/images/favicons";
     $hash = Hprose::get("wpHash");
 ?>
-<!--[if lt IE 7]>      <html class="ie6"  manifest="<?=$manifest?>"> <![endif]-->
-<!--[if IE 7]>         <html class="ie7"  manifest="<?=$manifest?>"> <![endif]-->
-<!--[if IE 8]>         <html class="ie8"  manifest="<?=$manifest?>"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="pure" manifest="<?=$manifest?>"> <!--<![endif]-->
+<!--[if lt IE 7]>      <html class="ie6"  <?=$manifestAttr?>> <![endif]-->
+<!--[if IE 7]>         <html class="ie7"  <?=$manifestAttr?>> <![endif]-->
+<!--[if IE 8]>         <html class="ie8"  <?=$manifestAttr?>> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="pure" <?=$manifestAttr?>> <!--<![endif]-->
     <head>
         <title><?=$pageTitle?></title>
         <meta charset="utf-8"/>
@@ -74,17 +76,17 @@
         <section name="app">
             <div id="Panels">
                 <!-- Panels -->
-                <div id="Ptop" class="panel top">
+                <div id="Ptop" class="push-panel top">
                 </div>
-                <div id="Pleft" class="panel side left container">
+                <div id="Pleft" class="push-panel side left container">
                     <p>This search will look for Characters, Media and Forum entries.</p>
                     <div><input type="text" id="allSearch" class="form-control white-box"></div>
                 </div>
-                <div id="Pright" class="panel side right">
+                <div id="Pright" class="push-panel side right">
                     <?=Widget::UserSidebar()?>
                 </div>
                 <?php if(isset($this->panelBottom)): ?>
-                <div id="Pbottom" class="panel bottom">
+                <div id="Pbottom" class="push-panel bottom">
                     <?=$this->panelBottom?>
                 </div>
                 <?php endif; ?>

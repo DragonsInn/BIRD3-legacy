@@ -1,22 +1,29 @@
-# BIRD3, the roleplayer's CMS
+# BIRD3, the role-player's CMS
 This is the CMS behind the Dragon's Inn. I have open-sourced it for easier contribution, and to let people see the guts of it. Developers can use this is as a resource to learn about scalable projects that utilize inter-language communication and other things. In fact, I would go as far and say that people actually get to look at an application that would be best described as "common practice" or at least "running with current tech".
 
+BIRD3 runs on UNIX systems **only**. I might make it compatible to Windows at some point, but core-dependencies such as Workerman require UNIX. So if you want to try running BIRD3, use docker. I might provide an image in the future.
+
 ## Common practices
-- Modularized
+### Modularized
 The whole BIRD3 source tree is modularized. It even has a few modules inside of it that are to be published out of it too. Like it's web server component.
-- Unit testing
+
+### Unit testing
 BIRD3 is tested in all aspects back and forth. We use Jasmine for Node and Web, Peridot for PHP.
-- Code sharing
+
+### Code sharing
 The namespaces are aligned in a way that allows the code to be shared between the various parts. For instance, the frontend could easily use the same method for pasword generation than the backend. No problem!
-- Branching
+
+### Branching
 Heavy changes in the code are branched, minor changes are kept on master. Master is always the topmost development branch.
-- Versioning with semver
+
+### Versioning with semver
 Although `BIRD 3.0.0-dev.76` may not look like it, but it actually is a semantic version:
     * Major: `3`
     * Minor: `0`
     * Patch: `0`
     * Tag: `dev.76`
-- Development and production dependencies are separated
+
+### Development and production dependencies are separated
 BIRD3 makes use of `dependencies` and `devDependencies` in order to sort it's stuff into what is needed in development, and which is only needed for running.
 
 ## Dependencies, when running the whole stack:
@@ -24,11 +31,17 @@ BIRD3 makes use of `dependencies` and `devDependencies` in order to sort it's st
 - MySql >= 5.5
 - Nodejs >= v4.0.0
     * npm >= 3 is recommended.
+    * WebPack does not seem to like the 4.x.x branch actually. Might try out 5.x.x versions if it causes issues.
 - PHP >= 5.5.4
     * Composer
     * Native extensions:
         - pcntl (Install from php source)
         - [hprose](https://github.com/hprose/hprose-pecl)
+
+## Dependencies, when you only want to run an assets build (WebPack)
+- Node >= v4.0.0
+- NPM >= 3.5.0 (use `npm -g i npm` to update to latest)
+- Bower
 
 ### Note
 BIRD3 is divided in various parts. Read more in the "Structure" section! You do not need the whole thing to only run a specific task.
@@ -46,7 +59,7 @@ $ bower install
 $ npm install
 
 # Install PHP resources
-curl -sS https://getcomposer.org/installer | php
+curl -sS https://getcomposer.org/installer | php # If you dont have Composer yet
 php composer.phar install
 ```
 
@@ -61,34 +74,36 @@ Copy `config/_BIRD3.yml` to `config/BIRD3.yml` and adjust the settings. The valu
 As BIRD3 is a really big project, it doesn't hurt to look at it from a topmost view, to see _what it roughly uses_.
 
 ### NodeJS
-| Name          | Version           |
-|---------------|-------------------|
-| SocketCluster | v3.x              |
-| Express       | v4.x              |
-| Babel         | v6.x              |
-| WebPack       | v0.12.x           |
-| PowerHouse    | Selfmade, latest  |
-| WebDriver     | Selfmade, latest  |
-| OJ            | v1.x              |
+| Name                                     | Version          |
+|------------------------------------------|------------------|
+| [SocketCluster](http://socketcluster.io) | v4.x             |
+| [Express](http://expressjs.com/)         | v4.x             |
+| [Babel](http://babeljs.io/)              | v6.x             |
+| [WebPack](http://webpack.github.io/)     | v0.12.x          |
+| PowerHouse                               | Selfmade, latest |
+| WebDriver                                | Selfmade, latest |
+| [OJ](https://github.com/musictheory/oj)  | v1.x             |
+| [Uniter](https://github.com/uniter)      | Various          |
+| [hprose](http://hprose.com/)             | Various          |
 
 ### PHP
-| Name          | Version           |
-|---------------|-------------------|
-| Laravel       | v5.1.x            |
-| Workerman     | v3.2.x            |
-| Facebook SDK  | v5 via SP         |
-| Entrust       | Via git (master)  |
+| Name                                             | Version          |
+|--------------------------------------------------|------------------|
+| [Laravel](https://laravel.com/)                  | v5.1.x           |
+| [Workerman](https://github.com/walkor/Workerman) | v3.2.x           |
+| Facebook SDK                                     | v5 via SP        |
+| [Entrust](https://github.com/Zizaco/entrust)     | Via git (master) |
+| [Phinx](https://phinx.org/)                      | 0.5.x            |
 
 ### Browser
 #### JavaScript
-| Name             | Version           |
-|------------------|-------------------|
-| Cash *           | Latest            |
-| Grapnel          | v0.6.x            |
-| Bootstrap.Native | Git (master)      |
-| ally.js          | 0.0.6             |
-| progressbar.js   | v0.8.x            |
-| web-socket-js    | v1.x              |
+| Name                                                           | Version      |
+|----------------------------------------------------------------|--------------|
+| [Grapnel](http://grapnel.js.org/)                              | v0.6.x       |
+| [Bootstrap.Native](https://github.com/thednp/bootstrap.native) | Git (master) |
+| ally.js                                                        | 0.0.6        |
+| progressbar.js                                                 | v0.8.x       |
+| web-socket-js                                                  | v1.x         |
 
 #### S/CSS
 | Name                           | Version           |
@@ -98,12 +113,6 @@ As BIRD3 is a really big project, it doesn't hurt to look at it from a topmost v
 | Normalize CSS                  | v3.x              |
 | Bootstrap Accessibility Plugin | v1.x              |
 | Ladda                          | v0.9.x            |
-
-## Needing what for what
-- For building the front-end JS and CSS:
-    - NodeJS, WebPack
-- For running the actual PHP app:
-    - PHP, NodeJS, Redis, MySQL and a configuration.
 
 ## Structure
 BIRD3 is a heavy project and has a pretty big stack of software underneath. Here, I will briefly go over what is used why and how. Brace yourself, this is not easy.
@@ -132,8 +141,8 @@ BIRD3
         - Still in development, this is a SSH service that you can log into to do stuff.
 ```
 
-### Everything is sorted into folders
-The various bits and pieces that work together are ultimatively sorted properly into folders. Some of them are accessed under a shared condition, some are not.
+### Everything is sorted into folders - well, namespaces
+The various bits and pieces that work together are ultimatively sorted properly into folders/namespaces. Some of them are accessed under a shared condition, some are not.
 
 - `config`: This contains the actual config.
 - `app`: This folder contains the real app logic. It responds to the PHP namespaces.

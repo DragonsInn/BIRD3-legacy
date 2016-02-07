@@ -1,7 +1,16 @@
 .ldt {
-    /* highlight styles */
+    // Sizing..
+    $size: 100px;
+    height: $size;
+
+    &, &.form-control, label {
+        margin-bottom: 0;
+    }
+
+    // highlight styles
     .bold {
         font-weight: bold;
+        letter-spacing: -0.6px;
     }
     .underline {
         text-decoration: underline;
@@ -15,11 +24,14 @@
     .mention {
         color: lime;
     }
-    .url, .ip, .anchor {
+    .uri {
         color: aqua;
     }
-    .code, .quote, .list {
+    .quote, .list {
         color: gray;
+    }
+    .code, .pre {
+        color: maroon;
     }
     .hashtag {
         color: purple;
@@ -27,20 +39,31 @@
     .email {
         color: orange;
     }
-    .header {
+    .heading {
         color: silver;
     }
 
     /* fix for bold/italic/non regular fonts on windows */
-    .fix {
-        display: inline-block;
+    .word {
+        //display: inline-block; // This breaks .code and .pre ...
         margin-bottom: -1px;
     }
 
-    pre, textarea {
+    label {
+        padding: 0;
+    }
+
+    textarea, pre {
         margin: 0;
         padding: 0;
         word-wrap: break-word;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        font-weight: normal !important;
+        font-family: "Arial", sans-serif !important;
     }
 
     textarea {
@@ -51,18 +74,6 @@
         background: black;
         color: white;
     }
-
-    pre, textarea {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-
-    /* Sizing... */
-    $size: 100px;
-    height: $size;
 }
 
 // Color picker

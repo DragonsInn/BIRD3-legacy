@@ -3,8 +3,8 @@ import behave from "behave.js";
 import LDT from "LDT";
 import jsCaret from "legacy!jsCaret/jsCaret.js";
 
-// Text parser
-import miniMarkdown from "miniMarkdown";
+// Parser and tokenizer
+import {ParseMarkdown} from "./lib/transform-md-ast";
 
 // Color picker
 import {Piklor} from "piklor.js"
@@ -21,7 +21,8 @@ import "./Style/editor.scss";
 import {colors as palette} from "./Resources/nes-colors.json";
 
 // The actual logic
-export default function BIRD3MarkdownEditor(targetNode){
+export default function BIRD3MarkdownEditor(targetNode, cb){
+    cb = cb || function(){};
     var $el = oo(targetNode);
     var id = targetNode.id;
     var name = $el.data("name");
@@ -82,14 +83,10 @@ export default function BIRD3MarkdownEditor(targetNode){
     var parser = {
         add: function(){ throw new Error("Can't add dynamic rules."); },
         tokenize: function(input){
-            //return transform(markdownIt.parse(input));
-            return input;
+            return ParseMarkdown(input);
         },
         identify: function(token){
-            // Identify a token... aha. o.o
-            // TODO: Investigate into this.
-            //return token.identify();
-            return "";
+            return token.identify();
         },
     };
     var ta_l = new LDT(TextArea[0], parser);
@@ -98,16 +95,22 @@ export default function BIRD3MarkdownEditor(targetNode){
     // Create behave.js stuff.
     var ta_b = new behave({
         textarea: ta_l.input,
-        fence: "```"
+        fence: "```",
+        replaceTab: true,
+        softTabs: true,
+        tabSize: 4,
+        autoOpen: true,
+        overwrite: true,
+        autoStrip: true,
+        autoIndent: true
     });
 
     // Re-Attach stuff
-    ta_l.input.addEventListener("keyup", ta_l.update);
-    //ta_l.input.addEventListener("keydown", ta_l.update);
-    //ta_l.input.addEventListener("keypress", ta_l.update);
+    //ta_l.input.addEventListener("keyup", ta_l.update);
+    ta_l.input.addEventListener("keydown", ta_l.update);
+    ta_l.input.addEventListener("keypress", ta_l.update);
 
     // Auto-resize? Sure.
-    window.$ta = ta_l.input;
     var $ldt = oo(ta_l.input).parent().parent();
     TextArea.data("origSize", $ldt.height());
     ta_l.input.addEventListener("keyup", function(e){
@@ -118,7 +121,7 @@ export default function BIRD3MarkdownEditor(targetNode){
         var lines = parseInt($e.val().split("\n").length);
         var inner = (lh*lines);
         if(inner > size) {
-            // The text "went over the borders". Then lets go borderlandsing.
+            // The text "went over the borders". Then lets go borderlandsing!
             $parent.css("height", (inner)+"px");
         } else {
             $parent.removeAttr("style");

@@ -1,109 +1,120 @@
-/**
- * Transforms a markdown-it AST into a simplified array.
- * That array should only contain objects of format:
- *
- * {
- *     type: "Name of the token",
- *     content: "...",
- * }
- */
-var transform = function(AST, parentStack, lineStore) {
-    parentStack = parentStack || [];
-    lineStore = lineStore || [];
-    var previous = null;
-    var tokens = [];
+import {
+    Tokenizer as MarkdownTokenizer,
+    TokenType
+} from "miniMarkdown";
 
-    // Helper
-    function addToken(lineId, nodeData) {
-        if(typeof lineStore[lineId] == "undefined") {
-            lineStore[lineId] = [];
+// Global grammar selection
+var Grammar = [
+    new TokenType('pre', {
+        grammar: [],
+        start: "```\n",
+        end: "```\n"
+    }),
+    new TokenType('code', {surround: '`'}),
+    new TokenType('italic', {surround: '_'}),
+    new TokenType('bold', {surround: '*'}),
+    new TokenType('strike', {surround: '~'}),
+    new TokenType('heading', {
+        constraint: function (text) {
+            var match = text.match(/^#{1,6}\s.*\n/)
+            return match && match[0].length;
         }
-        lineStore[lineId].push(new mdASTNode(nodeData));
-    }
-    function makeTokens() {
-        for(var l=0; l<lineStore.length; l++) {
-            if(typeof lineStore[l] == "undefined") {
-                lineStore[l] = [new mdASTNode({
-                    type: "empty",
-                    content: "\n"
-                })];
-            }
-            var line = lineStore[l];
-            for(var n=0; n<line.length; n++) {
-                tokens.push(line[n]);
+    }),
+    new TokenType('quote', {
+        constraint: function (text) {
+            var match = text.match(/^>{1,}\s.*\n/)
+            return match && match[0].length;
+        }
+    }),
+    new TokenType('list', {
+        constraint: function (text) {
+            var match = text.match(/^[\-\*]{1,}\s.*\n/)
+            return match && match[0].length;
+        }
+    }),
+    new TokenType('mention', {
+        constraint: function(text) {
+            var match = text.match(/^@[a-z0-9_\-\.]*/i)
+            return match && match[0].length;
+        }
+    }),
+    new TokenType('uri', {
+        constraint: function(text) {
+            var match = text.match(/^(((http|ftp)s?:\/\/|mailto:)[^\s]+)/);
+            return match && match[0].length;
+        }
+    }),
+    new TokenType('email', {
+        constraint: function(text) {
+            //var regex = require("email-regex")({exact: true});
+            var regex = /^\S+@\S+\.\S+/i;
+            var match = text.match(regex);
+            return match && match[0].length;
+        }
+    }),
+    new TokenType('hashtag', {
+        constraint: function(text) {
+            var match = text.match(/^#[a-z0-9]{1,}/i)
+            return match && match[0].length;
+        }
+    })
+];
+
+// Helper to find and wrap according to grammar.
+function wrapToken(types, text) {
+    var starts = [], ends = [];
+    types = (types instanceof Array ? types : types.split(" "));
+    types.forEach(function(type){
+        for(var i=0; i<Grammar.length; i++) {
+            var spec = Grammar[i];
+            if(type == spec.type) {
+                starts.push(spec.start);
+                ends.push(spec.end);
+                break;
             }
         }
+    });
+    var out = "";
+    out += starts.join("");
+    out += text;
+    out += ends.join("");
+    return out;
+}
+
+export class MDToken {
+    constructor(name, content) {
+        this.name = name;
+        this.content = content;
     }
 
-    for(var node_id=0; node_id<AST.length; node_id++) {
-        var ASTNode = AST[node_id];
-        var lineNr = null;
-        previous = (previous==null ? ASTNode : AST[node_id-1]);
-        if(ASTNode.map != null && lineNr == null) {
-            lineNr = ASTNode.map[0];
+    toString() {
+        return wrapToken(this.name, this.content);
+    }
+
+    identify() {
+        return this.name;
+    }
+}
+
+export function ParseMarkdown(str) {
+    var mdTokenizer = new MarkdownTokenizer(str, Grammar);
+    var AST = mdTokenizer.run();
+    return Tokenize(AST);
+}
+
+export function Tokenize(
+    ASTNodes,
+    className = "",
+    stack = []
+) {
+    ASTNodes.forEach(function(node){
+        if(typeof node.children == "undefined") {
+            var prefix = [className, node.type].join(" ").trim();
+            var token = new MDToken(prefix, node.text);
+            stack.push(token);
         } else {
-            if(previous.map != null) {
-                lineNr = previous.map[0];
-            } else {
-                for(var i=parentStack.length-1; i+1>0; i--) {
-                    console.log("i", i)
-                    if(parentStack[i].map != null) lineNr = parentStack[i].map[0];
-                }
-            }
-            if(lineNr == null) {
-                console.log("I...cant find a line.", {
-                    ASTNode: ASTNode,
-                    previous: previous,
-                    parentStack: parentStack
-                });
-            }
+            Tokenize(node.children, node.type, stack);
         }
-        if(ASTNode.markup != '' && ASTNode.nesting != -1) {
-            addToken(lineNr, {
-                type: ASTNode.tag,
-                content: ASTNode.markup+" "
-            });
-        }
-        if(ASTNode.children != null) {
-            parentStack.push(ASTNode);
-            transform(ASTNode.children, parentStack, lineStore);
-        } else {
-            if(ASTNode.type == "text") {
-                // Text! Let's find the proper name for it.
-                var parent = previous;
-                for(var i=parentStack.length-1; i+1>0; i--) {
-                    // Either, parent being the previous token will
-                    // already result in a valid, tag'ed token.
-                    // Alternatively, we pop the parent stack till it can pop no' mo'.
-                    if(parentStack[i].tag != '') {
-                        parent = parentStack[i];
-                        break;
-                    }
-                }
-                if(parent.tag == '' && parentStack.length == 0) {
-                    throw new Error("The parentStack has ran out and no matching node was found.");
-                }
-                addToken(lineNr,{
-                    type: parent.tag,
-                    content: ASTNode.content
-                });
-            }
-        }
-    }
-    makeTokens();
-    console.log(tokens, lineStore)
-    return tokens;
+    });
+    return stack;
 }
-
-var mdASTNode = function(node) {
-    this.node = node;
-}
-mdASTNode.prototype.toString = function() {
-    return this.node.content;
-}
-mdASTNode.prototype.identify = function() {
-    return "ldt-"+this.node.type;
-}
-
-module.exports = transform;
-module.exports.mdASTNode = mdASTNode;

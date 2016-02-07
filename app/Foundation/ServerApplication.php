@@ -54,6 +54,7 @@ class ServerApplication extends BaseApplication implements WebDriverContract {
         $configure = require_once("$appDir/bootstrap/php/configure.php");
         # Construct
         parent::__construct(APP_ROOT, CONFIG_ROOT);
+        Log::info("It should configure now?");
         $configure($this);
         $this->bootstrapConsole();
 

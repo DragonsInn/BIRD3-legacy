@@ -14,10 +14,8 @@ class Handler extends ExceptionHandler
      *
      * @var array
      */
-    protected $dontReport = [
-        HttpException::class,
-        ModelNotFoundException::class,
-    ];
+    // Report ALL THE THINGS!1!!11!!
+    protected $dontReport = [];
 
     public function __construct() {
         // noop
@@ -32,6 +30,7 @@ class Handler extends ExceptionHandler
      * @return void
      */
     public function report(Exception $e) {
+        parent::report($e);
         if ($this->shouldReport($e)) {
             Log::error($e);
         }

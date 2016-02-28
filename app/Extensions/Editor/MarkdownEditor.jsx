@@ -1,10 +1,15 @@
-// Text editor behaviours
-import behave from "behave.js";
-import LDT from "LDT";
-import jsCaret from "legacy!jsCaret/jsCaret.js";
+// Editor
+import LRTEditor from "LRTEditor/src/LRTEditor"; // using fork
+import LRTE_Highlight from "LRTEditor/src/LRTEditor.HighlightPlugin";
+import LRTE_Minimal from "LRTEditor/src/LRTEditor.MinimalPlugin";
 
-// Parser and tokenizer
-import {ParseMarkdown} from "./lib/transform-md-ast";
+import md from "md-highlight"; // using fork
+import hljs from "highlight.js/lib/highlight";
+
+// Text editor behaviours
+// TODO: Re-introduce jsCaret to get insert-before and insert-after.
+//import behave from "behave.js";
+//import jsCaret from "legacy!jsCaret/jsCaret.js";
 
 // Color picker
 import {Piklor} from "piklor.js"
@@ -16,9 +21,18 @@ import Popover from "bootstrap.native/lib/popover-native";
 
 // CSS
 import "./Style/editor.scss";
+import "LRTEditor/src/style.css";
+import "md-highlight/style.css";
 
 // Data
 import {colors as palette} from "./Resources/nes-colors.json";
+
+// Set langs
+hljs.registerLanguage('javascript', require('highlight.js/lib/languages/javascript'));
+hljs.registerLanguage('js', require('highlight.js/lib/languages/javascript'));
+hljs.registerLanguage('xml', require('highlight.js/lib/languages/xml'));
+hljs.registerLanguage('php', require('highlight.js/lib/languages/php'));
+hljs.registerLanguage('css', require('highlight.js/lib/languages/css'));
 
 // The actual logic
 export default function BIRD3MarkdownEditor(targetNode, cb){
@@ -33,10 +47,7 @@ export default function BIRD3MarkdownEditor(targetNode, cb){
     var placement = $el.data("placement");
     var editorPlacement = $el.data("editorPlacement");
 
-    // Grab the content and flush the DIV.
-    var content = targetNode.innerHTML;
-    targetNode.innerHTML = "";
-
+    // The toolbar - either on top or bottom.
     var Toolbar = ToolbarTemplate({
         wid: id,
         placement: placement,
@@ -44,19 +55,31 @@ export default function BIRD3MarkdownEditor(targetNode, cb){
         groupSize: groupSize
     });
 
-    // Create the input
+    // This will become the content-editable.
+    var Editor = (<div
+        id={id+"_editorView"}
+        className={[taClass, "bird3-editor"].join(" ")}
+        innerHTML={targetNode.innerHTML}
+        placeholder={placeholder}
+    />)[0];
+    targetNode.innerHTML = "";
+
+    // Create the textarea. It will hold the actual value.
+    // Now i actually need data-binding. o.o
     var TextArea = (<textarea
         id={(id+"_input")}
-        className={taClass}
         name={name}
-        placeholder={placeholder}
-        value={content}
+        className="YouDontSeeMeArea"
     />);
+    Editor.addEventListener("input", (e)=>{
+        TextArea.val(md.unhighlight(Editor.textContent));
+    });
 
     // Pop the components in
-    if(editorPlacement == "top") $el.appendChild(TextArea);
+    if(editorPlacement == "top") $el.appendChild(Editor);
     $el.appendChild(Toolbar);
-    if(editorPlacement == "bottom") $el.appendChild(TextArea);
+    if(editorPlacement == "bottom") $el.appendChild(Editor);
+    $el.appendChild(TextArea);
 
     // Rendering the Popovers and Tooltips...
     oo("[data-toggle=tooltip]").each(function(item){
@@ -78,39 +101,44 @@ export default function BIRD3MarkdownEditor(targetNode, cb){
         new Popover(item,options);
     });
 
-    // Give this text-area some super bird power!
-    // LDT setup. A bit complicated but do-able.
-    var parser = {
-        add: function(){ throw new Error("Can't add dynamic rules."); },
-        tokenize: function(input){
-            return ParseMarkdown(input);
+    LRTEditor.initialize(Editor, [
+        LRTE_Highlight,
+        LRTE_Minimal
+    ], {
+        highlightCallback: function(el) {
+            var out, src = el.textContent;
+            // md-highlight throws a nasty Error when you give it an empty string.
+            // This is a workaround.
+            if(src.length > 0) {
+                //src = md.unhighlight(src);
+                out = md.highlight(src);
+                if(out.charAt(out.length-1) != "\n") {
+                    out += "\n";
+                }
+                el.innerHTML = out;
+            }
+
+            // Code highlights
+            var els = document.getElementsByClassName("md-bcode"); // use ooDOM's .find() instead!
+            for(var i=0; i<els.length; i++) {
+                (function(e){ // JS and scopes... I kid you not. FIXME: ES6 scopes.
+                    if(e.children.length <= 0) {
+                        // Not a highlightable thing. Skip.
+                        return;
+                    }
+                    var c = e.children[0]
+                    if(c.className == "nohighlight") return;
+                    e.className += " hljs hljs-fix";
+                    c.className += " hljs";
+                    hljs.highlightBlock(c);
+                })(els[i]);
+            }
         },
-        identify: function(token){
-            return token.identify();
-        },
-    };
-    var ta_l = new LDT(TextArea[0], parser);
-    // jsCaret setup
-    var caret = new jsCaret(ta_l.input);
-    // Create behave.js stuff.
-    var ta_b = new behave({
-        textarea: ta_l.input,
-        fence: "```",
-        replaceTab: true,
-        softTabs: true,
-        tabSize: 4,
-        autoOpen: true,
-        overwrite: true,
-        autoStrip: true,
-        autoIndent: true
+        addLineWrapper: false
     });
 
-    // Re-Attach stuff
-    //ta_l.input.addEventListener("keyup", ta_l.update);
-    ta_l.input.addEventListener("keydown", ta_l.update);
-    ta_l.input.addEventListener("keypress", ta_l.update);
-
     // Auto-resize? Sure.
+    /*
     var $ldt = oo(ta_l.input).parent().parent();
     TextArea.data("origSize", $ldt.height());
     ta_l.input.addEventListener("keyup", function(e){
@@ -127,6 +155,7 @@ export default function BIRD3MarkdownEditor(targetNode, cb){
             $parent.removeAttr("style");
         }
     });
+    */
 
     var $preview_btn = $el.find("#"+id+"_preview");
     $preview_btn.click(function(e){

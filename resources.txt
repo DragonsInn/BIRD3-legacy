@@ -25,6 +25,7 @@ http://blueimp.github.io/Bootstrap-Image-Gallery/
 
 // Want to add
 http://codepen.io/xixao/pen/jvxFc
+Better caching: http://www.scrapbook.cash/
 
 // Important docs
 Laravel 5.1: http://laravel.com/api/5.1/index.html

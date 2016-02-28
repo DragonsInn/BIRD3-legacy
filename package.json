@@ -14,6 +14,7 @@
     "babel-plugin-module-alias": "^1.1.1",
     "babel-plugin-remove-webpack": "^1.0.0",
     "babel-plugin-syntax-jsx": "^6.3.13",
+    "babel-plugin-transform-class-properties": "^6.5.2",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.4.5",
     "babel-plugin-transform-react-jsx": "^6.4.0",
     "babel-plugin-transform-runtime": "^6.4.3",
@@ -154,7 +155,9 @@
     "LDT": "kueblc/LDT",
     "behave.js": "jakiestfu/Behave.js",
     "jsCaret": "schovi/jsCaret",
-    "termlib": "http://www.masswerk.at/termlib/termlib.zip"
+    "termlib": "http://www.masswerk.at/termlib/termlib.zip",
+    "LRTEditor": "IngwiePhoenix/lRTEditor",
+    "md-highlight": "IngwiePhoenix/js-md-highlight"
   },
   "devDependencies": {
     "jasmine": "^2.4.1",

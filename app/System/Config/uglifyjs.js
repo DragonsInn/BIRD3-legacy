@@ -24,7 +24,7 @@ module.exports = {
     //sourceMap: true,
     mangle: {
         toplevel: true,
-        sort: true,
+        sort: false,
         eval: true,
         properties: true
     },

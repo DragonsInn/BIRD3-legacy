@@ -1,11 +1,12 @@
 <?php namespace BIRD3\Support\Modules;
 
-use Caffeinated\Modules\Repositories\Interfaces\ModuleRepositoryInterface;
+use Caffeinated\Modules\Contracts\RepositoryInterface;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Filesystem\Filesystem;
-use \Exception;
+use Exception;
+use Cache;
 
-class InternalModuleRepository implements ModuleRepositoryInterface {
+class InternalModuleRepository implements RepositoryInterface {
 
     // Holds the config
     protected $config;
@@ -278,4 +279,62 @@ class InternalModuleRepository implements ModuleRepositoryInterface {
 	public function disable($slug) {
 		return $this->setProperty("{$slug}::enabled", false);
 	}
+
+    /**
+     * Refresh the cache with any newly found modules.
+     *
+     * @return bool
+     */
+    public function cache() {
+        $cacheFile = storage_path('modules.json');
+        $cache     = $this->getCache();
+        $modules   = $this->all();
+        $collection = collect([]);
+        foreach ($modules as $module) {
+            $collection->put($module['slug'], true);
+        }
+        $keys    = $collection->keys()->toArray();
+        $merged  = $collection->merge($cache)->only($keys);
+        $content = json_encode($merged->all(), JSON_PRETTY_PRINT);
+        return $this->files->put($cacheFile, $content);
+    }
+    
+    /**
+     * Get the contents of the cache file.
+     *
+     * The cache file lists all module slugs and their
+     * enabled or disabled status. This can be used to
+     * filter out modules depending on their status.
+     *
+     * @return Collection
+     */
+    public function getCache() {
+        $cacheFile = storage_path('modules.json');
+        if (! $this->files->exists($cacheFile)) {
+            $modules = $this->all();
+            $content = [];
+            foreach ($modules as $module) {
+                $content[$module['slug']] = true;
+            }
+            $content = json_encode($content, JSON_PRETTY_PRINT);
+            $this->files->put($cacheFile, $content);
+            return collect(json_decode($content, true));
+        }
+        return collect(json_decode($this->files->get($cacheFile), true));
+    }
+
+    /**
+     * Set the given cache key value.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return int
+     */
+    public function setCache($key, $value) {
+        $cacheFile = storage_path('modules.json');
+        $content   = $this->getCache();
+        $content->put($key, $value);
+        $content = json_encode($content, JSON_PRETTY_PRINT);
+        return $this->files->put($cacheFile, $content);
+    }
 }

@@ -244,26 +244,29 @@ DOM.prototype = _.extend(DOM.prototype, domEasy.prototype, {
      * @return {Mixed} Value of the CSS rule.
      */
     css: function(key, value) {
-        if(_.isPlainObject(key)) {
-            for(var rule in key) {
-                var data = key[rule];
-                for(var i=0; i<this.length; i++) {
-                    this[i].style[toSnake(rule)] = data;
+        if(typeof value == "undefined") {
+            if(_.isPlainObject(key)) {
+                for(var k in key) {
+                    var v = key[k];
+                    this.each(function(node){
+                        node.style[toSnake(k)] = v;
+                    });
                 }
-            }
-        } else if(typeof value == "undefined") {
-            if(this.length <= 1) {
-                // Single return
-                var css = window.getComputedStyle(this[0]);
-                var val = css.getPropertyValue(key);
-                return cssValue(val)[0].value;
             } else {
-                var vals = [];
-                this.each(function(e){
-                    var css = window.getComputedStyle(e);
-                    return cssValue(css.getPropertyValue(key))[0].value;
-                });
-                return vals;
+                if(this.length <= 1) {
+                    // Single return
+                    var css = window.getComputedStyle(this[0]);
+                    var val = css.getPropertyValue(key);
+                    var c = cssValue(val)[0];
+                    return c.value || c.string;
+                } else {
+                    var vals = [];
+                    this.each(function(e){
+                        var css = window.getComputedStyle(e);
+                        return cssValue(css.getPropertyValue(key))[0].value;
+                    });
+                    return vals;
+                }
             }
         } else {
             if(this.length < 1) {
@@ -311,8 +314,12 @@ DOM.prototype = _.extend(DOM.prototype, domEasy.prototype, {
         }
     },
 
-    val: function(){
-        return this[0].value;
+    val: function(value){
+        if(value) {
+            this[0].value = value;
+        } else {
+            return this[0].value;
+        }
     },
 
     /**

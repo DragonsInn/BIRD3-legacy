@@ -88,8 +88,8 @@ and (orientation : portrait) {
 
 /* Form controlz */
 .form-control {
-    background: black !important;
-    color: white !important;
+    background: black;
+    color: white;
 }
 
 /* Thumbnail elements */

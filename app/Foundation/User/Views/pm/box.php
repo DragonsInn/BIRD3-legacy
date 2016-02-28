@@ -136,8 +136,8 @@
                         // But actually, attach some.
                         const container = oo("#MessageContainer");
                         container.html("");
-                        for(let i in data.messages) {
-                            let message = data.messages[i];
+                        console.log(data);
+                        data.messages.forEach(function(message){
                             let data = { id: message.id }; // FIXME: Data in o.o is broken.
                             container.appendChild(
                                 <div className="well">
@@ -145,23 +145,26 @@
                                     <div innerHTML={message.body}/>
                                 </div>
                             );
-                        }
+                        })
                         container.appendChild(<hr/>);
                         let tagId = `reply-conv-${id}`;
-                        let editorDiv = (<div
+                        let editorContainer = (<div
                             className="well"
+                        />);
+                        let editorDiv = (<div
+                            //className="well"
                             data-conv-id={id}
+                            id={tagId}
                             data-name={tagId}
                             data-placement="bottom"
-                            data-ta-class=""
+                            data-ta-class="form-control"
                             data-autogrow="true"
                             data-text-display="true"
-                            data-use-well="true"
+                            data-use-well="false"
                             data-editor-placement="bottom"
                             data-group-size="sm"
                             data-placeholder="Type here to reply"
                             data-height="200px"
-                            data-id={tagId}
                         />);
                         let sendButton = (
                             <button className="btn btn-sm btn-success">
@@ -178,8 +181,9 @@
                                 method: "POST"
                             });
                         });
-                        container.appendChild(editorDiv);
-                        container.appendChild(sendButton);
+                        editorContainer.appendChild(editorDiv);
+                        editorContainer.appendChild(sendButton);
+                        container.appendChild(editorContainer);
                         editorDiv.editor();
                     } catch(e) {
                         console.error(e)

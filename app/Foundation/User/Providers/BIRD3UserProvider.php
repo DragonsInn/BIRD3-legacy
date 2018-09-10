@@ -70,7 +70,7 @@ class BIRD3UserProvider implements UserProvider {
             \BIRD3\Backend\Log::info("BIRD2 user detected.");
             // A BIRD2 user who didn't convert yet. Take care of that, first.
             $newHash = Password::hash($credentials["password"]);
-            $user->password = $hash;
+            $user->password = $newHash;
             $user->update();
             return true;
         } else {

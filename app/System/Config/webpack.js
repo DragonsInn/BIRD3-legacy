@@ -347,6 +347,6 @@ module.exports = {
         // CSS
         extractor, purifyPlugin,
         // JavaScript
-        //uglify
+        uglify
     ]
 };

@@ -74,27 +74,6 @@ class Frontend {
             ${$name} = (object)$data;
         }
 
-        /*
-            In here, we should start up the Laravel app, feed it with the
-            information that it needs in order to perform a request-response.
-
-            The good thing is, that if this fails, HPROSE will pick the exception
-            up, and distribute it to NodeJS - which will result in an error event.
-
-            Thakfully, Laravel ALSO has an exceptin handler. This should account
-            for a majority of failsafety.
-
-            Hopefuly though, this does work...
-
-            For this to work:
-                - Obtain the application instance
-                - Create a Request, get a response
-                - Serialize the data and send it back to NodeJS.
-
-            Important is:
-                - Reponse body and headers must be separated.
-        */
-
         // Store the hprose parameters, the optional ones.
         if(!App::bound(HproseHolder::class)) {
             App::instance(HproseHolder::class, new HproseHolder());
@@ -123,8 +102,9 @@ class Frontend {
         );
 
         // If we have a request body, set it.
+        // FIXME: Uh. Raw bodies ... might be different. o.o
         if(isset($request->body)) {
-            $request->setRawBody($request->body);
+            $requestCtx->setRawBody($request->body);
         }
 
         // Obtain a response.

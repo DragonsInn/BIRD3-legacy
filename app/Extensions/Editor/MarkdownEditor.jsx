@@ -19,6 +19,9 @@ import ToolbarTemplate from "./Views/toolbar";
 import Tooltip from "bootstrap.native/lib/tooltip-native";
 import Popover from "bootstrap.native/lib/popover-native";
 
+// o.o - global.
+import oo from "o.o";
+
 // CSS
 import "./Style/editor.scss";
 import "LRTEditor/src/style.css";
@@ -107,6 +110,14 @@ export default function BIRD3MarkdownEditor(targetNode, cb){
     ], {
         highlightCallback: function(el) {
             var out, src = el.textContent;
+
+            // It is possible, that the string only contains a newline.
+            // Untill I get @asmblah/highlighted working with proper HTML,
+            // I have to make sure the string is tidy.
+            if(src == "\n" && src.length == 1) {
+                src = "";
+            }
+
             // md-highlight throws a nasty Error when you give it an empty string.
             // This is a workaround.
             if(src.length > 0) {
@@ -119,20 +130,17 @@ export default function BIRD3MarkdownEditor(targetNode, cb){
             }
 
             // Code highlights
-            var els = document.getElementsByClassName("md-bcode"); // use ooDOM's .find() instead!
-            for(var i=0; i<els.length; i++) {
-                (function(e){ // JS and scopes... I kid you not. FIXME: ES6 scopes.
-                    if(e.children.length <= 0) {
-                        // Not a highlightable thing. Skip.
-                        return;
-                    }
-                    var c = e.children[0]
-                    if(c.className == "nohighlight") return;
-                    e.className += " hljs hljs-fix";
-                    c.className += " hljs";
-                    hljs.highlightBlock(c);
-                })(els[i]);
-            }
+            oo(".md-bcode").each((node) => {
+                if(node.children.length <= 0) {
+                    // Not a highlightable thing. Skip.
+                    return;
+                }
+                var c = node.children[0]
+                if(c.className == "nohighlight") return;
+                node.className += " hljs hljs-fix";
+                c.className += " hljs";
+                hljs.highlightBlock(c);
+            });
         },
         addLineWrapper: false
     });

@@ -22,6 +22,7 @@ class UserController extends BaseController {
         if(Auth::attempt($creds)) {
             return redirect()->intended($this->redirectPath);
         } else {
+            // FIXME: Return to login form, and display errors.
             return response("Could not log in. ".var_export($creds,true));
         }
     }

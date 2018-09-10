@@ -135,6 +135,7 @@ function Dispatcher(uri, requestClass, hostConfig, optional) {
     this.getMiddleware = function() {
         var self = this;
         return function(req, res, next) {
+            console.log("Request body:",req.body);
             // The context we will be referencing forth and back
             var ctx = {
                 // This object holds the request information, plus slightly fixed info for PHP.

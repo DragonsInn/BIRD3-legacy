@@ -5,7 +5,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use BIRD3\Backend\Log;
+#use BIRD3\Backend\Log;
+use Log;
 
 class Handler extends ExceptionHandler
 {
@@ -30,9 +31,11 @@ class Handler extends ExceptionHandler
      * @return void
      */
     public function report(Exception $e) {
-        parent::report($e);
+        $pid = getmypid();
+        Log::error("$pid: $e");
+        #parent::report($e);
         if ($this->shouldReport($e)) {
-            Log::error($e);
+            #Log::error($e);
         }
     }
 

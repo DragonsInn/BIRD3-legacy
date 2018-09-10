@@ -101,7 +101,7 @@ class PmController extends BaseController {
                 In Yii we used a HMAC. Wonder if Laravel has that too.
             */
             $to_conv_id = Request::input("pmReply.conv_id");
-            $is_member = $user->conversationMemberships()->contains($to_conv_id);
+            $is_member = $user->conversationMemberships->contains($to_conv_id);
             if(!$is_member) {
                 $errors["Validation"][] = "There was an error during transmission. Please try again.";
             } else {

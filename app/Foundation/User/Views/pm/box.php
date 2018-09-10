@@ -36,6 +36,7 @@
         return $v->owner->id == $user->id;
     })->all();
 ?>
+
 <div class="page-header">
     <h3>Your conversations</h2>
 </div>
@@ -117,22 +118,14 @@
 <script class="es6">
     // FIXME: We probably should attempt to move all the inline stuff into controllers. O.o
     BIRD3.ready(() => {
-        oo("[data-conv-id]").on("click", (e) => {
-            e.preventDefault();
-            let id = oo(e.target).data("convId");
-            let url = BIRD3.baseUrl + "/user/pm/convo/" + id;
+        function loadConvo(id) {
+            let url = `${BIRD3.baseUrl}/user/pm/convo/${id}`;
             oo.uxhr(url, {}, {
                 method: "GET",
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest"
-                },
+                headers: { "X-Requested-With": "XMLHttpRequest" },
                 complete: (res, code) => {
                     try {
                         let data = JSON.parse(res);
-                        // Informative...
-                        let pre = (<pre innerHTML={res}></pre>);
-                        pre.appendTo(document.body);
-
                         // But actually, attach some.
                         const container = oo("#MessageContainer");
                         container.html("");
@@ -147,6 +140,7 @@
                             );
                         })
                         container.appendChild(<hr/>);
+                        const csrf = oo("[name=_token]");
                         let tagId = `reply-conv-${id}`;
                         let editorContainer = (<div
                             className="well"
@@ -173,15 +167,19 @@
                         );
                         sendButton.on("click", (e)=>{
                             oo.uxhr(url,{
-                                pmReply: {
-                                    conv_id: id,
-                                    body: oo(`[name="reply-conv-${id}"]`).val()
-                                }
+                                "pmReply[conv_id]": id,
+                                "pmReply[body]": oo(`[name="reply-conv-${id}"]`).val(),
+                                _token: <?=json_encode(csrf_token())?>
                             },{
-                                method: "POST"
+                                method: "POST",
+                                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                                complete: (req, code) => {
+                                    loadConvo(id);
+                                }
                             });
                         });
                         editorContainer.appendChild(editorDiv);
+                        editorContainer.appendChild(csrf);
                         editorContainer.appendChild(sendButton);
                         container.appendChild(editorContainer);
                         editorDiv.editor();
@@ -190,6 +188,12 @@
                     }
                 }
             });
+        }
+
+        oo("[data-conv-id]").on("click", (e) => {
+            e.preventDefault();
+            let id = oo(e.target).data("convId");
+            loadConvo(id);
         });
     });
 </script>

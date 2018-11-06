@@ -1,0 +1,72 @@
+# TODO:
+# Node image for having node...
+#   > Might base my app on that.
+#
+# Future TODO:
+# Radio station server (icecast?)
+# Video streaming server
+version: "3"
+services:
+  BIRD3:
+    image: node:11
+    name: app
+    ports:
+      # RPC
+      - "1337:1337"
+      # Web, http/s
+      - "80:80"
+      - "443:443"
+      # SSH
+      - "2020:22"
+      # mailin.io: SMTP, IMAP
+      # @todo
+  PostgreSQL:
+    image: sameersbn/postgresql:10
+    restart: always
+    name: pgsql
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      - DEBUG=false
+      - DB_USER=pgdocker
+      - DB_PASS=pgdocker
+      - DB_NAME=${APP_NAME}
+      - DB_TEMPLATE=
+      - DB_EXTENSION=
+      - REPLICATION_MODE=
+      - REPLICATION_USER=
+      - REPLICATION_PASS=
+      - REPLICATION_SSLMODE=
+    volumes:
+      - ./data/postgres:/var/lib/postgresql
+  Redis:
+    image: redis:latest
+    restart: always
+    name: redis
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - ./data/redis:/data
+  axibase_astd:
+    image: axibase/atsd:latest
+    restart: always
+    name: astd
+    environment:
+      - ADMIN_USER_NAME=
+      - ADMIN_USER_PASSWORD=
+      - COLLECTOR_USER_NAME=
+      - COLLECTOR_USER_PASSWORD=
+      - COLLECTOR_USER_TYPE=
+      - DB_TIMEZONE=
+      - JAVA_OPTS=
+      - HADOOP_OPTS=
+      - HBASE_OPTS=
+    ports:
+      - "127.0.0.1:8088:8088"     # HTTP, User Interface
+      - "127.0.0.1:8443:8443"     # HTTPS, User Interface (secure)
+      - "127.0.0.1:8081:8081"     # Network commands TCP
+      - "127.0.0.1:8082:8082/udp" # Network commands UDP
+      - "127.0.0.1:8084:8084"     # Graphite interface in Python picle format
+      - "127.0.0.1:1099:1099"     # JMX
+    volumes:
+      - ./data/atsd:/opt/atsd

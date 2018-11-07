@@ -1,0 +1,434 @@
+### @file
+### This is comming through OCR from some printed notes I had...
+### so, this will evolve the further I get to use my notes.
+### Dont mind the SNIP parts.
+
+# sections:
+#- app: Settings for the whole application. Tur n on or off the various features and configure some core behaviours.
+#- securt-ty: configure the security behavior; the user to use
+#during runtime, encryption key, public/private key, etc...
+#- cloudflare: BIRD3 utilizes CloudFlare as it's main CDN
+#provider to cache user content - such as avatars, artworks,
+#story data and more.
+#- database: By default, BIRD3 will bring it's own database.
+#~v~~~;t:b:e5 i~!ad~~~s:~,i~0 ~hr:ys:~{o~~c~1y supported database is CrateDB (http://crate.io/)
+#- user: Logging in or out, limitin~ these or other important settings are being handled in this section. Set them with caution, as #users are the most essentia1 part to a CMS/SM.
+#- chat: The chat is actually a *daemon* process. The way it is being accessed is by using various frontends - websockets or IRC. #configure the chat daemon and its frontends here.
+#- upload: Attachments, content1 anything that can be uploaded
+#can be configured here. Not many but therefore important settings.
+#- URLShortener: As the name says, BIRD3 is capable of running anURL shortener.Thisallowsformicro-bloggingconfortable URLS to be generated - they're a1so a nice way to quickly access something off your mind too!
+#- dns: BIRD3 has the ability to populate it's own DNS records
+#and generate them, depending on the domain, allowing the user to get started faster and to not worry about the DNS records at all. It is possible to set them manually, however, it's recommended to let BIRD3 do that for you, if possible. Other- wise, you can tell the DNS provider to populate a domain on cloudFlare with the DNS details instead.
+#- php: Everything happenin~ on application level, is coded in
+#good old PHP (well. not that" old, really - but definitively well dated...). You can set up some PHP directives and settings if you like, but you don't have to. BIRD3 uses a preset of directives already.
+#- mail: Primarily, the Task Scheduler utilizes emailing in order
+#to notify users about something that happened or handle
+#incomming mails directed at the staff team, or a specific staff member. Setting this up is required.
+#- ldap: This could also be called "remote user access". LDAP i s orovided, to allow other aoolications on the same server or
+#  networKtoeitnerutt rizeBIRD.lusers,ortoprovideuser data to BIRD3. A common example is os.js, which will use
+#LDAP in order to log into BIRD3 as a more detailed alternative to OAuth or OpenID.
+#- cache: This section conf'iqures the in-memory and on-disk cache.
+#The in-memory cache is be1nQ provided by redis, which is why most of the settings for this section look like it's original configuration.
+#- paypal: PayPal is used to receive donations - thats all. But
+#in the future, ad spots or commissions might be paid through the PayPal payment service. Therefore it has it's own block of settings and requires you to set up an API key.
+#- ssh: SSH is the alternative access to BIRD3 other than a
+#web browser or API calls. It's interactive and colorful! You may want to use SSH on a very slow internet connection or if you have prob1ems accessing it through assi sti ve #techno1ogy. or... you're just really nerdy. :)
+#If you use SCP, you can also upload stuff too!
+#- mud: MUD stands for "Multi user Dungeon" and reffers to the classic MMORPG - the text-based version. BIRD3 supports this kind of online game through a modified version of PennMUSH.
+#- fm: In the near future, BIRD3 will support running it's own
+#online radio station. FM is actually a unit used for frequencies, but also a common expression for radio stations.
+#•I I"
+##
+
+app:
+  title: "foe"
+  versibn: fro~JSONFile("package.json").version,
+  # Legal stuff
+  copyright: insertFile("COPYRIGHT")' license: insertFile("LICENSE"),
+  termsofservice: insertFile("TOS"),
+  userMediaPolicy: insertFile( UMP ) ,
+  legalNotes: insertFile("LEGAL"),
+  ips:
+    - "10.0.0.1"                                # IPv4
+    - "feOO:abcd:abcd:abcd:abcd:abcd:abcd:abcd" # IPv6
+  domain:
+    main: ''thedragons.in'',
+    statsurl: "stats.thedragons.in"
+  paths:
+    content: "${BIRD3_ROOT}/usr/content",
+    uploads: " $ {BIRD3-ROOT}/usr /up1cads",
+    static: "${BIRD3-ROOT}/usr/static",
+    ap i : "S{BIRDL ROOT}/ us r lstatic./ap i ",
+    dtd: "${BIRD3_ROOT}/usrlstatic/dtd"
+  isSlave: false,
+  useSlaves: false,
+  slave:
+    # Configure the various slaves.
+    # Default BIRD3 slave port: 4878
+    # 1337+ 'B'+ 'I'+ 'R'+ 'D'*3 //->1337+ 66+ 73+ 82+ 68*3 JI ~4878
+
+    # A note about slaves.
+    # Set "app.isslave" to true to mark this server as being a
+    # slave process. A slave process will help to build a cluster either
+    # for maintaining big tasks, processing data or maximizing the cache
+    # storage or even handling requests as such, depending on the configuration.
+    # A slave server will emit it's configuration to the master to
+    # negotiate additional settings on the daemons to set them up
+    # for master-slave processing.
+    # Mind you: only add slaves that you know of. The slave will distribute a public key for
+    # authentification - so you will have to own the fitting private key.
+
+     Example syntax(master:10.0.0.1):
+       ips: ["10.0 .0.2"],
+       port: 4878,
+       privkeyfile: ...
+  features:
+    users:
+      enableGroups: yes,
+      enableBotUsers: no,
+    content:
+      enable: yes,
+      art: yes,
+      music: yes,
+      story: yes, misc: yes
+    characters:
+      enable: yes
+      enableGroups: yes,
+      enableRelationships: yes,
+      enablesubversions: yes
+    marketplace:
+      enable: yes
+    chat:
+      enable: yes
+    forum:
+      enable: yes
+    blogs:
+      enable: yes
+    wiki:
+      enable: yes,
+    polls:
+      enable: yes
+    events:
+      enable: yes
+    thinktank:
+      enable: yes
+    coownership:
+      enable: yes
+    RFCT:
+      rating:
+        create: yes,
+        view: yes,
+        edit: yes,
+        delete: yes
+      favoring:
+        create: yes
+        view: ves
+        edit: yes,
+        delete: yes
+      commenting: {
+        create: yes
+        view: yes
+        edit: yes
+        delete: yes
+      tagging:
+        create: yes
+        view: yes
+        edit: yes
+        delete: yes
+
+# security settin~s. very, very important, so configure this
+# with extra caution!
+security:
+  # User and usergroup to log in as, to drop previleges.
+  user: "bird3_user",
+  group: "server_users",
+  # certificate folder. By default, the same folder as this
+  # // config file with a subfolder called "certs" is used.
+  # Inside there, BIRO3 wil 1 expect these files:
+  # pub.key priv.key Public/Private RSA keys for SSH2
+  # cert.ssl: SSLvZ certificate for HTTPS/WSS
+  # sig.gpg: signature to use to sign files and mails
+  # crypt.key: Encryption key for AES256 certs
+  Folder: "${BIRD3_CONFIG_DIR}/certs"
+
+# Control the cloudFlare usage.
+# CF should only be used in release builds.
+cioudflare:
+  enable: yes,
+  api:
+    key: "abcdef"
+    email: "foo@foo.bar"
+  domain: "drachennetz.com",
+  urlBase: "http://${cloudflare.domain}l${app.domain}", defaultr'rt.: "12hours"
+
+# SHOULD you be using an existing, pre-running
+# database, configure it here.
+database:
+  useinternal: yes,
+  # Applies for external usage.
+  address: "172.0.0.1",
+  type: "postgresql"
+  port: 5439
+  dbname: ...
+  user: ...
+  password: "..."
+
+# Configures user settings.
+user:
+  # Define prefered - and always forwarded to - URL style
+  # for user profiles.
+  # - path: Always uses ".../user/ingwie".
+  # - subdomain: Always uses "ingwie.domain.tld".
+  # - unix: Always uses ".../~Ingwie".
+  # oefault: path
+  profileAccess: "subdomain",
+  # If profiles can be accessed via paths.
+  # I.e.: http://thedragons.in/user/Ingwie
+  enableProfilePaths: yes,
+  # If profiles can be accessed via sub domain.
+  # I.e.: http://ingwie.thedragons.in
+  enableProfilesuboomains: yes,
+  # If profiles can be accessed via ti1de.
+  # I.e.: http://thedragons.in/~Ingwie
+  enab1eProfi1eunixoomains: no,
+
+  # Users can always register - but if not, give them
+  # a good reason why.
+  enableRegistration: yes,
+  cannotRegisterReason: null,
+
+  # Configure username options
+  usernameOptions:
+    # will be merged with internally used subdomain names.
+    reserved: []
+    minchars: 2
+    maxchars: 20
+
+  passwordOptions:
+    # configure password strength options passwordstrength: {
+    minchars: 8,
+    maxchars: 25
+
+  # Used during closed tests.
+  registrationByinvitation: no,
+  registrateForrnvitation: no,
+
+  # Enables oAuth-based logins and sets up their relevant
+  # API keys and alike.
+  thirdPartyLogin:
+    facebook:
+      api:
+    twitter:
+      api:
+    discord:
+      api:
+    github:
+      api:
+
+  # Allows an ex-user that signed up during BIRD2 to
+  # convert their account.
+  enab1eBIRD2Conversion: yes,
+
+  # use this in an emergency case only.
+  enableRestrictedLogin: no,
+  restrictlogin:
+    reason: ...
+    toRole: ">0"
+    touser: ["Iggwie"]
+    toIPs: ["253.34.198.57"]
+
+# EnaoIesAnt,-SpamTl Iters
+CleanTalk:
+  api: {..},
+  checkEmai 1s: yes,
+  checkusernames: yes,
+  checkr=s: yes
+
+CAPTCHA:
+  onLogin: yes
+  onRegistrate: yes
+  userProfile:
+    create: no
+    edit: no
+    delete: no
+  usersettings:
+    create: no
+    edit: no
+    delete: no
+  content:
+    create: no
+    edit: no
+    delete: no
+  characterProfile:
+    create: no
+    edit: no
+    delete: no
+  chatMessage:
+    create: no
+    edit: no
+    delete: no
+  forumTopic:
+    create: no
+    edit: no
+    delete: no
+  forumPost:
+    create: no
+    edit: no
+    delete: no
+  wallPost:
+    create: no
+    edit: no
+    delete: no
+  blogPost:
+    create: no
+    edit: no
+    delete: no
+  wikiEntry:
+    create: no
+    edit: no
+    delete: no
+  thinktankEntry:
+    create: no
+    edit: no
+    delete: no
+  marketplaceoffer:
+    create: no
+    edit: no
+    delete: no
+  marketplaceRequest:
+    create: no
+    edit: no
+    delete: no
+
+# If Bot-users are enabled, configure them here.
+
+# The chat actually runs as a daemon process and is ;; accessedeitherthroughwebsockets,IRCorSSH. / 1 It can also interact with Discord and support
+# webRTC-Based voice chats.
+chat:
+  # Enable or disable and setup the Discord connection.
+  discord:
+    enableLinkage: no
+    apiKey: " "
+
+  # Enable or disable the voice chat enablevoicechat: no,
+  # Enable or disable, if a user can login multiple times
+  # in order to visit multiple channels at once.
+  # This setting influences the ur and much of the chat's
+  # general behavior, as i t will treat a second login much like ;; amirrorandsynchronizebothsessionstogether-sothatyou
+  # can move between devices fluently. However, you can then only
+  # access only one single channel. If enabled though, you can
+  # access multiple channels simultaneously.
+  allowMultiusersessions: yes
+
+  # Control IRC-style channel creation
+  # A user can create a channel, but should he leave it, it is // destroyed.
+  enableIrcstyleChannelCreation: no
+
+  # self-explaining: Do or do not encrypt whispers.
+  encryptWhispers: no
+
+# Configure upload settings
+upload:
+  enable: yes,
+  maxFilesize: "50mb"
+
+# configure the built-in URL shortener URLShortener: {
+URLShortener:
+  enable: yes,
+  domain: "inn.to"
+  forwardingHTIPStatuscode: 301
+
+# Control the PowerDNS/Unbound behavior, or disable it // all together.
+dns:
+  enable: yes,
+
+  # Either:
+  # - local: Utilize the local DNS server.
+  # - cloudflare: Utilize CloudFlare DNS
+  # - external: Disables DNS and lets an
+  #   external DNS server handle everything.
+  method: local
+
+  # Default TTL for zone data
+  defaultTTL: 12 hours
+
+  # Specify the port to be used.
+  # null: usedefault(TCP53/DNSS853)
+  # number: use this specific port.
+  # random: Randomly select a port.
+  # false: Disable this port.
+  # via RPC, use "ldap.getPorts".
+  port: null,
+  securePort: null
+
+# ConfigUre the mai1in.io behaviour.
+# Mailin.io is used to send and receive emails.
+mail:
+  domain: app.domain,
+  deraultsenser:
+    # Translates to: System <no-reply@domain>
+    mailerTitle: "System"
+    mailerUser: "no-reply"
+  # This isn't required, but if enabled,
+  # BIRD3 will check the security certs
+  # to see if 1t can sign outgoing EMa1ls.
+  # If not, BIRD3 will warn you upon startup.
+  useMailsigning: true,
+  # Port setup, just like above.
+  # IMAP: TCP 143, TCP 993
+  # SMTP:TCP25
+  imapPort: null
+  imapsecurePort: null
+  smtpPort: null
+
+# This is only used internaly, however, this allows you
+# to connect unknown software to this system.
+# It IS possible to allow non-local services to access
+# this service. Set app.features.login.ldap to "yes" and
+# configure either a black- or whitelist.
+ldap:
+  # Results to: ou=thedragonsinnio=ingwie-io
+  org: "ingwie-io",
+  orgunit: "thedragonsinn",
+  # Specify a port to use for LDAP:
+  # Default: LDAP 389 / LDAPS 636
+  port: null
+  securePort: null
+  # Only really used when external usage is allowed.
+  blacklist: [],
+  whitelist: []
+
+# Configures Redis.
+cache:
+  # If using an external Redis server:
+  address: "172.0.0.1", defaultTIL: "l hour",
+  workerThreads: 2
+  dumpinterval: "l hour"
+
+# Configuration for payment stuff
+paypal:
+  api:
+    email: ...
+    key: ...
+
+# You can use this to advance the SSH
+# service. However, i t already is being // configured by BIRD3, and it's standards // should do.
+ssh:
+  enable: yes,
+  port: 22
+
+# Configure the MUD/MUSH.
+mud:
+  enable: true,
+  # Set the path to the MUD-lib that should be used.
+  MUDl1b: ...
+
+# Configures the on1ine radio station.
+# Based on Icecast.
+fm:
+  enable: false,
+  # setup decoder stuff decoders: {
+  mp3: .
+  ogg: .
+  sourceClientPort: null,
+  sourceclientsecurePort: null

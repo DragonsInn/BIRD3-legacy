@@ -65,7 +65,8 @@ app:
   slave:
     # Configure the various slaves.
     # Default BIRD3 slave port: 4878
-    # 1337+ 'B'+ 'I'+ 'R'+ 'D'*3 //->1337+ 66+ 73+ 82+ 68*3 JI ~4878
+    #   1337+ 'B'+ 'I'+ 'R'+ 'D'*3
+    # ->1337+ 66 + 73 + 82 + 68 *3  = 4878
 
     # A note about slaves.
     # Set "app.isslave" to true to mark this server as being a

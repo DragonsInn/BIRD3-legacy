@@ -12,14 +12,27 @@ services:
     name: app
     ports:
       # RPC
-      - "1337:1337"
+      - "127.0.0.1:4878:4878"
       # Web, http/s
       - "80:80"
       - "443:443"
       # SSH
       - "2020:22"
-      # mailin.io: SMTP, IMAP
-      # @todo
+      # mailin.io
+      - "143:143" # IMAP
+      - "993:993" # IMAP Secure
+      - "25:25"   # SMTP
+      # Custom DNS
+      - "53:53"
+    volumes:
+      - ./app:/app:ro
+      - ./config:/etc/bird3:ro
+      - ./data/bird3:/var/bird3:rw
+    links:
+      # Need to learn more here...
+      - PostgreSQL:db
+      - redis:redis
+      - axibase_astd:astd
   PostgreSQL:
     image: sameersbn/postgresql:10
     restart: always

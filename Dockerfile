@@ -21,14 +21,33 @@ RUN yarn install
 COPY src /srv/bird3/src
 
 # Expose all the ports...there's a lot of them.
+# RPC: Use only on localhost, or export for slaves.
 #EXPOSE 4878
+
+# Web, http/s: Public
 #EXPOSE 80
 #EXPOSE 443
+
+# SSH: Public
 #EXPOSE 22
+
+# mailin.io: Public
+## IMAP
 #EXPOSE 143
+## IMAP Secure
 #EXPOSE 993
+## SMTP
 #EXPOSE 25
+
+# Custom DNS: Public
 #EXPOSE 53
 
+# LDAP: Private
+## Plain
+#EXPOSE 389
+## Secure
+#EXPOSE 636
+
+
 # Run!
-CMD [ "npm", "start" ]
+CMD [ "node", "src/Entrypoints/NodeJS/index.js" ]

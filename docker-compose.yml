@@ -9,6 +9,7 @@ version: "3"
 services:
   BIRD3:
     image: node:11
+    build: .
     name: app
     ports:
       # RPC
@@ -24,6 +25,9 @@ services:
       - "25:25"   # SMTP
       # Custom DNS
       - "53:53"
+      # LDAP
+      - "127.0.0.1:389:389" # Plain
+      - "127.0.0.1:636:636" # Secure
     volumes:
       - ./app:/app:ro
       - ./config:/etc/bird3:ro

@@ -498,10 +498,10 @@ mud:
 # Configures the on1ine radio station.
 # Based on Icecast.
 fm:
-  enable: false,
+  enable: false
   # setup decoder stuff
   decoders:
     mp3: .
     ogg: .
-  sourceClientPort: null,
+  sourceClientPort: null
   sourceClientSecurePort: null

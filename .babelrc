@@ -2,12 +2,18 @@
   "presets": [
     ["@babel/env", {
       "targets": {
-        "node": "current",
-        "cheome": "45"
+        "node": "current"
       }
     }]
   ],
   "plugins": [
+    "babel-plugin-syntax-async-functions",
+    "babel-plugin-async-to-promises",
+    ["babel-plugin-module-resolver", {
+      "alias": {
+        "BIRD3": "./src"
+      }
+    }],
     ["@babel/plugin-proposal-class-properties", {
       "loose": true
     }],

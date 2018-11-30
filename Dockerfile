@@ -1,8 +1,5 @@
 FROM node:11
 
-# Install global tools first...
-#RUN npm i -g yarn
-
 # Deps:
 RUN npm install -g "@babel/node" "@babel/core@^7.1"
 
@@ -12,14 +9,13 @@ VOLUME /srv/bird3
 # Change to the bird3 folder...
 WORKDIR /srv/bird3
 
-
 # Expose all the ports...there's a lot of them.
 # RPC: Use only on localhost, or export for slaves.
-#EXPOSE 4878
+EXPOSE 4878
 
-# Web, http/s: Public
-##     HTTP HTTPS
-EXPOSE 80   443
+# Web, http/s AND ws: Public
+##     HTTP
+EXPOSE 80
 
 # SSH: Public
 ##     SSH

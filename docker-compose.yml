@@ -1,21 +1,19 @@
-# TODO:
-# Node image for having node...
-#   > Might base my app on that.
-#
 # Future TODO:
 # Radio station server (icecast?)
 # Video streaming server
+
 version: "3"
 services:
   BIRD3:
-    image: node:11
     build: .
+    image: bird3
     ports:
+      # STRUCTURE
+      # host spec:host port:container port
       # RPC
       - "127.0.0.1:4878:4878"
-      # Web, http/s
-      #- "80:80"
-      #- "443:443"
+      # Web (HTTP, WS)
+      #- "8080:8080"
       # SSH
       #- "2020:22"
       # mailin.io
@@ -30,15 +28,20 @@ services:
     volumes:
       - ./:/srv/bird3/
     links:
-      # Need to learn more here...
+      # I want the config to look nice, but hostnames to be easy...
       - PostgreSQL:db
       - Redis:redis
       - axibase_astd:astd
+    depends_on:
+      - PostgreSQL
+      - Redis
+      - axibase_astd
+
   PostgreSQL:
     image: sameersbn/postgresql:10
     restart: always
-    #ports:
-      #- "127.0.0.1:5432:5432"
+    ports:
+      - "127.0.0.1:5432:5432"
     environment:
       - DEBUG=false
       - DB_USER=pgdocker
@@ -52,13 +55,15 @@ services:
       - REPLICATION_SSLMODE=
     volumes:
       - ./data/postgres:/var/lib/postgresql
+
   Redis:
     image: redis:latest
     restart: always
-    #ports:
-      #- "127.0.0.1:6379:6379"
+    ports:
+      - "127.0.0.1:6379:6379"
     volumes:
       - ./data/redis:/data
+
   axibase_astd:
     image: axibase/atsd:latest
     restart: always

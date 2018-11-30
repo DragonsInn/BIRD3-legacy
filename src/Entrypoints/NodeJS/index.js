@@ -12,7 +12,7 @@ let counter = 0;
 function keepTickingForever() {
   process.nextTick(_=>{
     counter++;
-    keepTickingForever();
+    setTimeout(keepTickingForever, 1000);
   })
 }
 

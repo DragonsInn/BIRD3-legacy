@@ -1,9 +1,0 @@
-# Tasks and jobs
-
-All the things that need to be done in the background are organized in this folder.
-
-* Each job is a class.
-* Jobs may be combined to a namespace, represented as a folder.
-* All jobs are queued via Redis.
-* Each job has to return and report progress.
-* Jobs are run asynchron by default, but may use blocking calls if required.

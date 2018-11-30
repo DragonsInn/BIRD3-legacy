@@ -2,13 +2,17 @@ module.exports = {
   development: {
     client: 'postgresql',
     connection: {
-      // @todo
+      host: "db",
+      database: process.env.APP_NAME || "bird3",
+      user: "pgdocker",
+      password: "pgdocker"
     }
   },
 
   production: {
     client: 'postgresql',
     connection: {
+      host: "db",
       database: 'my_db',
       user:     'username',
       password: 'password'

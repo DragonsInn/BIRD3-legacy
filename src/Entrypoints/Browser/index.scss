@@ -1,0 +1,9 @@
+/**
+ * All that we do here is to tell WebPack where the real entrypoint is.
+ * This is used in order to separate program logic from design logic.
+ * All the user interface related data is stored in src/UI.
+ * This just serves as a placeholder to adhere to the idea of organized
+ * entrypoints.
+ */
+
+@import "~BIRD3/UI/index.scss";

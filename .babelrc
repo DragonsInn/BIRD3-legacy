@@ -1,13 +1,10 @@
 {
   "presets": [
     ["@babel/env", {
-      "targets": {
-        "node": "current"
-      }
+      "targets": { "node": "current" }
     }]
   ],
   "plugins": [
-    "module:fast-async",
     ["babel-plugin-module-resolver", {
       "alias": {
         "BIRD3": "./src"
@@ -16,10 +13,5 @@
     ["@babel/plugin-proposal-class-properties", {
       "loose": true
     }],
-    ["@babel/plugin-transform-react-jsx", {
-      "pragma": "h",
-      "pragmaFrag": "fragment",
-      "throwIfNamespace": false
-    }]
   ]
 }

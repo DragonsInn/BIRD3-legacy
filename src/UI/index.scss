@@ -1,0 +1,9 @@
+// Tailwind imports.
+@tailwind preflight;
+@tailwind components;
+@tailwind utilities;
+
+// Importing additional styles.
+@import "~BIRD3/UI/MenuBar/design";
+@import "~BIRD3/UI/Modal/design";
+@import "~BIRD3/UI/MessageBar/design";

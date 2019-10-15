@@ -13,5 +13,7 @@
     ["@babel/plugin-proposal-class-properties", {
       "loose": true
     }],
+    "babel-plugin-dynamic-import-node",
+    "babel-plugin-inferno"
   ]
 }

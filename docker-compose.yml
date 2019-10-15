@@ -1,52 +1,30 @@
-# Future TODO:
-# Radio station server (icecast?)
-# Video streaming server
-
-version: "3"
+version: '3'
 services:
   BIRD3:
     build: .
     image: bird3
     ports:
-      # STRUCTURE
-      # host spec:host port:container port
-      # RPC
-      - "127.0.0.1:4878:4878"
-      # Web (HTTP, WS)
-      #- "8080:8080"
-      # SSH
-      #- "2020:22"
-      # mailin.io
-      #- "143:143" # IMAP
-      #- "993:993" # IMAP Secure
-      #- "25:25"   # SMTP
-      # Custom DNS
-      #- "53:53"
-      # LDAP
-      #- "127.0.0.1:389:389" # Plain
-      #- "127.0.0.1:636:636" # Secure
+      - '127.0.0.1:4878:4878'
     volumes:
-      - ./:/srv/bird3/
+      - './:/srv/bird3/'
     links:
-      # I want the config to look nice, but hostnames to be easy...
-      - PostgreSQL:db
-      - Redis:redis
-      - axibase_astd:astd
+      - 'PostgreSQL:db'
+      - 'Redis:redis'
+      - 'axibase_astd:astd'
     depends_on:
       - PostgreSQL
       - Redis
       - axibase_astd
-
   PostgreSQL:
-    image: sameersbn/postgresql:10
+    image: 'sameersbn/postgresql:10'
     restart: always
     ports:
-      - "127.0.0.1:5432:5432"
+      - '127.0.0.1:5432:5432'
     environment:
       - DEBUG=false
       - DB_USER=pgdocker
       - DB_PASS=pgdocker
-      - DB_NAME=${APP_NAME}
+      - 'DB_NAME=${APP_NAME}'
       - DB_TEMPLATE=
       - DB_EXTENSION=
       - REPLICATION_MODE=
@@ -54,18 +32,16 @@ services:
       - REPLICATION_PASS=
       - REPLICATION_SSLMODE=
     volumes:
-      - ./data/postgres:/var/lib/postgresql
-
+      - './data/postgres:/var/lib/postgresql'
   Redis:
-    image: redis:latest
+    image: 'redis:latest'
     restart: always
     ports:
-      - "127.0.0.1:6379:6379"
+      - '127.0.0.1:6379:6379'
     volumes:
-      - ./data/redis:/data
-
+      - './data/redis:/data'
   axibase_astd:
-    image: axibase/atsd:latest
+    image: 'axibase/atsd:latest'
     restart: always
     environment:
       - ADMIN_USER_NAME=
@@ -77,12 +53,5 @@ services:
       - JAVA_OPTS=
       - HADOOP_OPTS=
       - HBASE_OPTS=
-    #ports:
-      #- "127.0.0.1:8088:8088"     # HTTP, User Interface
-      #- "127.0.0.1:8443:8443"     # HTTPS, User Interface (secure)
-      #- "127.0.0.1:8081:8081"     # Network commands TCP
-      #- "127.0.0.1:8082:8082/udp" # Network commands UDP
-      #- "127.0.0.1:8084:8084"     # Graphite interface in Python picle format
-      #- "127.0.0.1:1099:1099"     # JMX
     volumes:
-      - ./data/atsd:/opt/atsd
+      - './data/atsd:/opt/atsd'

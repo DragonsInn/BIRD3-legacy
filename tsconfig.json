@@ -1,0 +1,51 @@
+{
+    "compilerOptions": {
+        "target": "ES2018",
+        "module": "commonjs" ,
+        "lib": [
+            "es5",
+            "es6",
+            "dom"
+        ],
+        "allowJs": false,
+        "checkJs": false,
+        "jsx": "react",
+        "declaration": true,
+        "declarationMap": false,
+        "sourceMap": false,
+        // "outFile": "./",                       /* Concatenate and emit output to single file. */
+        "outDir": "./dist",
+        "rootDir": "src",
+        "composite": true,
+        "removeComments": true,
+        "noEmit": true,
+        "importHelpers": true,
+        "downlevelIteration": true,
+        "isolatedModules": false,
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictPropertyInitialization": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "moduleResolution": "node",
+        "baseUrl": "./src",
+        "paths": {
+            "@BIRD3/*": [
+                "*"
+            ]
+        },
+        "esModuleInterop": true,
+        "preserveSymlinks": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
+        // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
+        // "typeRoots": [],                       /* List of folders to include type definitions from. */
+        // "types": [],                           /* Type declaration files to be included in compilation. */
+        // "allowSyntheticDefaultImports": true,  /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */    }
+}
